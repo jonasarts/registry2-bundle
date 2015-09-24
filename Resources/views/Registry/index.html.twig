@@ -1,0 +1,40 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+Registry Key List
+{% endblock %}
+
+{% block body %}
+<h1>Registry Key List</h1>
+{% for flashMessage in app.session.flashbag.get('error') %}
+    <div class="alert alert-danger">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
+<p><a href="{{ path('system_index') }}">View System Key List</a></p>
+<p class="pull-right"><a href="{{ path('registry_new') }}" class="btn btn-success">Add</a></p>
+<p><table class="table table-striped">
+    <thead>
+        <tr>
+            <th>UserID</th>
+            <th>Key</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            <td>{{ entity.userid }}</td>
+            <td>{{ entity.key }}</td>
+            <td>{{ entity.name }}</td>
+            <td>{{ entity.type }}</td>
+            <td>{{ entity.value }}</td>
+            <td><a href="{{ path( 'registry_edit', { entity: entity.serialize }) }}" class="btn">Edit</a> <a href="{{ path( 'registry_delete', { entity: entity.serialize }) }}" class="btn">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table></p>
+{% endblock %}

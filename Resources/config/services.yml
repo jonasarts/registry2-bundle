@@ -1,0 +1,4 @@
+services:
+    registry:
+        class: %registry_class%
+        arguments: [ @service_container ]
