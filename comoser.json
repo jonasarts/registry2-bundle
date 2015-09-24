@@ -1,8 +1,8 @@
 {
-    "name": "jonasarts/registry-bundle",
+    "name": "jonasarts/registry2-bundle",
     "description": "A Registry System for Symfony",
     "keywords": ["registry", "key", "value", "store"],
-    "homepage": "https://github.com/jonasarts/registry-bundle",
+    "homepage": "https://github.com/jonasarts/registry2-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
