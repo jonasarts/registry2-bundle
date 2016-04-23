@@ -19,8 +19,8 @@ namespace jonasarts\Bundle\RegistryBundle\Interfaces;
 interface AbstractRegistryInterface
 {
     /**
- * Registry Key Methods.
- */
+     * Registry Key Methods.
+     */
 
     // exists
     public function registryExists($userid, $key, $name, $type);
@@ -31,9 +31,9 @@ interface AbstractRegistryInterface
     // set
     public function registryWrite($userid, $key, $name, $type, $value);
 
-/**
- * System Key Methods.
- */
+    /**
+     * System Key Methods.
+     */
 
     // exists
     public function systemExists($key, $name, $type);

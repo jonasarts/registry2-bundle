@@ -41,15 +41,20 @@ class Configuration implements ConfigurationInterface
                             ->values(array('redis', 'doctrine'))
                             ->defaultValue('redis')
                         ->end()
-                        // default registry key-value file
-                        ->scalarNode('defaultvalues')
+                        // registry class
+                        ->scalarNode('registry_class')
                             ->isRequired()
                             ->cannotBeEmpty()
-                            ->defaultValue('%kernel.root_dir%/config/registry.yml')
+                            //->defaultValue('jonasarts\\Bundle\\RegistryBundle\\Services\\DoctrineRegistry')
+                            ->defaultValue('jonasarts\\Bundle\\RegistryBundle\\Services\\RedisRegistry')
+                        ->end()
+                        // default registry key-value file
+                        ->scalarNode('default_values')
+                            ->defaultNull()
+                            //->defaultValue('%kernel.root_dir%/config/registry.yml')
                         ->end()
                         // field delimiter
                         ->scalarNode('delimiter')
-                            ->isRequired()
                             ->cannotBeEmpty()
                             ->defaultValue(':')
                         ->end()
@@ -66,6 +71,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         // prefix
                         ->scalarNode('prefix')
+                            ->isRequired()
                             ->defaultValue('registry')
                         ->end()
                     ->end()

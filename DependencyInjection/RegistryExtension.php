@@ -33,7 +33,8 @@ class RegistryExtension extends Extension
 
         // apply config globals
         $container->setParameter('registry.globals.engine', $config['globals']['engine']);
-        $container->setParameter('registry.globals.defaultvalues', $config['globals']['defaultvalues']);
+        $container->setParameter('registry.globals.registry_class', $config['globals']['registry_class']);
+        $container->setParameter('registry.globals.default_values', $config['globals']['default_values']);
         $container->setParameter('registry.globals.delimiter', $config['globals']['delimiter']);
 
         if ('doctrine' === $config['globals']['engine']) {

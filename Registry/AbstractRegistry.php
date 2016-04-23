@@ -149,7 +149,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
         $this->use_yaml = false;
         $this->yaml = null;
 
-        $filename = $container->getParameter('registry.globals.defaultvalues');
+        $filename = $container->getParameter('registry.globals.default_values');
 
         $this->use_yaml = file_exists($filename);
         if ($this->use_yaml) {
@@ -159,7 +159,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
         $this->delimiter = $container->getParameter('registry.globals.delimiter');
 
         // create the engine
-        $engine_type = $container->getParameter('registry');
+        $engine_type = $container->getParameter('registry.globals.engine');
 
         $this->engine = RegistryEngineFactory::build($engine_type, $container);
     }

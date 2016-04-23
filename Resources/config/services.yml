@@ -1,4 +1,4 @@
 services:
     registry:
-        class: %registry_class%
-        arguments: [ @service_container ]
+        class: "%registry.globals.registry_class%"
+        arguments: [ "@service_container" ]
