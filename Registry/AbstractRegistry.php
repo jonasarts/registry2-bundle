@@ -165,16 +165,36 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     }
 
     /**
-     * @param string             $engine
+     * @param string             $engine_type
      * @param ContainerInterface $container
      *
      * @return Registry
      */
-    public function switchEngine($engine, ContainerInterface $container)
+    public function switchEngineType($engine_type, ContainerInterface $container)
     {
-        $this->engine = RegistryEngineFactory::build($engine, $container);
+        $this->engine = RegistryEngineFactory::build($engine_type, $container);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEngineType()
+    {
+        return get_class($this->engine);
+    }
+
+    /**
+     * @param string $engine_type
+     * @return bool
+     */
+    public function isEngineType($engine_type)
+    {
+        $requested_engine_class = 'jonasarts\\Bundle\\RegistryBundle\\Engines\\'.ucwords($engine_type).'RegistryEngine';
+        $current_engine_class = $this->getEngineType();
+
+        return $requested_engine_class == $current_engine_class;
     }
 
     /**

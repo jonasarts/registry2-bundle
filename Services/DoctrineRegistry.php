@@ -30,10 +30,10 @@ class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
      */
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct($container);
+        
         // get entity manager
         $this->em = $container->get('doctrine.orm.entity_manager');
-
-        parent::__construct($container);
     }
 
     /**

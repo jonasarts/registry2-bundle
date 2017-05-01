@@ -14,11 +14,10 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "symfony/framework-bundle": "^2.7 || ^3.0",
+        "symfony/framework-bundle": "~2.7|~3.0",
         "snc/redis-bundle": "2.x-dev"
     },
     "autoload": {
-        "psr-0": { "jonasarts\\Bundle\\RegistryBundle": "" }
-    },
-    "target-dir": "jonasarts/Bundle/RegistryBundle"
+        "psr-4": { "jonasarts\\Bundle\\RegistryBundle": "" }
+    }
 }
