@@ -433,12 +433,12 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     {
         // validate registry key - delimiter is not allowed
         if (strpos($key, $this->delimiter) !== false) {
-            return false;
+            // why
         }
 
-        // validate name - delimiter is not allowed
+        // validate name - delimiter is not allowed in name
         if (strpos($name, $this->delimiter) !== false) {
-            return false;
+            throw new \Exception('delimiter is not allowed in name');
         }
 
         // value = default key value?
@@ -710,12 +710,12 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     {
         // validate registry key - delimiter is not allowed
         if (strpos($key, $this->delimiter) !== false) {
-            return false;
+            // why ?
         }
 
-        // validate name - delimiter is not allowed
+        // validate name - delimiter is not allowed in name
         if (strpos($name, $this->delimiter) !== false) {
-            return false;
+            throw new \Exception('delimiter is not allowed in name');
         }
 
         // convert type
