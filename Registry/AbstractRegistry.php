@@ -265,7 +265,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      * @param mixed  $default
      *
@@ -364,7 +364,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      *
      * @return mixed
@@ -396,7 +396,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      *
      * @return mixed
@@ -423,7 +423,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      * @param mixed  $value
      *
@@ -551,7 +551,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * If no key is found, the default value will be returned.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string type
      * @param mixed $default
      *
@@ -643,7 +643,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * Read system key from database.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string type
      *
      * @return mixed
@@ -674,7 +674,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * Read system key from database and delete it immediately.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      *
      * @return mixed
@@ -700,7 +700,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * Write system key to database.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string type
      * @param mixed value
      *
