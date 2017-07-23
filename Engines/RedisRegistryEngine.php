@@ -84,6 +84,12 @@ class RedisRegistryEngine implements AbstractRegistryInterface
         return $this->redis->hSet($this->getHashKey($key, $user_id), $name.$this->delimiter.$type, $value) !== false;
     }
 
+    // expire
+    public function registrySetTimeout($user_id, $key, $name, $seconds)
+    {
+        return $this->redis->setTimeout( this is not working as long as hset has no expire , $seconds);
+    }
+
     // exists
     public function systemExists($systemkey, $name, $type)
     {
@@ -106,5 +112,11 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     public function systemWrite($systemkey, $name, $type, $value)
     {
         return $this->redis->hSet($this->getHashKey($systemkey), $name.$this->delimiter.$type, $value) !== false;
+    }
+
+    // expire
+    public function systemSetTimeout($systemkey, $name, $seconds)
+    {
+        return $this->redis->setTimeout( this is not working as long as hset has no expire , $seconds);
     }
 }

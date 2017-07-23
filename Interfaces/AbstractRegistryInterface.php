@@ -30,6 +30,8 @@ interface AbstractRegistryInterface
     public function registryRead($userid, $key, $name, $type);
     // set
     public function registryWrite($userid, $key, $name, $type, $value);
+    // expire
+    public function registrySetTimeout($user_id, $key, $name, $seconds);
 
     /**
      * System Key Methods.
@@ -43,4 +45,6 @@ interface AbstractRegistryInterface
     public function systemRead($key, $name, $type);
     // set
     public function systemWrite($key, $name, $type, $value);
+    // expire
+    public function systemSetTimeout($key, $name, $seconds);
 }

@@ -91,6 +91,12 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
         return !is_null($entity);
     }
 
+    // expire
+    public function registrySetTimeout($user_id, $key, $name, $seconds)
+    {
+        return false;
+    }
+
     // exists
     public function systemExists($key, $name, $type)
     {
@@ -140,5 +146,11 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
         $this->em->flush();
 
         return !is_null($entity);
+    }
+
+    // expire
+    public function systemSetTimeout($key, $name, $seconds)
+    {
+        return false;
     }
 }

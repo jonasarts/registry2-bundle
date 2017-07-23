@@ -265,7 +265,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      * @param mixed  $default
      *
@@ -364,7 +364,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      *
      * @return mixed
@@ -396,7 +396,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      *
      * @return mixed
@@ -423,7 +423,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @param int    $user_id
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      * @param mixed  $value
      *
@@ -484,6 +484,23 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     public function rw($uid, $k, $n, $t, $v)
     {
         return $this->registryWrite($uid, $k, $n, $t, $v);
+    }
+
+    /* special methods - system */
+
+    /**
+     * Expires a key in database in given seconds.
+     * 
+     * @param int    $user_id
+     * @param string $key
+     * @param string $name
+     * @param int    $seconds
+     *
+     * @return bool
+     */
+    public function registrySetTimeout($user_id, $key, $name, $seconds)
+    {
+        return $this->engine->registrySetTimeout($user_id, $key, $name, $seconds);
     }
 
     /**
@@ -551,7 +568,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * If no key is found, the default value will be returned.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string type
      * @param mixed $default
      *
@@ -643,7 +660,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * Read system key from database.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string type
      *
      * @return mixed
@@ -674,7 +691,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * Read system key from database and delete it immediately.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string $type
      *
      * @return mixed
@@ -700,7 +717,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * Write system key to database.
      * 
      * @param string $key
-     * @param string $string
+     * @param string $name
      * @param string type
      * @param mixed value
      *
@@ -748,5 +765,21 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     public function sw($k, $n, $t, $v)
     {
         return $this->systemWrite($k, $n, $t, $v);
+    }
+
+    /* special methods - system */
+
+    /**
+     * Expires a key in database in given seconds.
+     * 
+     * @param string $key
+     * @param string $name
+     * @param int    $seconds
+     *
+     * @return bool
+     */
+    public function systemSetTimeout($key, $name, $seconds)
+    {
+        return $this->engine->systemSetTimeout($key, $name, $seconds);
     }
 }
