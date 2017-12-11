@@ -14,11 +14,11 @@
     ],
     "require": {
         "php": "^7.1",
+        "predis/predis": "^1.0",
         "symfony/dependency-injection": "^4.0",
         "snc/redis-bundle": "^2.0"
     },
     "require-dev": {
-        "predis/predis": "^1.0",
         "symfony/form": "^4.0",
         "twig/twig": "^2.4.4"
     },
