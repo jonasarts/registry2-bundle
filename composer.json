@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "symfony/form": "^4.0",
-        "twig/twig": "^2.4.4",
+        "twig/twig": "^2.4.4"
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "" }
