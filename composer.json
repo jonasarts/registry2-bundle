@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.1",
         "symfony/dependency-injection": "^4.0",
         "snc/redis-bundle": "^2.0"
     },
