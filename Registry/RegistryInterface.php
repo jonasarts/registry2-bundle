@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Interfaces;
+namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 /**
  * RegistryInterface.
  * 
- * Interface to the registry service
+ * Extended interface to the 'basic' registry service
  */
 interface RegistryInterface extends AbstractRegistryInterface
 {

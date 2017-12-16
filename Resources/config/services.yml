@@ -2,3 +2,12 @@ services:
     registry:
         class: "%registry.globals.registry_class%"
         arguments: [ "@service_container" ]
+        public: true
+
+    jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry: 
+        arguments: [ "@service_container" ]
+
+    jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry:
+        arguments: [ "@service_container" ]
+
+    jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface: '@registry'

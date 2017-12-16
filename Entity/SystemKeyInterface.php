@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Interfaces;
+namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 /**
  * SystemKeyInterface.

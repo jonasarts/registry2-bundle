@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Form\Type;
+namespace jonasarts\Bundle\RegistryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +17,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
+
+/**
+ * Symfony Form
+ */
 class SystemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -51,7 +56,7 @@ class SystemType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'jonasarts\Bundle\RegistryBundle\Model\SystemKey',
+            'data_class' => SystemKey::class,
             'mode' => null,
         ));
     }

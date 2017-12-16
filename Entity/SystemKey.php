@@ -9,22 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Model;
+namespace jonasarts\Bundle\RegistryBundle\Entity;
 
-use jonasarts\Bundle\RegistryBundle\Interfaces\RegistryKeyInterface;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
 
 /**
- * RegistryKey.
+ * SystemKey.
  * 
- * Stores a user value
+ * Stores a global/system value
  */
-class RegistryKey implements RegistryKeyInterface
+class SystemKey implements SystemKeyInterface
 {
-    /**
-     * @var int;
-     */
-    private $user_id;
-
     /**
      * @var string
      */
@@ -46,37 +41,13 @@ class RegistryKey implements RegistryKeyInterface
     private $value;
 
     /**
-     * Entitiy to string.
+     * Entity to string.
      * 
      * @return string
      */
     public function __toString()
     {
-        return $this->user_id.' - '.$this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
-    }
-
-    /**
-     * Get user_id.
-     *
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    /**
-     * Set user_id.
-     *
-     * @param int $user_id
-     *
-     * @return RegistryKey
-     */
-    public function setUserId($user_id)
-    {
-        $this->user_id = $user_id;
-
-        return $this;
+        return $this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
     }
 
     /**
@@ -93,8 +64,7 @@ class RegistryKey implements RegistryKeyInterface
      * Set key.
      *
      * @param string $key
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public function setKey($key)
     {
@@ -117,8 +87,7 @@ class RegistryKey implements RegistryKeyInterface
      * Set name.
      *
      * @param string $name
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public function setName($name)
     {
@@ -141,8 +110,7 @@ class RegistryKey implements RegistryKeyInterface
      * Set type.
      *
      * @param string $type
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public function setType($type)
     {
@@ -165,8 +133,7 @@ class RegistryKey implements RegistryKeyInterface
      * Set value.
      *
      * @param string $value
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public function setValue($value)
     {
@@ -180,51 +147,46 @@ class RegistryKey implements RegistryKeyInterface
      */
     public function serialize()
     {
-        $a = array();
-        $a['user_id'] = $this->user_id;
-        $a['key'] = $this->key;
-        $a['name'] = $this->name;
-        $a['type'] = $this->type;
-        $a['value'] = $this->value;
+        $array = array();
+        $array['key'] = $this->key;
+        $array['name'] = $this->name;
+        $array['type'] = $this->type;
+        $array['value'] = $this->value;
 
-        return json_encode($a);
+        return json_encode($array);
     }
 
     /**
      * @param string $string
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public static function deserialize($string)
     {
         $object = json_decode($string);
 
-        $registry_key = new self();
+        $system_key = new self();
 
-        $registry_key->user_id = $object->user_id;
-        $registry_key->key = $object->key;
-        $registry_key->name = $object->name;
-        $registry_key->type = $object->type;
-        $registry_key->value = $object->value;
+        $system_key->key = $object->key;
+        $system_key->name = $object->name;
+        $system_key->type = $object->type;
+        $system_key->value = $object->value;
 
-        return $registry_key;
+        return $system_key;
     }
 
     /**
      * @param array $array
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public static function fromArray($array)
     {
-        $registry_key = new self();
+        $system_key = new self();
 
-        $registry_key->user_id = $array['user_id'];
-        $registry_key->key = $array['key'];
-        $registry_key->name = $array['name'];
-        $registry_key->type = $array['type'];
-        $registry_key->value = $array['value'];
+        $system_key->key = $array['key'];
+        $system_key->name = $array['name'];
+        $system_key->type = $array['type'];
+        $system_key->value = $array['value'];
 
-        return $registry_key;
+        return $system_key;
     }
 }

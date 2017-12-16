@@ -9,14 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Services;
+namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Interfaces\RegistryInterface;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
+
+use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
 
 /**
  * DoctrineRegistry.
+ * 
+ * Implementation of AbstractRegistry using doctrine for persistence.
  */
 class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
 {
@@ -42,7 +47,7 @@ class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
     public function registryAll()
     {
         $entities = $this->em
-            ->getRepository('RegistryBundle:RegistryKeyEntity')
+            ->getRepository(RegistryKeyEntity::class)
             ->findAll();
 
         return $entities;
@@ -54,7 +59,7 @@ class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
     public function systemAll()
     {
         $entities = $this->em
-            ->getRepository('RegistryBundle:SystemKeyEntity')
+            ->getRepository(SystemKeyEntity::class)
             ->findAll();
 
         return $entities;

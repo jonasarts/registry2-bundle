@@ -9,25 +9,25 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Model;
+namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use jonasarts\Bundle\RegistryBundle\Interfaces\RegistryKeyInterface;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
 
 /**
- * RegistryKeyEntity.
- * 
- * Doctrine-mapped RegistryKey entity
+ * SystemKeyEntity.
  *
+ * Doctrine-mapped SystemKey entity
+ * 
  * @ORM\Entity()
- * @ORM\Table(name="registry",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="uix_userid_key_name", columns={"userid", "registrykey", "name"})}
+ * @ORM\Table(name="system",
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="uix_key_name", columns={"systemkey", "name"})}
  * )
- * @UniqueEntity({"name", "registrykey", "userid"})
+ * @UniqueEntity({"name", "systemkey"})
  */
-class RegistryKeyEntity implements RegistryKeyInterface
+class SystemKeyEntity implements SystemKeyInterface
 {
     /**
      * @var int
@@ -39,14 +39,9 @@ class RegistryKeyEntity implements RegistryKeyInterface
     private $id;
 
     /**
-     * @var int;
-     * @ORM\Column(name="userid", type="integer") 
-     */
-    private $user_id;
-
-    /**
      * @var string
-     * @ORM\Column(name="registrykey", type="string", length=255, nullable=false)
+     * 
+     * @ORM\Column(name="systemkey", type="string", length=255, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
      */
@@ -54,6 +49,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @var string
+     * 
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
@@ -62,14 +58,16 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @var string
+     * 
      * @ORM\Column(name="type", type="string", length=1, nullable=false)
      * @Assert\NotBlank
-     * @Assert\Length(min = 1, max = 1)
+     * @Assert\Length(min = 1, max = 1)) 
      */
     private $type;
 
     /**
      * @var string
+     * 
      * @ORM\Column(name="value", type="text", nullable=true)
      */
     private $value;
@@ -81,7 +79,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      */
     public function __toString()
     {
-        return $this->user_id.' - '.$this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
+        return $this->key.'/'.$this->name.' => '.$this->value.' ('.$this->type.')';
     }
 
     /**
@@ -95,35 +93,10 @@ class RegistryKeyEntity implements RegistryKeyInterface
     }
 
     /**
-     * Set user_id.
-     *
-     * @param int $user_id
-     *
-     * @return Registry
-     */
-    public function setUserId($user_id)
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    /**
-     * Get user_id.
-     *
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    /**
      * Set key.
      *
      * @param string $key
-     *
-     * @return Registry
+     * @return System
      */
     public function setKey($key)
     {
@@ -146,8 +119,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set name.
      *
      * @param string $name
-     *
-     * @return Registry
+     * @return System
      */
     public function setName($name)
     {
@@ -170,8 +142,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set type.
      *
      * @param string $type
-     *
-     * @return Registry
+     * @return System
      */
     public function setType($type)
     {
@@ -194,8 +165,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set value.
      *
      * @param string $value
-     *
-     * @return Registry
+     * @return System
      */
     public function setValue($value)
     {
@@ -219,33 +189,30 @@ class RegistryKeyEntity implements RegistryKeyInterface
      */
     public function serialize()
     {
-        $a = array();
-        $a['user_id'] = $this->user_id;
-        $a['key'] = $this->key;
-        $a['name'] = $this->name;
-        $a['type'] = $this->type;
-        $a['value'] = $this->value;
+        $array = array();
+        $array['key'] = $this->key;
+        $array['name'] = $this->name;
+        $array['type'] = $this->type;
+        $array['value'] = $this->value;
 
-        return json_encode($a);
+        return json_encode($array);
     }
 
     /**
      * @param string $string
-     *
-     * @return RegistryKey
+     * @return SystemKey
      */
     public static function deserialize($string)
     {
         $object = json_decode($string);
 
-        $registry_key = new RegistryKey();
+        $system_key = new SystemKey();
 
-        $registry_key->user_id = $object->user_id;
-        $registry_key->key = $object->key;
-        $registry_key->name = $object->name;
-        $registry_key->type = $object->type;
-        $registry_key->value = $object->value;
+        $system_key->key = $object->key;
+        $system_key->name = $object->name;
+        $system_key->type = $object->type;
+        $system_key->value = $object->value;
 
-        return $registry_key;
+        return $system_key;
     }
 }

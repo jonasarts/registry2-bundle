@@ -21,9 +21,7 @@ class RegistryEngineFactory
     /**
      * @param string             $engine_type
      * @param ContainerInterface $container
-     *
      * @return RegistryEngineInterface
-     *
      * @throws Exception
      */
     public static function build($engine_type, ContainerInterface $container)

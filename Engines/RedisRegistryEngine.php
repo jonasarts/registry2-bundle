@@ -12,12 +12,16 @@
 namespace jonasarts\Bundle\RegistryBundle\Engines;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Interfaces\AbstractRegistryInterface;
+use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 
+/**
+ * 
+ */
 class RedisRegistryEngine implements AbstractRegistryInterface
 {
     // redis hash key part for registry keys
     const REGISTRY_TYPE = 'registry';
+    
     // redis hash key part for system keys
     const SYSTEM_TYPE = 'system';
 

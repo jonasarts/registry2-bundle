@@ -12,10 +12,13 @@
 namespace jonasarts\Bundle\RegistryBundle\Engines;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Interfaces\AbstractRegistryInterface;
-use jonasarts\Bundle\RegistryBundle\Model\RegistryKeyEntity as RegKey;
-use jonasarts\Bundle\RegistryBundle\Model\SystemKeyEntity as SysKey;
+use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
+use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 
+/**
+ * 
+ */
 class DoctrineRegistryEngine implements AbstractRegistryInterface
 {
     // entity manager
@@ -23,6 +26,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
 
     // doctrine repository for registry keys
     private $registry;
+
     // doctrine repository for system keys
     private $system;
 
@@ -35,8 +39,8 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
         $this->em = $container->get('doctrine.orm.entity_manager');
 
         // get repositories
-        $this->registry = $this->em->getRepository('RegistryBundle:RegistryKeyEntity');
-        $this->system = $this->em->getRepository('RegistryBundle:SystemKeyEntity');
+        $this->registry = $this->em->getRepository(RegKey::class);
+        $this->system = $this->em->getRepository(SysKey::class);
     }
 
     // exists

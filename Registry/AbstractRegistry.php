@@ -14,8 +14,11 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
 use jonasarts\Bundle\RegistryBundle\Factory\RegistryEngineFactory;
-use jonasarts\Bundle\RegistryBundle\Interfaces\AbstractRegistryInterface;
+use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 
+/**
+ * The registry logic
+ */
 abstract class AbstractRegistry implements AbstractRegistryInterface
 {
     /**
@@ -28,18 +31,29 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      */
     protected $engine;
 
-    // boolean, use default key-name/value array
+    /**
+     * boolean, use default key-name/value array
+     * 
+     * @var bool
+     */
     protected $use_yaml;
 
-    // default key-name/value array
+    /**
+     * default key-name/value array
+     * 
+     * @var array
+     */
     protected $yaml;
 
-    // field delimiter
+    /**
+     * field delimiter
+     * 
+     * @var string
+     */
     protected $delimiter;
 
     /**
      * @param string $type
-     *
      * @return string
      */
     private function optimizeType($type)
@@ -85,7 +99,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return mixed
      */
     private function readDefaultKeyValue($realm, $key, $name, $type)
@@ -167,7 +180,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     /**
      * @param string             $engine_type
      * @param ContainerInterface $container
-     *
      * @return Registry
      */
     public function switchEngineType($engine_type, ContainerInterface $container)
@@ -210,7 +222,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return bool
      */
     public function registryExists($user_id, $key, $name, $type)
@@ -238,7 +249,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return bool
      */
     public function registryDelete($user_id, $key, $name, $type)
@@ -268,7 +278,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $name
      * @param string $type
      * @param mixed  $default
-     *
      * @return mixed
      */
     public function registryReadDefault($user_id, $key, $name, $type, $default)
@@ -366,7 +375,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return mixed
      */
     public function registryRead($user_id, $key, $name, $type)
@@ -398,7 +406,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return mixed
      */
     public function registryReadOnce($user_id, $key, $name, $type)
@@ -426,7 +433,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $name
      * @param string $type
      * @param mixed  $value
-     *
      * @return bool
      */
     public function registryWrite($user_id, $key, $name, $type, $value)
@@ -498,7 +504,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return bool
      */
     public function systemExists($key, $name, $type)
@@ -525,7 +530,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return bool
      */
     public function systemDelete($key, $name, $type)
@@ -554,7 +558,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $name
      * @param string type
      * @param mixed $default
-     *
      * @return mixed
      */
     public function systemReadDefault($key, $name, $type, $default)
@@ -645,7 +648,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string type
-     *
      * @return mixed
      */
     public function systemRead($key, $name, $type)
@@ -676,7 +678,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $key
      * @param string $name
      * @param string $type
-     *
      * @return mixed
      */
     public function systemReadOnce($key, $name, $type)
@@ -703,7 +704,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $name
      * @param string type
      * @param mixed value
-     *
      * @return bool
      */
     public function systemWrite($key, $name, $type, $value)

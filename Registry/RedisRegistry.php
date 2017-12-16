@@ -9,16 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Services;
+namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Interfaces\RegistryInterface;
-use jonasarts\Bundle\RegistryBundle\Model\RegistryKey as RegKey;
-use jonasarts\Bundle\RegistryBundle\Model\SystemKey as SysKey;
+use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * RedisRegistry.
+ * 
+ * Implementation of AbstractRegistry using redis for persistence.
  */
 class RedisRegistry extends AbstractRegistry implements RegistryInterface
 {

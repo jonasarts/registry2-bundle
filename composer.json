@@ -13,14 +13,22 @@
         }
     ],
     "require": {
+        "doctrine/orm": "^2.5",
         "php": "^7.1",
         "predis/predis": "^1.0",
         "symfony/dependency-injection": "^4.0",
+        "symfony/validator": "^4.0",
         "snc/redis-bundle": "^2.0"
     },
     "require-dev": {
         "symfony/form": "^4.0",
         "twig/twig": "^2.4.4"
+    },
+    "suggest": {
+        "sensio/framework-extra-bundle": "If you want to use the builtin controller.",
+        "symfony/form": "If you want to use the builtin controller.",
+        "symfony/framework-bundle": "If you want to user the bultin controller.",
+        "predis/predis": "If you want to use predis.",
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "" }
