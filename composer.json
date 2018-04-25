@@ -18,7 +18,7 @@
         "snc/redis-bundle": "2.*"
     },
     "autoload": {
-        "psr-0": { "jonasarts\\Bundle\\RegistryBundle": "" }
+        "psr-0": { "jonasarts\\Bundle\\RegistryBundle\\": "" }
     },
     "target-dir": "jonasarts/Bundle/RegistryBundle"
 }
