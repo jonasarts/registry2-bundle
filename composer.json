@@ -16,7 +16,7 @@
         "doctrine/orm": "^2.5",
         "php": "^7.1",
         "predis/predis": "^1.0",
-        "symfony/dependency-injection": "^4.0",
+        "symfony/dependency-injection": "^3.0|^4.0",
         "symfony/validator": "^3.0|^4.0",
         "snc/redis-bundle": "^2.0"
     },
