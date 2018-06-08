@@ -13,7 +13,6 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
-use jonasarts\Bundle\RegistryBundle\Factory\RegistryEngineFactory;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 
 /**

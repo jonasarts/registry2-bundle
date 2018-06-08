@@ -14,11 +14,8 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Engines\DoctrineRegistryEngine;
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity;
-use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
-
 
 /**
  * DoctrineRegistry.
@@ -28,9 +25,9 @@ use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
 {
     /**
-     * 
+     * Constructor
      */
-    public function __constructor(ContainerInterface $container, EntityManagerInterface $em)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
     {
         parent::__construct($container);
 

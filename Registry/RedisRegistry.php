@@ -24,7 +24,7 @@ use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 class RedisRegistry extends AbstractRegistry implements RegistryInterface
 {
     /**
-     * 
+     * Constructor
      */
     public function __construct(ContainerInterface $container, $redis)
     {
