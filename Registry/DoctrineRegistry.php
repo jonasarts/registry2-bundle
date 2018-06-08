@@ -11,12 +11,14 @@
 
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use jonasarts\Bundle\RegistryBundle\Engines\DoctrineRegistryEngine;
+use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity;
-use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
 
 /**
  * DoctrineRegistry.
@@ -26,42 +28,13 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
 class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
 {
     /**
-     * @var EntityManager
+     * 
      */
-    private $em;
-
-    /**
-     * Constructor.
-     */
-    public function __construct(ContainerInterface $container)
+    public function __constructor(ContainerInterface $container, EntityManagerInterface $em)
     {
         parent::__construct($container);
-        
-        // get entity manager
-        $this->em = $container->get('doctrine.orm.entity_manager');
-    }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function registryAll()
-    {
-        $entities = $this->em
-            ->getRepository(RegistryKeyEntity::class)
-            ->findAll();
-
-        return $entities;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function systemAll()
-    {
-        $entities = $this->em
-            ->getRepository(SystemKeyEntity::class)
-            ->findAll();
-
-        return $entities;
+        // create the engine
+        $this->engine = new DoctrineRegistryEngine($container, $em);
     }
 }

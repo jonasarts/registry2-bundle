@@ -14,12 +14,9 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 /**
  * RegistryInterface.
  * 
- * Extended interface to the 'basic' registry service
+ * Interface to the registry service
  */
 interface RegistryInterface extends AbstractRegistryInterface
 {
-    // all registry keys
-    public function registryAll();
-    // all system keys
-    public function systemAll();
+
 }

@@ -12,8 +12,7 @@
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
-use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
+use jonasarts\Bundle\RegistryBundle\Engines\RedisRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
@@ -25,77 +24,13 @@ use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 class RedisRegistry extends AbstractRegistry implements RegistryInterface
 {
     /**
-     * Constructor.
+     * 
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $redis)
     {
         parent::__construct($container);
-    }
 
-    /**
-     * @return array
-     */
-    public function registryAll()
-    {
-        $delimiter = $this->delimiter;
-        $alias = $this->container->getParameter('registry.redis.alias');
-        $prefix = $this->container->getParameter('registry.redis.prefix');
-
-        $redis = $this->container->get('snc_redis.'.$alias);
-        $keys = $redis->keys($prefix.$delimiter.'registry'.$delimiter.'*');
-
-        $entities = array();
-
-        foreach ($keys as $key) {
-            $values = $redis->hgetall($key);
-            foreach ($values as $name => $value) {
-                $k = explode($delimiter, $key, 4);
-                $n = explode($delimiter, $name);
-
-                $array = array();
-                $array['user_id'] = $k[2];
-                $array['key'] = $k[3];
-                $array['name'] = $n[0];
-                $array['type'] = $n[1];
-                $array['value'] = $value;
-
-                $entities[] = RegKey::fromArray($array);
-            }
-        }
-
-        return $entities;
-    }
-
-    /**
-     * @return array
-     */
-    public function systemAll()
-    {
-        $delimiter = $this->delimiter;
-        $alias = $this->container->getParameter('registry.redis.alias');
-        $prefix = $this->container->getParameter('registry.redis.prefix');
-
-        $redis = $this->container->get('snc_redis.'.$alias);
-        $keys = $redis->keys($prefix.$delimiter.'system'.$delimiter.'*');
-
-        $entities = array();
-
-        foreach ($keys as $key) {
-            $values = $redis->hgetall($key);
-            foreach ($values as $name => $value) {
-                $k = explode($delimiter, $key, 3);
-                $n = explode($delimiter, $name);
-
-                $array = array();
-                $array['key'] = $k[2];
-                $array['name'] = $n[0];
-                $array['type'] = $n[1];
-                $array['value'] = $value;
-
-                $entities[] = SysKey::fromArray($array);
-            }
-        }
-
-        return $entities;
+        // create the engine
+        $this->engine = new RedisRegistryEngine($container, $redis);
     }
 }

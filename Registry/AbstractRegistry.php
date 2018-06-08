@@ -22,11 +22,6 @@ use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 abstract class AbstractRegistry implements AbstractRegistryInterface
 {
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * @var RegistryEngineInterface
      */
     protected $engine;
@@ -157,8 +152,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
-
         $this->use_yaml = false;
         $this->yaml = null;
 
@@ -169,44 +162,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
             $this->yaml = Yaml::parse($filename); // load yaml file into array
         }
 
-        $this->delimiter = $container->getParameter('registry.globals.delimiter');
-
-        // create the engine
-        $engine_type = $container->getParameter('registry.globals.engine');
-
-        $this->engine = RegistryEngineFactory::build($engine_type, $container);
-    }
-
-    /**
-     * @param string             $engine_type
-     * @param ContainerInterface $container
-     * @return Registry
-     */
-    public function switchEngineType($engine_type, ContainerInterface $container)
-    {
-        $this->engine = RegistryEngineFactory::build($engine_type, $container);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEngineType()
-    {
-        return get_class($this->engine);
-    }
-
-    /**
-     * @param string $engine_type
-     * @return bool
-     */
-    public function isEngineType($engine_type)
-    {
-        $requested_engine_class = 'jonasarts\\Bundle\\RegistryBundle\\Engines\\'.ucwords($engine_type).'RegistryEngine';
-        $current_engine_class = $this->getEngineType();
-
-        return $requested_engine_class == $current_engine_class;
     }
 
     /**
@@ -493,6 +448,14 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     }
 
     /**
+     * 
+     */
+    public function registryAll()
+    {
+        return $this->engine->registryAll();
+    }
+
+    /**
      * --------------
      * System Methods
      * --------------.
@@ -748,5 +711,13 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     public function sw($k, $n, $t, $v)
     {
         return $this->systemWrite($k, $n, $t, $v);
+    }
+
+    /**
+     * 
+     */
+    public function systemAll()
+    {
+        return $this->engine->systemAll();
     }
 }

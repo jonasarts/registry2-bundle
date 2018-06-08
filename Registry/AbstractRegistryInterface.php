@@ -31,6 +31,9 @@ interface AbstractRegistryInterface
     // set
     public function registryWrite($userid, $key, $name, $type, $value);
 
+    // all registry keys
+    public function registryAll();
+
     /**
      * System Key Methods.
      */
@@ -43,4 +46,7 @@ interface AbstractRegistryInterface
     public function systemRead($key, $name, $type);
     // set
     public function systemWrite($key, $name, $type, $value);
+
+    // all system keys
+    public function systemAll();
 }

@@ -11,6 +11,7 @@
 
 namespace jonasarts\Bundle\RegistryBundle\Engines;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
@@ -33,10 +34,10 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
     {
         // get entity manager
-        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->em = $em;
 
         // get repositories
         $this->registry = $this->em->getRepository(RegKey::class);
@@ -95,6 +96,18 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
         return !is_null($entity);
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function registryAll()
+    {
+        $entities = $this->em
+            ->getRepository(RegistryKeyEntity::class)
+            ->findAll();
+
+        return $entities;
+    }
+
     // exists
     public function systemExists($key, $name, $type)
     {
@@ -144,5 +157,17 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
         $this->em->flush();
 
         return !is_null($entity);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function systemAll()
+    {
+        $entities = $this->em
+            ->getRepository(SystemKeyEntity::class)
+            ->findAll();
+
+        return $entities;
     }
 }

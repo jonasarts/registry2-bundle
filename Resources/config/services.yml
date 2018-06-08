@@ -1,13 +1,9 @@
 services:
-    registry:
-        class: "%registry.globals.registry_class%"
-        arguments: [ "@service_container" ]
-        public: true
-
     jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry: 
-        arguments: [ "@service_container" ]
+        arguments: [ "@service_container", "@doctrine.orm.entity_manager" ]
 
     jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry:
-        arguments: [ "@service_container" ]
+        #arguments: [ "@service_container", "@snc_redis.phpredis.registry" ]
+        arguments: [ "@service_container", "@snc_redis.registry" ]
 
-    jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface: '@registry'
+    #jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface:  '@jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry'

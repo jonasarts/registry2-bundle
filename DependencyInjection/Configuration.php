@@ -54,13 +54,6 @@ class Configuration implements ConfigurationInterface
                             ->values(array('redis', 'doctrine'))
                             ->defaultValue('redis')
                         ->end()
-                        // registry class
-                        ->scalarNode('registry_class')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                            //->defaultValue('jonasarts\\Bundle\\RegistryBundle\\Registry\\DoctrineRegistry')
-                            ->defaultValue('jonasarts\\Bundle\\RegistryBundle\\Registry\\RedisRegistry')
-                        ->end()
                         // default registry key-value file
                         ->scalarNode('default_values')
                             ->defaultNull()
@@ -76,12 +69,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('redis')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        // alias
-                        ->scalarNode('alias')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                            ->defaultValue('registry')
-                        ->end()
                         // prefix
                         ->scalarNode('prefix')
                             ->isRequired()

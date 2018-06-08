@@ -12,6 +12,8 @@
 namespace jonasarts\Bundle\RegistryBundle\Engines;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 
 /**
@@ -25,43 +27,48 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     // redis hash key part for system keys
     const SYSTEM_TYPE = 'system';
 
-    // phpredis client
+    /**
+     * @var \Redis
+     * 
+     * phpredis client
+     * or
+     * predis client
+     */
     private $redis;
 
-    private $redis_prefix;
+    /**
+     * @var string
+     */
+    private $prefix;
 
+    /**
+     * @var string
+     */
     private $delimiter;
 
     /**
      * @param string $key
-     * @param int    $user_id optional
+     * @param int $user_id
      *
      * @return string
      */
     private function getHashKey($key, $user_id = null)
     {
         if (is_null($user_id)) {
-            return $this->redis_prefix.static::SYSTEM_TYPE.$this->delimiter.$key;
+            return $this->prefix.$this->delimiter.static::SYSTEM_TYPE.$this->delimiter.$key;
         } else {
-            return $this->redis_prefix.static::REGISTRY_TYPE.$this->delimiter.(string) $user_id.$this->delimiter.$key;
+            return $this->prefix.$this->delimiter.static::REGISTRY_TYPE.$this->delimiter.(string) $user_id.$this->delimiter.$key;
         }
     }
 
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $redis)
     {
+        $this->redis = $redis;
+        $this->prefix = $container->getParameter('registry.redis.prefix');
         $this->delimiter = $container->getParameter('registry.globals.delimiter');
-        $alias = $container->getParameter('registry.redis.alias');
-
-        // get redis
-        $this->redis = $container->get('snc_redis.'.$alias);
-
-        $this->redis_prefix = $container->getParameter('registry.redis.prefix');
-
-        // append delimiter to prefix
-        $this->redis_prefix .= $this->delimiter;
     }
 
     // exists
@@ -88,6 +95,38 @@ class RedisRegistryEngine implements AbstractRegistryInterface
         return $this->redis->hSet($this->getHashKey($key, $user_id), $name.$this->delimiter.$type, $value) !== false;
     }
 
+    /**
+     * @return array
+     */
+    public function registryAll()
+    {
+        $prefix = $this->prefix;
+        $delimiter = $this->delimiter;
+
+        $keys = $this->redis->keys($prefix.$delimiter.'registry'.$delimiter.'*');
+
+        $entities = array();
+
+        foreach ($keys as $key) {
+            $values = $this->redis->hGetAll($key);
+            foreach ($values as $name => $value) {
+                $k = explode($delimiter, $key, 4);
+                $n = explode($delimiter, $name);
+
+                $array = array();
+                $array['user_id'] = $k[2];
+                $array['key'] = $k[3];
+                $array['name'] = $n[0];
+                $array['type'] = $n[1];
+                $array['value'] = $value;
+
+                $entities[] = RegKey::fromArray($array);
+            }
+        }
+
+        return $entities;
+    }
+
     // exists
     public function systemExists($systemkey, $name, $type)
     {
@@ -110,5 +149,36 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     public function systemWrite($systemkey, $name, $type, $value)
     {
         return $this->redis->hSet($this->getHashKey($systemkey), $name.$this->delimiter.$type, $value) !== false;
+    }
+
+    /**
+     * @return array
+     */
+    public function systemAll()
+    {
+        $prefix = $this->prefix;
+        $delimiter = $this->delimiter;
+        
+        $keys = $this->redis->keys($prefix.$delimiter.'system'.$delimiter.'*');
+
+        $entities = array();
+
+        foreach ($keys as $key) {
+            $values = $this->redis->hGetAll($key);
+            foreach ($values as $name => $value) {
+                $k = explode($delimiter, $key, 3);
+                $n = explode($delimiter, $name);
+
+                $array = array();
+                $array['key'] = $k[2];
+                $array['name'] = $n[0];
+                $array['type'] = $n[1];
+                $array['value'] = $value;
+
+                $entities[] = SysKey::fromArray($array);
+            }
+        }
+
+        return $entities;
     }
 }

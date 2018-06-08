@@ -31,7 +31,6 @@ class RegistryExtension extends Extension
 
         // apply config globals
         $container->setParameter('registry.globals.engine', $config['globals']['engine']);
-        $container->setParameter('registry.globals.registry_class', $config['globals']['registry_class']);
         $container->setParameter('registry.globals.default_values', $config['globals']['default_values']);
         $container->setParameter('registry.globals.delimiter', $config['globals']['delimiter']);
 
@@ -39,7 +38,6 @@ class RegistryExtension extends Extension
             // apply config doctrine
         } elseif ('redis' === $config['globals']['engine']) {
             // apply config redis
-            $container->setParameter('registry.redis.alias', $config['redis']['alias']);
             $container->setParameter('registry.redis.prefix', $config['redis']['prefix']);
         }
 
