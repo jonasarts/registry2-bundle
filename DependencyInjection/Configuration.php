@@ -47,13 +47,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('globals')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        // engine
-                        ->enumNode('engine')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                            ->values(array('redis', 'doctrine'))
-                            ->defaultValue('redis')
-                        ->end()
                         // default registry key-value file
                         ->scalarNode('default_values')
                             ->defaultNull()

@@ -15,7 +15,6 @@
     "require": {
         "doctrine/orm": "^2.5",
         "php": "^7.1",
-        "predis/predis": "^1.0",
         "symfony/dependency-injection": "^3.0|^4.0",
         "symfony/validator": "^3.0|^4.0",
         "snc/redis-bundle": "^2.0|^3.0"
@@ -28,7 +27,7 @@
         "sensio/framework-extra-bundle": "If you want to use the builtin controller.",
         "symfony/form": "If you want to use the builtin controller.",
         "symfony/framework-bundle": "If you want to user the bultin controller.",
-        "predis/predis": "If you want to use predis."
+        "predis/predis": "If you want to use predis for RedisRegistry."
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "" }

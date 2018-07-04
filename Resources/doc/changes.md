@@ -1,6 +1,12 @@
 CHANGE LOG
 ==========
 
+V 4.0.0
+-------
+
+- Release for Symfony 4.x
+- Introduces some BC, no longer switching of engines
+
 V 2.1.0
 -------
 
