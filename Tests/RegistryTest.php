@@ -48,6 +48,8 @@ class RegistryTest extends WebTestCase
      */
     public function setUp()
     {
+        parent::setUp();
+        
         self::bootKernel();
 
         /*
@@ -68,7 +70,7 @@ class RegistryTest extends WebTestCase
         // gets the special container that allows fetching private services
         $container = self::$container;
 
-        $this->em = $container->get('doctrine');
+        $this->em = $container->get('doctrine')->getManager();
         $this->registry = $container->get('registry');
 
     }
@@ -79,6 +81,7 @@ class RegistryTest extends WebTestCase
     protected function tearDown()
     {
         parent::tearDown();
+
         $this->em->close();
     }
 
