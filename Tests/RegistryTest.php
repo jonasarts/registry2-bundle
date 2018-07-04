@@ -50,6 +50,7 @@ class RegistryTest extends WebTestCase
     {
         self::bootKernel();
 
+        /*
         $this->em = static::$kernel->getContainer()
             ->get('doctrine')
             ->getManager()
@@ -57,6 +58,19 @@ class RegistryTest extends WebTestCase
         $this->registry = static::$kernel->getContainer()
             ->get('registry')
         ;
+        */
+
+        // Symfony 4.1
+
+        // returns the real and unchanged service container
+        //$container = self::$kernel->getContainer();
+
+        // gets the special container that allows fetching private services
+        $container = self::$container;
+
+        $this->em = $container->get('doctrine');
+        $this->registry = $container->get('registry');
+
     }
 
     /**
