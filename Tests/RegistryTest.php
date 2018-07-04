@@ -80,9 +80,28 @@ class RegistryTest extends WebTestCase
      */
     protected function tearDown()
     {
-        parent::tearDown();
+
+        // remove all test keys so no key remains in storage
+        $r = $this->registry->registryDelete(self::_user, 'key', 'name_bln', 'bln');
+        $r = $this->registry->registryDelete(0, 'key', 'name_bln', 'bln');
+        $r = $this->registry->registryDelete(self::_user, 'key', 'name_int', 'int');
+        $r = $this->registry->registryDelete(0, 'key', 'name_int', 'int');
+        $r = $this->registry->registryDelete(self::_user, 'key', 'name_str', 'str');
+        $r = $this->registry->registryDelete(0, 'key', 'name_str', 'str');
+        $r = $this->registry->registryDelete(self::_user, 'key', 'name_flt', 'flt');
+        $r = $this->registry->registryDelete(0, 'key', 'name_flt', 'flt');
+        $r = $this->registry->registryDelete(self::_user, 'key', 'name_dat', 'dat');
+        $r = $this->registry->registryDelete(0, 'key', 'name_dat', 'dat');
+
+        $r = $this->registry->systemDelete('key', 'name_bln', 'bln');
+        $r = $this->registry->systemDelete('key', 'name_int', 'int');
+        $r = $this->registry->systemDelete('key', 'name_str', 'str');
+        $r = $this->registry->systemDelete('key', 'name_flt', 'flt');
+        $r = $this->registry->systemDelete('key', 'name_dat', 'dat');
 
         $this->em->close();
+
+        parent::tearDown();
     }
 
     /**
