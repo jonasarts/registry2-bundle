@@ -16,7 +16,7 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
  * 
  * Interface to the registry service
  */
-interface RegistryInterface extends AbstractRegistryInterface
+interface RegistryInterface
 {
-
+    
 }

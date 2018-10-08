@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -13,15 +15,21 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
-use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * The registry logic
+ * 
+ * This class contains the business logic for registry keys !!!
  */
-abstract class AbstractRegistry implements AbstractRegistryInterface
+abstract class AbstractRegistry implements RegistryInterface
 {
     /**
-     * @var RegistryEngineInterface
+     * 
+     * This is not so good design, currently there is no RegistryEngineInterface,
+     * there is simply the RegistryInterface re-used
+     * 
+     * @var RegistryInterface
      */
     protected $engine;
 
@@ -40,7 +48,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     protected $yaml;
 
     /**
-     * field delimiter
+     * field delimiter (used in yaml)
      * 
      * @var string
      */
@@ -89,64 +97,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     }
 
     /**
-     * @param string $realm
-     * @param string $key
-     * @param string $name
-     * @param string $type
-     * @return mixed
-     */
-    private function readDefaultKeyValue($realm, $key, $name, $type)
-    {
-        // convert type
-        $type = $this->optimizeType($type);
-
-        // default key-name/value
-        if (is_array($this->yaml) && is_array($this->yaml[$realm]) && array_key_exists($key.$this->key_name_delimiter.$name, $this->yaml[$realm])) {
-            $result = $this->yaml[$realm][$key.$this->key_name_delimiter.$name];
-        } else {
-            $result = null;
-        }
-
-        switch ($type) {
-            case 'i':
-                if (!is_int($result)) {
-                    $result = 0;
-                }
-                break;
-            case 'b':
-                if (!is_bool($result)) {
-                    $result = false;
-                }
-                break;
-            case 's':
-                if (!is_string($result)) {
-                    $result = '';
-                }
-                break;
-            case 'f':
-                if (!is_double($result)) {
-                    $result = 0.00;
-                }
-                break;
-            case 'd':
-            case 't':
-                if ($result instanceof \DateTime) {
-                    // nothing to do
-                } elseif (is_int($result)) {
-                    // nothing to do
-                } elseif (is_string($result)) {
-                    $result = strtotime($result);
-                }
-                break;
-            default:
-                // nothing
-                break;
-        }
-
-        return $result;
-    }
-
-    /**
      * Constructor.
      */
     public function __construct(ContainerInterface $container)
@@ -154,9 +104,11 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
         $this->use_yaml = false;
         $this->yaml = null;
 
+        $this->delimiter = ':';
+
         $filename = $container->getParameter('registry.globals.default_values');
 
-        $this->use_yaml = file_exists($filename);
+        $this->use_yaml = !is_null($filename) && file_exists($filename);
         if ($this->use_yaml) {
             $this->yaml = Yaml::parse($filename); // load yaml file into array
         }
@@ -171,6 +123,8 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
 
     /**
      * Check registry key in database.
+     * 
+     * This does not use User 0 fallback !
      *
      * @param int    $user_id
      * @param string $key
@@ -178,7 +132,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $type
      * @return bool
      */
-    public function registryExists($user_id, $key, $name, $type)
+    public function registryExists(int $user_id, string $key, string $name, string $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -191,7 +145,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see RegistryExists
      */
-    public function re($uid, $k, $n, $t)
+    public function re(int $uid, string $k, string $n, string $t): bool
     {
         return $this->registryExists($uid, $k, $n, $t);
     }
@@ -199,13 +153,15 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     /**
      * Delete registry key from database.
      * 
+     * This does not use User 0 fallback !
+     * 
      * @param int    $user_id
      * @param string $key
      * @param string $name
      * @param string $type
      * @return bool
      */
-    public function registryDelete($user_id, $key, $name, $type)
+    public function registryDelete(int $user_id, string $key, string $name, string $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -218,7 +174,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see RegistryDelete
      */
-    public function rd($uid, $k, $n, $t)
+    public function rd(int $uid, string $k, string $n, string $t): bool
     {
         return $this->registryDelete($uid, $k, $n, $t);
     }
@@ -234,7 +190,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param mixed  $default
      * @return mixed
      */
-    public function registryReadDefault($user_id, $key, $name, $type, $default)
+    public function registryReadDefault(int $user_id, string $key, string $name, string $type, $default)
     {
         // RegistryRead returns any found value as string or false if not found!
 
@@ -317,7 +273,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see RegistryReadDefault
      */
-    public function rrd($uid, $k, $n, $t, $d)
+    public function rrd(int $uid, string $k, string $n, string $t, $d)
     {
         return $this->registryReadDefault($uid, $k, $n, $t, $d);
     }
@@ -331,7 +287,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $type
      * @return mixed
      */
-    public function registryRead($user_id, $key, $name, $type)
+    public function registryRead(int $user_id, string $key, string $name, string $type)
     {
         $result = $this->registryReadDefault($user_id, $key, $name, $type, null);
 
@@ -348,7 +304,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see RegistryRead
      */
-    public function rr($uid, $k, $n, $t)
+    public function rr(int $uid, string $k, string $n, string $t)
     {
         return $this->registryRead($uid, $k, $n, $t);
     }
@@ -362,7 +318,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $type
      * @return mixed
      */
-    public function registryReadOnce($user_id, $key, $name, $type)
+    public function registryReadOnce(int $user_id, string $key, string $name, string $type)
     {
         $r = $this->registryRead($user_id, $key, $name, $type);
 
@@ -374,7 +330,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     /**
      * Short method to RegistryReadOnce.
      */
-    public function rro($uid, $k, $n, $t)
+    public function rro(int $uid, string $k, string $n, string $t)
     {
         return $this->registryReadOnce($uid, $k, $n, $t);
     }
@@ -389,11 +345,11 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param mixed  $value
      * @return bool
      */
-    public function registryWrite($user_id, $key, $name, $type, $value)
+    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
         // validate registry key - delimiter is not allowed
         if (strpos($key, $this->delimiter) !== false) {
-            // why
+            // why not ?
         }
 
         // validate name - delimiter is not allowed in name
@@ -441,7 +397,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see RegistryWrite
      */
-    public function rw($uid, $k, $n, $t, $v)
+    public function rw(int $uid, string $k, string $n, string $t, $v): bool
     {
         return $this->registryWrite($uid, $k, $n, $t, $v);
     }
@@ -449,7 +405,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     /**
      * 
      */
-    public function registryAll()
+    public function registryAll(): array
     {
         return $this->engine->registryAll();
     }
@@ -468,7 +424,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $type
      * @return bool
      */
-    public function systemExists($key, $name, $type)
+    public function systemExists(string $key, string $name, string $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -481,7 +437,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see SystemExits
      */
-    public function se($k, $n, $t)
+    public function se(string $k, string $n, string $t): bool
     {
         return $this->systemExists($k, $n, $t);
     }
@@ -494,7 +450,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $type
      * @return bool
      */
-    public function systemDelete($key, $name, $type)
+    public function systemDelete(string $key, string $name, string $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -507,7 +463,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see SystemDelete
      */
-    public function sd($k, $n, $t)
+    public function sd(string $k, string $n, string $t): bool
     {
         return $this->systemDelete($k, $n, $t);
     }
@@ -522,7 +478,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param mixed $default
      * @return mixed
      */
-    public function systemReadDefault($key, $name, $type, $default)
+    public function systemReadDefault(string $key, string $name, string $type, $default)
     {
         // SystemRead returns any found value as string or false if not found!
 
@@ -599,7 +555,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see SystemReadDefault
      */
-    public function srd($k, $n, $t, $d)
+    public function srd(string $k, string $n, string $t, $d)
     {
         return $this->systemReadDefault($k, $n, $t, $d);
     }
@@ -612,7 +568,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string type
      * @return mixed
      */
-    public function systemRead($key, $name, $type)
+    public function systemRead(string $key, string $name, string $type)
     {
         $result = $this->systemReadDefault($key, $name, $type, null);
 
@@ -629,7 +585,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see SystemRead
      */
-    public function sr($k, $n, $t)
+    public function sr(string $k, string $n, string $t)
     {
         return $this->systemRead($k, $n, $t);
     }
@@ -642,7 +598,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param string $type
      * @return mixed
      */
-    public function systemReadOnce($key, $name, $type)
+    public function systemReadOnce(string $key, string $name, string $type)
     {
         $r = $this->systemRead($key, $name, $type);
 
@@ -654,7 +610,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     /**
      * Short method to SystemReadOnce.
      */
-    public function sro($k, $n, $t)
+    public function sro(string $k, string $n, string $t)
     {
         return $this->systemReadOnce($k, $n, $t);
     }
@@ -668,11 +624,11 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * @param mixed value
      * @return bool
      */
-    public function systemWrite($key, $name, $type, $value)
+    public function systemWrite(string $key, string $name, string $type, $value): bool
     {
         // validate registry key - delimiter is not allowed
         if (strpos($key, $this->delimiter) !== false) {
-            // why ?
+            // why not ?
         }
 
         // validate name - delimiter is not allowed in name
@@ -707,7 +663,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
      * 
      * @see SystemWrite
      */
-    public function sw($k, $n, $t, $v)
+    public function sw(string $k, string $n, string $t, $v): bool
     {
         return $this->systemWrite($k, $n, $t, $v);
     }
@@ -715,7 +671,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
     /**
      * 
      */
-    public function systemAll()
+    public function systemAll(): array
     {
         return $this->engine->systemAll();
     }

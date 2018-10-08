@@ -18,7 +18,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
  * 
  * Stores a user value
  */
-class RegistryKey implements RegistryKeyInterface
+class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 {
     /**
      * @var int;

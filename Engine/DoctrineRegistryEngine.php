@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -9,18 +11,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Engines;
+namespace jonasarts\Bundle\RegistryBundle\Engine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 
 /**
  * 
  */
-class DoctrineRegistryEngine implements AbstractRegistryInterface
+class DoctrineRegistryEngine implements RegistryEngineInterface
 {
     // entity manager
     private $em;
@@ -45,13 +46,13 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     }
 
     // exists
-    public function registryExists($user_id, $key, $name, $type)
+    public function registryExists(int $user_id, string $key, string $name, string $type): bool
     {
         return !is_null($this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type)));
     }
 
     // del
-    public function registryDelete($user_id, $key, $name, $type)
+    public function registryDelete(int $user_id, string $key, string $name, string $type): bool
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type));
 
@@ -64,7 +65,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     }
 
     // get
-    public function registryRead($user_id, $key, $name, $type)
+    public function registryRead(int $user_id, string $key, string $name, string $type)
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
 
@@ -76,7 +77,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     }
 
     // set
-    public function registryWrite($user_id, $key, $name, $type, $value)
+    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
 
@@ -99,7 +100,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     /**
      * @return ArrayCollection
      */
-    public function registryAll()
+    public function registryAll(): array
     {
         $entities = $this->em
             ->getRepository(RegistryKeyEntity::class)
@@ -109,13 +110,13 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     }
 
     // exists
-    public function systemExists($key, $name, $type)
+    public function systemExists(string $key, string $name, string $type): bool
     {
         return !is_null($this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type)));
     }
 
     // del
-    public function systemDelete($key, $name, $type)
+    public function systemDelete(string $key, string $name, string $type): bool
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type));
 
@@ -128,7 +129,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     }
 
     // get
-    public function systemRead($key, $name, $type)
+    public function systemRead(string $key, string $name, string $type)
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
 
@@ -140,7 +141,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     }
 
     // set
-    public function systemWrite($key, $name, $type, $value)
+    public function systemWrite(string $key, string $name, string $type, $value): bool
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
 
@@ -162,7 +163,7 @@ class DoctrineRegistryEngine implements AbstractRegistryInterface
     /**
      * @return ArrayCollection
      */
-    public function systemAll()
+    public function systemAll(): array
     {
         $entities = $this->em
             ->getRepository(SystemKeyEntity::class)

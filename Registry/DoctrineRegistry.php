@@ -13,16 +13,15 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Engines\DoctrineRegistryEngine;
+use jonasarts\Bundle\RegistryBundle\Engine\DoctrineRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
-use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * DoctrineRegistry.
  * 
  * Implementation of AbstractRegistry using doctrine for persistence.
  */
-class DoctrineRegistry extends AbstractRegistry implements RegistryInterface
+class DoctrineRegistry extends AbstractRegistry
 {
     /**
      * Constructor

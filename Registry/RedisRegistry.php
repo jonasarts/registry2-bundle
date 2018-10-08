@@ -12,16 +12,15 @@
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use jonasarts\Bundle\RegistryBundle\Engines\RedisRegistryEngine;
+use jonasarts\Bundle\RegistryBundle\Engine\RedisRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
-use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * RedisRegistry.
  * 
  * Implementation of AbstractRegistry using redis for persistence.
  */
-class RedisRegistry extends AbstractRegistry implements RegistryInterface
+class RedisRegistry extends AbstractRegistry
 {
     /**
      * Constructor

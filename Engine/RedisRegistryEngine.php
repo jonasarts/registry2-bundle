@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -9,17 +11,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\RegistryBundle\Engines;
+namespace jonasarts\Bundle\RegistryBundle\Engine;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
-use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistryInterface;
 
 /**
  * 
  */
-class RedisRegistryEngine implements AbstractRegistryInterface
+class RedisRegistryEngine implements RegistryEngineInterface
 {
     // redis hash key part for registry keys
     const REGISTRY_TYPE = 'registry';
@@ -52,12 +53,12 @@ class RedisRegistryEngine implements AbstractRegistryInterface
      *
      * @return string
      */
-    private function getHashKey($key, $user_id = null)
+    private function getHashKey(string $key, int $user_id = null)
     {
         if (is_null($user_id)) {
             return $this->prefix.$this->delimiter.static::SYSTEM_TYPE.$this->delimiter.$key;
         } else {
-            return $this->prefix.$this->delimiter.static::REGISTRY_TYPE.$this->delimiter.(string) $user_id.$this->delimiter.$key;
+            return $this->prefix.$this->delimiter.static::REGISTRY_TYPE.$this->delimiter.(string)$user_id.$this->delimiter.$key;
         }
     }
 
@@ -72,25 +73,28 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     }
 
     // exists
-    public function registryExists($user_id, $key, $name, $type)
+    public function registryExists(int $user_id, string $key, string $name, string $type): bool
     {
         return $this->redis->hExists($this->getHashKey($key, $user_id), $name.$this->delimiter.$type) > 0;
     }
 
     // del
-    public function registryDelete($user_id, $key, $name, $type)
+    public function registryDelete(int $user_id, string $key, string $name, string $type): bool
     {
-        return $this->redis->hDel($this->getHashKey($key, $user_id), $name.$this->delimiter.$type) > 0;
+        // false if failure, 0 if doesnt exist, long number of deleted keys
+        $r = $this->redis->hDel($this->getHashKey($key, $user_id), $name.$this->delimiter.$type);
+
+        return ($r != false) && ($r > 0);
     }
 
     // get
-    public function registryRead($user_id, $key, $name, $type)
+    public function registryRead(int $user_id, string $key, string $name, string $type)
     {
         return $this->redis->hGet($this->getHashKey($key, $user_id), $name.$this->delimiter.$type);
     }
 
     // set
-    public function registryWrite($user_id, $key, $name, $type, $value)
+    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
         return $this->redis->hSet($this->getHashKey($key, $user_id), $name.$this->delimiter.$type, $value) !== false;
     }
@@ -98,7 +102,7 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     /**
      * @return array
      */
-    public function registryAll()
+    public function registryAll(): array
     {
         $prefix = $this->prefix;
         $delimiter = $this->delimiter;
@@ -128,25 +132,28 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     }
 
     // exists
-    public function systemExists($systemkey, $name, $type)
+    public function systemExists(string $systemkey, string $name, string $type): bool
     {
         return $this->redis->hExists($this->getHashKey($systemkey), $name.$this->delimiter.$type) > 0;
     }
 
     // del
-    public function systemDelete($systemkey, $name, $type)
+    public function systemDelete(string $systemkey, string $name, string $type): bool
     {
-        return $this->redis->hDel($this->getHashKey($systemkey), $name.$this->delimiter.$type) > 0;
+        // false if failure, 0 if doesnt exist, long number of deleted keys
+        $r = $this->redis->hDel($this->getHashKey($systemkey), $name.$this->delimiter.$type) > 0;
+
+        return ($r != false) && ($r > 0);
     }
 
     // get
-    public function systemRead($systemkey, $name, $type)
+    public function systemRead(string $systemkey, string $name, string $type)
     {
         return $this->redis->hGet($this->getHashKey($systemkey), $name.$this->delimiter.$type);
     }
 
     // set
-    public function systemWrite($systemkey, $name, $type, $value)
+    public function systemWrite(string $systemkey, string $name, string $type, $value): bool
     {
         return $this->redis->hSet($this->getHashKey($systemkey), $name.$this->delimiter.$type, $value) !== false;
     }
@@ -154,7 +161,7 @@ class RedisRegistryEngine implements AbstractRegistryInterface
     /**
      * @return array
      */
-    public function systemAll()
+    public function systemAll(): array
     {
         $prefix = $this->prefix;
         $delimiter = $this->delimiter;

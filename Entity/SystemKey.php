@@ -18,7 +18,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
  * 
  * Stores a global/system value
  */
-class SystemKey implements SystemKeyInterface
+class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 {
     /**
      * @var string
