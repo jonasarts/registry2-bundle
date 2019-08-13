@@ -1,6 +1,19 @@
 CHANGE LOG
 ==========
 
+V 4.1.3
+-------
+
+- Updated TreeBuilder to support Symfony 5.0
+
+V 4.1.0
+-------
+
+- Simplified registry behavior
+- Removed factory
+- Removed engine switching
+- Use explicit constructors for different engine types
+
 V 4.0.0
 -------
 
