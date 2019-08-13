@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -15,12 +17,12 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
 
 /**
  * AbstractRegistryKey.
- * 
+ *
  * Stores a user value
  */
 abstract class AbstractRegistryKey
 {
-    // this class is 'empty' because the mapping annotation for doctrine 
+    // this class is 'empty' because the mapping annotation for doctrine
     // would need to reimplement all fields in the doctrine-version again
     // or use yaml / xml for doctrine entity definition
 
@@ -145,5 +147,5 @@ abstract class AbstractRegistryKey
     // {
     //     return $this->value;
     // }
-    
+
 }

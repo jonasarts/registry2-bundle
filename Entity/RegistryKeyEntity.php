@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -18,7 +20,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
 
 /**
  * RegistryKeyEntity.
- * 
+ *
  * Doctrine-mapped RegistryKey entity
  *
  * @ORM\Entity()
@@ -40,13 +42,13 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @var int;
-     * @ORM\Column(name="userid", type="integer") 
+     * @ORM\Column(name="userid", type="integer")
      */
     private $user_id;
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="registrykey", type="string", length=255, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
@@ -55,7 +57,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
@@ -64,7 +66,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="type", type="string", length=1, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 1)
@@ -73,14 +75,14 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="value", type="text", nullable=true)
      */
     private $value;
 
     /**
      * Entitiy to string.
-     * 
+     *
      * @return string
      */
     public function __toString()
@@ -104,7 +106,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @param int $user_id
      * @return Registry
      */
-    public function setUserId($user_id)
+    public function setUserId(int $user_id): self
     {
         $this->user_id = $user_id;
 
@@ -116,7 +118,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      *
      * @return int
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -127,7 +129,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @param string $key
      * @return Registry
      */
-    public function setKey($key)
+    public function setKey(string $key): self
     {
         $this->key = $key;
 
@@ -139,7 +141,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -150,7 +152,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @param string $name
      * @return Registry
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -162,7 +164,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -173,7 +175,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @param string $type
      * @return Registry
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -185,7 +187,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -196,7 +198,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @param string $value
      * @return Registry
      */
-    public function setValue($value)
+    public function setValue(string $value): self
     {
         $this->value = $value;
 
@@ -208,7 +210,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

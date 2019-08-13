@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -15,7 +17,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
 
 /**
  * RegistryKey.
- * 
+ *
  * Stores a user value
  */
 class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
@@ -47,7 +49,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Entitiy to string.
-     * 
+     *
      * @return string
      */
     public function __toString()
@@ -60,7 +62,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      *
      * @return int
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
@@ -71,7 +73,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param int $user_id
      * @return RegistryKey
      */
-    public function setUserId($user_id)
+    public function setUserId(int $user_id): self
     {
         $this->user_id = $user_id;
 
@@ -83,7 +85,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -94,7 +96,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param string $key
      * @return RegistryKey
      */
-    public function setKey($key)
+    public function setKey(string $key): self
     {
         $this->key = $key;
 
@@ -106,7 +108,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -117,7 +119,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param string $name
      * @return RegistryKey
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -129,7 +131,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -140,7 +142,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param string $type
      * @return RegistryKey
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -152,7 +154,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -163,7 +165,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param string $value
      * @return RegistryKey
      */
-    public function setValue($value)
+    public function setValue(string $value): self
     {
         $this->value = $value;
 

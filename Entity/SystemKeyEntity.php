@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -20,7 +22,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
  * SystemKeyEntity.
  *
  * Doctrine-mapped SystemKey entity
- * 
+ *
  * @ORM\Entity()
  * @ORM\Table(name="system",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="uix_key_name", columns={"systemkey", "name"})}
@@ -40,7 +42,7 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="systemkey", type="string", length=255, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
@@ -49,7 +51,7 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
@@ -58,23 +60,23 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="type", type="string", length=1, nullable=false)
      * @Assert\NotBlank
-     * @Assert\Length(min = 1, max = 1)) 
+     * @Assert\Length(min = 1, max = 1))
      */
     private $type;
 
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="value", type="text", nullable=true)
      */
     private $value;
 
     /**
      * Entitiy to string.
-     * 
+     *
      * @return string
      */
     public function __toString()
@@ -98,7 +100,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @param string $key
      * @return System
      */
-    public function setKey($key)
+    public function setKey(string $key): self
     {
         $this->key = $key;
 
@@ -110,7 +112,7 @@ class SystemKeyEntity implements SystemKeyInterface
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -121,7 +123,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @param string $name
      * @return System
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -133,7 +135,7 @@ class SystemKeyEntity implements SystemKeyInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -144,7 +146,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @param string $type
      * @return System
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -156,7 +158,7 @@ class SystemKeyEntity implements SystemKeyInterface
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -167,7 +169,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @param string $value
      * @return System
      */
-    public function setValue($value)
+    public function setValue(string $value): self
     {
         $this->value = $value;
 
@@ -179,7 +181,7 @@ class SystemKeyEntity implements SystemKeyInterface
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

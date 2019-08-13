@@ -357,6 +357,9 @@ abstract class AbstractRegistry implements RegistryInterface
             throw new \Exception('delimiter is not allowed in name');
         }
 
+        // convert type
+        $type = $this->optimizeType($type);
+
         // value = default key value?
         if ($user_id != 0) {
             $result = $this->registryRead(0, $key, $name, $type);
@@ -369,9 +372,6 @@ abstract class AbstractRegistry implements RegistryInterface
         }
 
         // is not default key value...
-
-        // convert type
-        $type = $this->optimizeType($type);
 
         // convert value to string for writing
         switch ($type) {

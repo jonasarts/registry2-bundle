@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -15,7 +17,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
 
 /**
  * SystemKey.
- * 
+ *
  * Stores a global/system value
  */
 class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
@@ -42,7 +44,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Entity to string.
-     * 
+     *
      * @return string
      */
     public function __toString()
@@ -55,7 +57,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      *
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -66,7 +68,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      * @param string $key
      * @return SystemKey
      */
-    public function setKey($key)
+    public function setKey(string $key): self
     {
         $this->key = $key;
 
@@ -78,7 +80,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -89,7 +91,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      * @param string $name
      * @return SystemKey
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -101,7 +103,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -112,7 +114,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      * @param string $type
      * @return SystemKey
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -124,7 +126,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -135,7 +137,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      * @param string $value
      * @return SystemKey
      */
-    public function setValue($value)
+    public function setValue(string $value): self
     {
         $this->value = $value;
 
