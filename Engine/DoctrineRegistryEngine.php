@@ -19,7 +19,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 
 /**
- * 
+ *
  */
 class DoctrineRegistryEngine implements RegistryEngineInterface
 {
@@ -89,7 +89,15 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         }
 
         $entity->setType($type);
-        $entity->setValue($value);
+        // entity value must be of type 'string'
+        if (is_array($value)) {
+            $entity->setValue(json_encode($value, true));
+        } else if (is_object($value)) {
+            $entity->setValue((string) $value);
+        } else {
+            // works for string, int, float, bool
+            $entity->setValue(strval($value));
+        }
 
         $this->em->merge($entity);
         $this->em->flush();
@@ -152,7 +160,15 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         }
 
         $entity->setType($type);
-        $entity->setValue($value);
+        // entity value must be of type 'string'
+        if (is_array($value)) {
+            $entity->setValue(json_encode($value, true));
+        } else if (is_object($value)) {
+            $entity->setValue((string) $value);
+        } else {
+            // works for string, int, float, bool
+            $entity->setValue(strval($value));
+        }
 
         $this->em->merge($entity);
         $this->em->flush();
