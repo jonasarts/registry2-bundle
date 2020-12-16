@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "doctrine/orm": "^2.6",
+        "doctrine/orm": "^2.8",
         "php": ">=7.2",
         "symfony/dependency-injection": "^5.0",
         "symfony/validator": "^5.0",
