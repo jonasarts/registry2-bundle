@@ -18,7 +18,7 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
  *
  * Interface to the registry service
  */
-interface DoctrineRegistryInterface
+interface DoctrineRegistryInterface extends RegistryInterface
 {
 
 }
