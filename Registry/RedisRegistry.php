@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -17,10 +19,10 @@ use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 
 /**
  * RedisRegistry.
- * 
+ *
  * Implementation of AbstractRegistry using redis for persistence.
  */
-class RedisRegistry extends AbstractRegistry
+class RedisRegistry extends AbstractRegistry implements RedisRegistryInterface
 {
     /**
      * Constructor

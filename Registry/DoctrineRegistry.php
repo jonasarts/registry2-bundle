@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -18,10 +20,10 @@ use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 
 /**
  * DoctrineRegistry.
- * 
+ *
  * Implementation of AbstractRegistry using doctrine for persistence.
  */
-class DoctrineRegistry extends AbstractRegistry
+class DoctrineRegistry extends AbstractRegistry implements DoctrineRegistryInterface
 {
     /**
      * Constructor

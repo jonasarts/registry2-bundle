@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 /**
- * RegistryInterface.
+ * RedisRegistryInterface.
  *
  * Interface to the registry service
  */
-interface RegistryInterface
+interface RedisRegistryInterface
 {
 
 }
