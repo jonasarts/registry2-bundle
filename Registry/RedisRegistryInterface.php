@@ -18,7 +18,7 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
  *
  * Interface to the registry service
  */
-interface RedisRegistryInterface
+interface RedisRegistryInterface extends RegistryInterface
 {
 
 }
