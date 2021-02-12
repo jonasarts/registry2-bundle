@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Engine;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 
@@ -35,7 +34,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em)
     {
         // get entity manager
         $this->em = $em;

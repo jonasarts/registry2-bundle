@@ -26,11 +26,11 @@ class RedisRegistry extends AbstractRegistry implements RedisRegistryInterface
     /**
      * Constructor
      */
-    public function __construct($redis, string $default_values_filename = null)
+    public function __construct($redis, string $registry_prefix, string $registry_delimiter, string $default_values_filename = null)
     {
         parent::__construct($default_values_filename);
 
         // create the engine
-        $this->engine = new RedisRegistryEngine($container, $redis);
+        $this->engine = new RedisRegistryEngine($redis, $registry_prefix, $registry_delimiter);
     }
 }
