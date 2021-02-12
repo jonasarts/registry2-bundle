@@ -13,43 +13,42 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
 use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * The registry logic
- * 
+ *
  * This class contains the business logic for registry keys !!!
  */
 abstract class AbstractRegistry implements RegistryInterface
 {
     /**
-     * 
+     *
      * This is not so good design, currently there is no RegistryEngineInterface,
      * there is simply the RegistryInterface re-used
-     * 
+     *
      * @var RegistryInterface
      */
     protected $engine;
 
     /**
      * boolean, use default key-name/value array
-     * 
+     *
      * @var bool
      */
     protected $use_yaml;
 
     /**
      * default key-name/value array
-     * 
+     *
      * @var array
      */
     protected $yaml;
 
     /**
      * field delimiter (used in yaml)
-     * 
+     *
      * @var string
      */
     protected $delimiter;
@@ -99,14 +98,14 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(string $default_values_filename = null)
     {
         $this->use_yaml = false;
         $this->yaml = null;
 
         $this->delimiter = ':';
 
-        $filename = $container->getParameter('registry.globals.default_values');
+        $filename = $default_values_filename;
 
         $this->use_yaml = !is_null($filename) && file_exists($filename);
         if ($this->use_yaml) {
@@ -123,7 +122,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Check registry key in database.
-     * 
+     *
      * This does not use User 0 fallback !
      *
      * @param int    $user_id
@@ -142,7 +141,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method of RegistryExists.
-     * 
+     *
      * @see RegistryExists
      */
     public function re(int $uid, string $k, string $n, string $t): bool
@@ -152,9 +151,9 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Delete registry key from database.
-     * 
+     *
      * This does not use User 0 fallback !
-     * 
+     *
      * @param int    $user_id
      * @param string $key
      * @param string $name
@@ -171,7 +170,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to RegistryDelete.
-     * 
+     *
      * @see RegistryDelete
      */
     public function rd(int $uid, string $k, string $n, string $t): bool
@@ -179,10 +178,10 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->registryDelete($uid, $k, $n, $t);
     }
 
-    /** 
+    /**
      * Read registry key from database.
      * If no key is found, the default value will be returned.
-     * 
+     *
      * @param int    $user_id
      * @param string $key
      * @param string $name
@@ -270,7 +269,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to RegistryReadDefault.
-     * 
+     *
      * @see RegistryReadDefault
      */
     public function rrd(int $uid, string $k, string $n, string $t, $d)
@@ -280,7 +279,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Read registry key from database.
-     * 
+     *
      * @param int    $user_id
      * @param string $key
      * @param string $name
@@ -301,7 +300,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to RegistryRead.
-     * 
+     *
      * @see RegistryRead
      */
     public function rr(int $uid, string $k, string $n, string $t)
@@ -311,7 +310,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Read registry key from database and delete it immediately.
-     * 
+     *
      * @param int    $user_id
      * @param string $key
      * @param string $name
@@ -337,7 +336,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Write registry key to database.
-     * 
+     *
      * @param int    $user_id
      * @param string $key
      * @param string $name
@@ -394,7 +393,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to RegistryWrite.
-     * 
+     *
      * @see RegistryWrite
      */
     public function rw(int $uid, string $k, string $n, string $t, $v): bool
@@ -403,7 +402,7 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
-     * 
+     *
      */
     public function registryAll(): array
     {
@@ -418,7 +417,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Check system key in database.
-     * 
+     *
      * @param string $key
      * @param string $name
      * @param string $type
@@ -434,7 +433,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method of SystemExists.
-     * 
+     *
      * @see SystemExits
      */
     public function se(string $k, string $n, string $t): bool
@@ -444,7 +443,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Delete system key from database.
-     * 
+     *
      * @param string $key
      * @param string $name
      * @param string $type
@@ -460,7 +459,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to SystemDelete.
-     * 
+     *
      * @see SystemDelete
      */
     public function sd(string $k, string $n, string $t): bool
@@ -471,7 +470,7 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Read system key from database.
      * If no key is found, the default value will be returned.
-     * 
+     *
      * @param string $key
      * @param string $name
      * @param string type
@@ -552,7 +551,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to SystemReadDefault.
-     * 
+     *
      * @see SystemReadDefault
      */
     public function srd(string $k, string $n, string $t, $d)
@@ -562,7 +561,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Read system key from database.
-     * 
+     *
      * @param string $key
      * @param string $name
      * @param string type
@@ -582,7 +581,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to SystemRead.
-     * 
+     *
      * @see SystemRead
      */
     public function sr(string $k, string $n, string $t)
@@ -592,7 +591,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Read system key from database and delete it immediately.
-     * 
+     *
      * @param string $key
      * @param string $name
      * @param string $type
@@ -617,7 +616,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Write system key to database.
-     * 
+     *
      * @param string $key
      * @param string $name
      * @param string type
@@ -660,7 +659,7 @@ abstract class AbstractRegistry implements RegistryInterface
 
     /**
      * Short method to SystemWrite.
-     * 
+     *
      * @see SystemWrite
      */
     public function sw(string $k, string $n, string $t, $v): bool
@@ -669,7 +668,7 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
-     * 
+     *
      */
     public function systemAll(): array
     {

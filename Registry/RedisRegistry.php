@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Engine\RedisRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 
@@ -27,9 +26,9 @@ class RedisRegistry extends AbstractRegistry implements RedisRegistryInterface
     /**
      * Constructor
      */
-    public function __construct(ContainerInterface $container, $redis)
+    public function __construct($redis, string $default_values_filename = null)
     {
-        parent::__construct($container);
+        parent::__construct($default_values_filename);
 
         // create the engine
         $this->engine = new RedisRegistryEngine($container, $redis);

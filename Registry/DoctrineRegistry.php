@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Engine\DoctrineRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
 
@@ -28,9 +27,9 @@ class DoctrineRegistry extends AbstractRegistry implements DoctrineRegistryInter
     /**
      * Constructor
      */
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, string $default_values_filename = null)
     {
-        parent::__construct($container);
+        parent::__construct($default_values_filename);
 
         // create the engine
         $this->engine = new DoctrineRegistryEngine($container, $em);
