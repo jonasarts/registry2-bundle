@@ -13,24 +13,23 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Engine;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
 
 /**
- * 
+ *
  */
 class RedisRegistryEngine implements RegistryEngineInterface
 {
     // redis hash key part for registry keys
     const REGISTRY_TYPE = 'registry';
-    
+
     // redis hash key part for system keys
     const SYSTEM_TYPE = 'system';
 
     /**
      * @var \Redis
-     * 
+     *
      * phpredis client
      * or
      * predis client
@@ -65,11 +64,11 @@ class RedisRegistryEngine implements RegistryEngineInterface
     /**
      * Constructor.
      */
-    public function __construct(ContainerInterface $container, $redis)
+    public function __construct($redis, string $registry_prefix, string $registry_delimiter)
     {
         $this->redis = $redis;
-        $this->prefix = $container->getParameter('registry.redis.prefix');
-        $this->delimiter = $container->getParameter('registry.globals.delimiter');
+        $this->prefix = $registry_prefix;
+        $this->delimiter = $registry_delimiter;
     }
 
     // exists
@@ -165,7 +164,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
     {
         $prefix = $this->prefix;
         $delimiter = $this->delimiter;
-        
+
         $keys = $this->redis->keys($prefix.$delimiter.'system'.$delimiter.'*');
 
         $entities = array();

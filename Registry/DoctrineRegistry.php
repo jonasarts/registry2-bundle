@@ -32,6 +32,6 @@ class DoctrineRegistry extends AbstractRegistry implements DoctrineRegistryInter
         parent::__construct($default_values_filename);
 
         // create the engine
-        $this->engine = new DoctrineRegistryEngine($container, $em);
+        $this->engine = new DoctrineRegistryEngine($em);
     }
 }
