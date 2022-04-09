@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -17,22 +19,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
+use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
 
 /**
  * Symfony Form
  */
-class RegistryType extends AbstractType
+class SystemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $read_only = $options['mode'] == 'edit';
 
         $builder
-            ->add('userid', 'integer', array(
-                'required' => true,
-                'read_only' => $read_only,
-            ))
             ->add('key', 'text', array(
                 'constraints' => array(
                     new NotBlank(),
@@ -60,13 +58,13 @@ class RegistryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => RegistryKey::class,
+            'data_class' => SystemKey::class,
             'mode' => null,
         ));
     }
 
     public function getName()
     {
-        return 'registry_registry';
+        return 'registry_system';
     }
 }

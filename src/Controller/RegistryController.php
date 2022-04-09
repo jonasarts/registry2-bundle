@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -11,9 +13,9 @@
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Form\RegistryType;
 
@@ -38,7 +40,7 @@ class RegistryController extends Controller
             ));
     }
 
-    /** 
+    /**
      * Displays a form to create a new Registry entity.
      *
      * @Route("/new", name="registry_new")
@@ -77,7 +79,7 @@ class RegistryController extends Controller
 
     /**
      * Displays a form to edit a Registry entity.
-     * 
+     *
      * @Route("/edit", name="registry_edit")
      */
     public function editAction(Request $request)
@@ -115,7 +117,7 @@ class RegistryController extends Controller
 
     /**
      * Delete a Registry entity.
-     * 
+     *
      * @Route("/delete", name="registry_delete")
      */
     public function deleteAction(Request $request)

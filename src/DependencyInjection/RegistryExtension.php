@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Registry bundle package.
  *
@@ -37,15 +39,15 @@ class RegistryExtension extends Extension
         $container->setParameter('registry.redis.prefix', $config['redis']['prefix']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('services.yaml');
     }
 
     /**
      * Define a custom bundle_alias
-     * 
+     *
      * {@inheritdoc}
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'registry';
     }
