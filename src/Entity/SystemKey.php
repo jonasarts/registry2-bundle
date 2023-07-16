@@ -25,22 +25,22 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string
      */
-    private $value;
+    private string $value;
 
     /**
      * Entity to string.
@@ -180,7 +180,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      * @param array $array
      * @return SystemKey
      */
-    public static function fromArray($array)
+    public static function fromArray(array $array)
     {
         $system_key = new self();
 

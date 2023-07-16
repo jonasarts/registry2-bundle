@@ -38,13 +38,14 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var int;
+     * @var int
+     *
      * @ORM\Column(name="userid", type="integer")
      */
-    private $user_id;
+    private int $user_id;
 
     /**
      * @var string
@@ -53,7 +54,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
      */
-    private $key;
+    private string $key;
 
     /**
      * @var string
@@ -62,7 +63,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
@@ -71,14 +72,14 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 1)
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string
      *
      * @ORM\Column(name="value", type="text", nullable=true)
      */
-    private $value;
+    private string $value;
 
     /**
      * Entitiy to string.
@@ -95,7 +96,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -104,7 +105,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set user_id.
      *
      * @param int $user_id
-     * @return Registry
+     * @return RegistryKeyEntity
      */
     public function setUserId(int $user_id): self
     {
@@ -127,7 +128,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set key.
      *
      * @param string $key
-     * @return Registry
+     * @return RegistryKeyEntity
      */
     public function setKey(string $key): self
     {
@@ -150,7 +151,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set name.
      *
      * @param string $name
-     * @return Registry
+     * @return RegistryKeyEntity
      */
     public function setName(string $name): self
     {
@@ -173,7 +174,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set type.
      *
      * @param string $type
-     * @return Registry
+     * @return RegistryKeyEntity
      */
     public function setType(string $type): self
     {
@@ -196,7 +197,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      * Set value.
      *
      * @param string $value
-     * @return Registry
+     * @return RegistryKeyEntity
      */
     public function setValue(string $value): self
     {
@@ -240,11 +241,11 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
         $registry_key = new RegistryKey();
 
-        $registry_key->user_id = $object->user_id;
-        $registry_key->key = $object->key;
-        $registry_key->name = $object->name;
-        $registry_key->type = $object->type;
-        $registry_key->value = $object->value;
+        $registry_key->setUserId($object->user_id);
+        $registry_key->setKey($object->key);
+        $registry_key->setName($object->name);
+        $registry_key->setType($object->type);
+        $registry_key->setValue($object->value);
 
         return $registry_key;
     }

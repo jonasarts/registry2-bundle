@@ -23,7 +23,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 class DoctrineRegistryEngine implements RegistryEngineInterface
 {
     // entity manager
-    private $em;
+    private EntityManagerInterface $em;
 
     // doctrine repository for registry keys
     private $registry;
@@ -64,7 +64,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     // get
-    public function registryRead(int $user_id, string $key, string $name, string $type)
+    public function registryRead(int $user_id, string $key, string $name, string $type): bool|string
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
 
@@ -105,7 +105,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function registryAll(): array
     {
@@ -136,7 +136,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     // get
-    public function systemRead(string $key, string $name, string $type)
+    public function systemRead(string $key, string $name, string $type): bool|string
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
 
@@ -176,7 +176,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function systemAll(): array
     {

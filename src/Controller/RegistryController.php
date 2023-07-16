@@ -15,6 +15,7 @@ namespace jonasarts\Bundle\RegistryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Form\RegistryType;
@@ -31,13 +32,13 @@ class RegistryController extends Controller
      *
      * @Route("/", name="registry_index")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $entities = $this->all();
 
         return $this->render('@Registry/Registry/index.html.twig', array(
             'entities' => $entities,
-            ));
+        ));
     }
 
     /**
@@ -45,7 +46,7 @@ class RegistryController extends Controller
      *
      * @Route("/new", name="registry_new")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request): Response
     {
         $entity = new RegKey();
 
@@ -61,7 +62,7 @@ class RegistryController extends Controller
                 $entity->getName(),
                 $entity->getType(),
                 $entity->getValue()
-                );
+            );
 
             if (!$r) {
                 $this->addFlash('error', 'RegistryController.new: error on write');
@@ -74,7 +75,7 @@ class RegistryController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('registry_index'),
-            ));
+        ));
     }
 
     /**
@@ -82,7 +83,7 @@ class RegistryController extends Controller
      *
      * @Route("/edit", name="registry_edit")
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request): Response
     {
         $s = $request->query->get('entity');
         $entity = RegKey::deserialize($s);
@@ -99,7 +100,7 @@ class RegistryController extends Controller
                 $entity->getName(),
                 $entity->getType(),
                 $entity->getValue()
-                );
+            );
 
             if (!$r) {
                 $this->addFlash('error', 'RegistryController.edit: error on write');
@@ -112,7 +113,7 @@ class RegistryController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('registry_index'),
-            ));
+        ));
     }
 
     /**
@@ -120,7 +121,7 @@ class RegistryController extends Controller
      *
      * @Route("/delete", name="registry_delete")
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request): Response
     {
         $s = $request->query->get('entity');
         $entity = RegKey::deserialize($s);
@@ -130,7 +131,7 @@ class RegistryController extends Controller
             $entity->getKey(),
             $entity->getName(),
             $entity->getType()
-            );
+        );
 
         if (!$r) {
             $this->addFlash('error', 'RegistryController.delete: error on delete');

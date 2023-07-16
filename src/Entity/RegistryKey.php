@@ -25,27 +25,27 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     /**
      * @var int;
      */
-    private $user_id;
+    private int $user_id;
 
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string
      */
-    private $value;
+    private string $value;
 
     /**
      * Entitiy to string.
@@ -210,7 +210,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param array $array
      * @return RegistryKey
      */
-    public static function fromArray($array)
+    public static function fromArray(array $array)
     {
         $registry_key = new self();
 

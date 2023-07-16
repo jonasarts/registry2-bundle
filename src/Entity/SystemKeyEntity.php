@@ -38,7 +38,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
@@ -47,7 +47,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
      */
-    private $key;
+    private string $key;
 
     /**
      * @var string
@@ -56,7 +56,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * @Assert\NotBlank
      * @Assert\Length(max = 255)
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
@@ -65,14 +65,14 @@ class SystemKeyEntity implements SystemKeyInterface
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 1))
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string
      *
      * @ORM\Column(name="value", type="text", nullable=true)
      */
-    private $value;
+    private string $value;
 
     /**
      * Entitiy to string.
@@ -89,7 +89,7 @@ class SystemKeyEntity implements SystemKeyInterface
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -98,7 +98,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * Set key.
      *
      * @param string $key
-     * @return System
+     * @return SystemKeyEntity
      */
     public function setKey(string $key): self
     {
@@ -121,7 +121,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * Set name.
      *
      * @param string $name
-     * @return System
+     * @return SystemKeyEntity
      */
     public function setName(string $name): self
     {
@@ -144,7 +144,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * Set type.
      *
      * @param string $type
-     * @return System
+     * @return SystemKeyEntity
      */
     public function setType(string $type): self
     {
@@ -167,7 +167,7 @@ class SystemKeyEntity implements SystemKeyInterface
      * Set value.
      *
      * @param string $value
-     * @return System
+     * @return SystemKeyEntity
      */
     public function setValue(string $value): self
     {
@@ -210,10 +210,10 @@ class SystemKeyEntity implements SystemKeyInterface
 
         $system_key = new SystemKey();
 
-        $system_key->key = $object->key;
-        $system_key->name = $object->name;
-        $system_key->type = $object->type;
-        $system_key->value = $object->value;
+        $system_key->setKey($object->key);
+        $system_key->setName($object->name);
+        $system_key->setType($object->type);
+        $system_key->setValue($object->value);
 
         return $system_key;
     }

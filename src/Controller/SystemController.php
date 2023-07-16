@@ -15,6 +15,7 @@ namespace jonasarts\Bundle\RegistryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
 use jonasarts\Bundle\RegistryBundle\Form\SystemType;
@@ -32,13 +33,13 @@ class SystemController extends Controller
      * @Route("/", name="system_index")
      * @Template()
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $entities = $this->all();
 
         return $this->render('@Registry/System/index.html.twig', array(
             'entities' => $entities,
-            ));
+        ));
     }
 
     /**
@@ -46,7 +47,7 @@ class SystemController extends Controller
      *
      * @Route("/new", name="system_new")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request): Response
     {
         $entity = new SysKey();
 
@@ -61,7 +62,7 @@ class SystemController extends Controller
                 $entity->getName(),
                 $entity->getType(),
                 $entity->getValue()
-                );
+            );
 
             if (!$r) {
                 $this->addFlash('error', 'SystemController.new: error on write');
@@ -74,7 +75,7 @@ class SystemController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('system_index'),
-            ));
+        ));
     }
 
     /**
@@ -82,7 +83,7 @@ class SystemController extends Controller
      *
      * @Route("/edit", name="system_edit")
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request): Response
     {
         $s = $request->query->get('entity');
         $entity = SysKey::deserialize($s);
@@ -99,7 +100,7 @@ class SystemController extends Controller
                 $entity->getName(),
                 $entity->getType(),
                 $entity->getValue()
-                );
+            );
 
             if (!$r) {
                 $this->addFlash('error', 'SystemController.edit: error on write');
@@ -112,7 +113,7 @@ class SystemController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('system_index'),
-            ));
+        ));
     }
 
     /**
@@ -120,7 +121,7 @@ class SystemController extends Controller
      *
      * @Route("/delete", name="system_delete")
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request): Response
     {
         $s = $request->query->get('entity');
         $entity = SysKey::deserialize($s);
@@ -129,7 +130,7 @@ class SystemController extends Controller
             $entity->getKey(),
             $entity->getName(),
             $entity->getType()
-            );
+        );
 
         if (!$r) {
             $this->addFlash('error', 'SystemController.delete: error on delete');

@@ -6,32 +6,15 @@ Setting up the bundle
 Execute this console command in your project:
 
 ``` bash
-$ composer require jonasarts/registry2-bundle
+composer require jonasarts/registry2-bundle
 ```
 
 ## Enable the bundle
 
-Register the bundle in the kernel:
+Composer enables the bundle for you in config/bundles.php
 
-```php
-// app/AppKernel.php
-
-// ...
-class AppKernel extends Kernel
-{
-    // ...
-
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new jonasarts\Bundle\RegistryBundle\RegistryBundle(),
-        );
-
-    // ...
-    }
-}
-```
+You can now use the
+`jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface` class.
 
 To use the RegistryController, register also the routes in
 *app/config/routing.yml* or *app/config/routing_dev.yml* (this is optional and

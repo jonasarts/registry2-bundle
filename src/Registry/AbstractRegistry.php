@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\Yaml\Yaml;
-use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
+use jonasarts\Bundle\RegistryBundle\Engine\RegistryEngineInterface;
 
 /**
  * The registry logic
@@ -24,40 +24,36 @@ use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 abstract class AbstractRegistry implements RegistryInterface
 {
     /**
-     *
-     * This is not so good design, currently there is no RegistryEngineInterface,
-     * there is simply the RegistryInterface re-used
-     *
-     * @var RegistryInterface
+     * @var RegistryEngineInterface
      */
-    protected $engine;
+    protected RegistryEngineInterface $engine;
 
     /**
      * boolean, use default key-name/value array
      *
      * @var bool
      */
-    protected $use_yaml;
+    protected bool $use_yaml;
 
     /**
      * default key-name/value array
      *
      * @var array
      */
-    protected $yaml;
+    protected array $yaml;
 
     /**
      * field delimiter (used in yaml)
      *
      * @var string
      */
-    protected $delimiter;
+    protected string $delimiter;
 
     /**
      * @param string $type
      * @return string
      */
-    private function optimizeType($type)
+    private function optimizeType(string $type): string
     {
         switch (trim($type)) {
             case 'i':
@@ -101,7 +97,7 @@ abstract class AbstractRegistry implements RegistryInterface
     public function __construct(string $default_values_filename = null)
     {
         $this->use_yaml = false;
-        $this->yaml = null;
+        $this->yaml = [];
 
         $this->delimiter = ':';
 
@@ -337,12 +333,13 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Write registry key to database.
      *
-     * @param int    $user_id
+     * @param int $user_id
      * @param string $key
      * @param string $name
      * @param string $type
-     * @param mixed  $value
+     * @param mixed $value
      * @return bool
+     * @throws \Exception
      */
     public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
@@ -394,6 +391,7 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Short method to RegistryWrite.
      *
+     * @throws \Exception
      * @see RegistryWrite
      */
     public function rw(int $uid, string $k, string $n, string $t, $v): bool
@@ -473,7 +471,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string type
+     * @param string $type
      * @param mixed $default
      * @return mixed
      */
@@ -564,7 +562,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string type
+     * @param string $type
      * @return mixed
      */
     public function systemRead(string $key, string $name, string $type)
@@ -619,9 +617,10 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string type
-     * @param mixed value
+     * @param string $type
+     * @param mixed $value
      * @return bool
+     * @throws \Exception
      */
     public function systemWrite(string $key, string $name, string $type, $value): bool
     {
@@ -660,6 +659,7 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Short method to SystemWrite.
      *
+     * @throws \Exception
      * @see SystemWrite
      */
     public function sw(string $k, string $n, string $t, $v): bool

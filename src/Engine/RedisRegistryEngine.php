@@ -28,7 +28,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
     const SYSTEM_TYPE = 'system';
 
     /**
-     * @var \Redis
+     * @var \Redis|\Predis
      *
      * phpredis client
      * or
@@ -39,20 +39,20 @@ class RedisRegistryEngine implements RegistryEngineInterface
     /**
      * @var string
      */
-    private $prefix;
+    private string $prefix;
 
     /**
      * @var string
      */
-    private $delimiter;
+    private string $delimiter;
 
     /**
      * @param string $key
-     * @param int $user_id
+     * @param int|null $user_id
      *
      * @return string
      */
-    private function getHashKey(string $key, int $user_id = null)
+    private function getHashKey(string $key, int $user_id = null): string
     {
         if (is_null($user_id)) {
             return $this->prefix.$this->delimiter.static::SYSTEM_TYPE.$this->delimiter.$key;
@@ -63,6 +63,8 @@ class RedisRegistryEngine implements RegistryEngineInterface
 
     /**
      * Constructor.
+     *
+     * @var $redis \Redis|\Predis
      */
     public function __construct($redis, string $registry_prefix, string $registry_delimiter)
     {
@@ -100,6 +102,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
 
     /**
      * @return array
+     * @throws \RedisException
      */
     public function registryAll(): array
     {
@@ -159,6 +162,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
 
     /**
      * @return array
+     * @throws \RedisException
      */
     public function systemAll(): array
     {

@@ -15,10 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 use jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
- * This tests are executed on a real database!
- * Therefore they need a proper database setup.
+ * These tests are executed on a real database!
+ * Therefore, they need a proper database setup.
  * Best practice is to use config_test.yml.
  * 
  * DO NOT TEST ON A PRODUCTION SYSTEM!
@@ -30,14 +31,9 @@ use jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry;
 class RegistryTest extends WebTestCase
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var RegistryInterface
      */
-    private static $em;
-
-    /**
-     * @var Registry
-     */
-    private static $registry;
+    private static RegistryInterface $registry;
 
     const _user = 2;
     const _bln = true;
@@ -49,16 +45,18 @@ class RegistryTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        
+        //echo "setUpBeforeClass()";
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
+        //echo "tearDownAfterClass()";
+
         if (true) {
             // remove all test keys so no key remains in storage
             $r = static::$registry->registryDelete(self::_user, 'key', 'name_bln', 'bln');
@@ -83,37 +81,33 @@ class RegistryTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
+        //echo "setUp()";
+
         parent::setUp();
 
+        // (1) boot the Symfony kernel
         self::bootKernel();
 
-        // Symfony 4.1
+        // (2) use static::getContainer() to access the service container
+        $container = static::getContainer();
 
-        // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
-
-        // gets the special container that allows fetching private services
-        $container = self::$container;
-
-        //static::$em = $container->get('doctrine')->getManager();
-        //static::$registry = $container->get('registry');
+        // (3) run some service & test the result ...
 
         // phpredis
-        $redis = $container->get('snc_redis.phpredis.registry');
-        static::$registry = new RedisRegistry($container, $redis);
+        $redis = $container->get('snc_redis.registry');
+        $prefix = "bundle-dev";
+        $delimiter = "/";
+        static::$registry = new RedisRegistry($redis, $prefix, $delimiter, null);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
-
-        if (!empty(static::$em)) {
-            static::$em->close();
-        }
+        //echo "tearDown()";
 
         parent::tearDown();
     }

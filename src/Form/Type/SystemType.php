@@ -55,7 +55,7 @@ class SystemType extends AbstractType
             ->add('value', 'textarea');
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => SystemKey::class,
@@ -63,7 +63,7 @@ class SystemType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'registry_system';
     }
