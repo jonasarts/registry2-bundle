@@ -15,6 +15,7 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
 
 use Symfony\Component\Yaml\Yaml;
 use jonasarts\Bundle\RegistryBundle\Engine\RegistryEngineInterface;
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 
 /**
  * The registry logic
@@ -50,42 +51,53 @@ abstract class AbstractRegistry implements RegistryInterface
     protected string $delimiter;
 
     /**
-     * @param string $type
+     * The engine only operates with type-strings, this method always returns strings for types
+     *
+     * @param string|RegistryKeyType $type
      * @return string
      */
-    private function optimizeType(string $type): string
+    private function optimizeType(string|RegistryKeyType $type): string
     {
-        switch (trim($type)) {
+        if (is_string($type)) {
+            $type = trim($type);
+        }
+
+        switch ($type) {
             case 'i':
             case 'int':
             case 'integer':
+            case RegistryKeyType::INTEGER:
                 return 'i';
-                break;
             case 'b':
             case 'bln':
             case 'boolean':
+            case RegistryKeyType::BOOLEAN:
                 return 'b';
-                break;
             case 's':
             case 'str':
             case 'string':
+            case RegistryKeyType::STRING:
                 return 's';
-                break;
             case 'f':
             case 'flt':
             case 'float':
+            case RegistryKeyType::FLOAT:
                 return 'f';
-                break;
             case 'd':
             case 'dat':
             case 'date':
+            case RegistryKeyType::DATE:
                 return 'd';
-                break;
             case 't':
             case 'tim':
             case 'time':
+            case RegistryKeyType::TIME:
                 return 't';
-                break;
+            case 'a':
+            case 'arr':
+            case 'array':
+            case RegistryKeyType::ARRAY:
+                return 'a';
             default:
                 return 's';
         }
@@ -124,10 +136,10 @@ abstract class AbstractRegistry implements RegistryInterface
      * @param int    $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function registryExists(int $user_id, string $key, string $name, string $type): bool
+    public function registryExists(int $user_id, string $key, string $name, string|RegistryKeyType $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -140,7 +152,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see RegistryExists
      */
-    public function re(int $uid, string $k, string $n, string $t): bool
+    public function re(int $uid, string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->registryExists($uid, $k, $n, $t);
     }
@@ -153,10 +165,10 @@ abstract class AbstractRegistry implements RegistryInterface
      * @param int    $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function registryDelete(int $user_id, string $key, string $name, string $type): bool
+    public function registryDelete(int $user_id, string $key, string $name, string|RegistryKeyType $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -169,7 +181,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see RegistryDelete
      */
-    public function rd(int $uid, string $k, string $n, string $t): bool
+    public function rd(int $uid, string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->registryDelete($uid, $k, $n, $t);
     }
@@ -181,11 +193,11 @@ abstract class AbstractRegistry implements RegistryInterface
      * @param int    $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed  $default
      * @return mixed
      */
-    public function registryReadDefault(int $user_id, string $key, string $name, string $type, $default)
+    public function registryReadDefault(int $user_id, string $key, string $name, string|RegistryKeyType $type, $default)
     {
         // RegistryRead returns any found value as string or false if not found!
 
@@ -204,19 +216,21 @@ abstract class AbstractRegistry implements RegistryInterface
             // return value
             switch ($type) {
                 case 'i':
+                case RegistryKeyType::INTEGER:
                     return (integer) $value;
-                    break;
                 case 'b':
+                case RegistryKeyType::BOOLEAN:
                     return (boolean) $value;
-                    break;
                 case 's':
+                case RegistryKeyType::STRING:
                     return (string) $value;
-                    break;
                 case 'f':
+                case RegistryKeyType::FLOAT:
                     return (float) $value;
-                    break;
                 case 'd':
                 case 't':
+                case RegistryKeyType::DATE:
+                case RegistryKeyType::TIME:
                     $value = $value; // this always is a string
                     if (is_numeric($value)) { // don't use is_int here
                         return (integer) $value;
@@ -224,6 +238,9 @@ abstract class AbstractRegistry implements RegistryInterface
                         return strtotime($value);
                     }
                     break;
+                case 'a':
+                case RegistryKeyType::ARRAY:
+                    return json_decode($value, true);
                 default:
                     return $value;
             }
@@ -236,27 +253,35 @@ abstract class AbstractRegistry implements RegistryInterface
             // regular
             switch ($type) {
                 case 'i':
+                case RegistryKeyType::INTEGER:
                     return (integer) $default;
-                    break;
                 case 'b':
+                case RegistryKeyType::BOOLEAN:
                     return (boolean) $default;
-                    break;
                 case 's':
+                case RegistryKeyType::STRING:
                     return (string) $default;
-                    break;
                 case 'f':
+                case RegistryKeyType::FLOAT:
                     return (float) $default;
-                    break;
                 case 'd':
                 case 't':
+                case RegistryKeyType::DATE:
+                case RegistryKeyType::TIME:
                     if ($default instanceof \DateTime) {
                         return $default;
                     } elseif (is_int($default)) {
                         return $default;
-                    } elseif (is_string($default)) {
+                    } else { //if (is_string($default)) {
                         return strtotime($default);
                     }
                     break;
+                case 'a':
+                case RegistryKeyType::ARRAY:
+                    if (is_string($default)) {
+                        return json_decode($default, true);
+                    }
+                    return $default; // is_array()
                 default:
                     return $default;
             }
@@ -268,7 +293,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see RegistryReadDefault
      */
-    public function rrd(int $uid, string $k, string $n, string $t, $d)
+    public function rrd(int $uid, string $k, string $n, string|RegistryKeyType $t, $d)
     {
         return $this->registryReadDefault($uid, $k, $n, $t, $d);
     }
@@ -279,10 +304,10 @@ abstract class AbstractRegistry implements RegistryInterface
      * @param int    $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function registryRead(int $user_id, string $key, string $name, string $type)
+    public function registryRead(int $user_id, string $key, string $name, string|RegistryKeyType $type)
     {
         $result = $this->registryReadDefault($user_id, $key, $name, $type, null);
 
@@ -299,7 +324,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see RegistryRead
      */
-    public function rr(int $uid, string $k, string $n, string $t)
+    public function rr(int $uid, string $k, string $n, string|RegistryKeyType $t)
     {
         return $this->registryRead($uid, $k, $n, $t);
     }
@@ -310,10 +335,10 @@ abstract class AbstractRegistry implements RegistryInterface
      * @param int    $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function registryReadOnce(int $user_id, string $key, string $name, string $type)
+    public function registryReadOnce(int $user_id, string $key, string $name, string|RegistryKeyType $type)
     {
         $r = $this->registryRead($user_id, $key, $name, $type);
 
@@ -325,7 +350,7 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Short method to RegistryReadOnce.
      */
-    public function rro(int $uid, string $k, string $n, string $t)
+    public function rro(int $uid, string $k, string $n, string|RegistryKeyType $t)
     {
         return $this->registryReadOnce($uid, $k, $n, $t);
     }
@@ -336,12 +361,12 @@ abstract class AbstractRegistry implements RegistryInterface
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $value
      * @return bool
      * @throws \Exception
      */
-    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
+    public function registryWrite(int $user_id, string $key, string $name, string|RegistryKeyType $type, $value): bool
     {
         // validate registry key - delimiter is not allowed
         if (strpos($key, $this->delimiter) !== false) {
@@ -373,6 +398,8 @@ abstract class AbstractRegistry implements RegistryInterface
         switch ($type) {
             case 'd':
             case 't':
+            case RegistryKeyType::DATE:
+            case RegistryKeyType::TIME:
                 if ($value instanceof \DateTime) {
                     // convert DateTime to string
                     $value = $value->format('c');
@@ -381,6 +408,10 @@ abstract class AbstractRegistry implements RegistryInterface
                 } elseif (is_string($value)) {
                     // nothing to do
                 }
+                break;
+            case 'a':
+            case RegistryKeyType::ARRAY:
+                $value = json_encode($value);
                 break;
         }
 
@@ -394,7 +425,7 @@ abstract class AbstractRegistry implements RegistryInterface
      * @throws \Exception
      * @see RegistryWrite
      */
-    public function rw(int $uid, string $k, string $n, string $t, $v): bool
+    public function rw(int $uid, string $k, string $n, string|RegistryKeyType $t, $v): bool
     {
         return $this->registryWrite($uid, $k, $n, $t, $v);
     }
@@ -418,10 +449,10 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function systemExists(string $key, string $name, string $type): bool
+    public function systemExists(string $key, string $name, string|RegistryKeyType $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -434,7 +465,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see SystemExits
      */
-    public function se(string $k, string $n, string $t): bool
+    public function se(string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->systemExists($k, $n, $t);
     }
@@ -444,10 +475,10 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function systemDelete(string $key, string $name, string $type): bool
+    public function systemDelete(string $key, string $name, string|RegistryKeyType $type): bool
     {
         // convert type
         $type = $this->optimizeType($type);
@@ -460,7 +491,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see SystemDelete
      */
-    public function sd(string $k, string $n, string $t): bool
+    public function sd(string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->systemDelete($k, $n, $t);
     }
@@ -471,11 +502,11 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $default
      * @return mixed
      */
-    public function systemReadDefault(string $key, string $name, string $type, $default)
+    public function systemReadDefault(string $key, string $name, string|RegistryKeyType $type, $default)
     {
         // SystemRead returns any found value as string or false if not found!
 
@@ -488,26 +519,30 @@ abstract class AbstractRegistry implements RegistryInterface
             // return value
             switch ($type) {
                 case 'i':
+                case RegistryKeyType::INTEGER:
                     return (integer) $value;
-                    break;
                 case 'b':
+                case RegistryKeyType::BOOLEAN:
                     return (boolean) $value;
-                    break;
                 case 's':
+                case RegistryKeyType::STRING:
                     return (string) $value;
-                    break;
                 case 'f':
+                case RegistryKeyType::FLOAT:
                     return (float) $value;
-                    break;
                 case 'd':
                 case 't':
+                case RegistryKeyType::DATE:
+                case RegistryKeyType::TIME:
                     $value = $value; // this always is a string
                     if (is_numeric($value)) { // don't use is_int here
                         return (integer) $value;
                     } else {
                         return strtotime($value);
                     }
-                    break;
+                case 'a':
+                case RegistryKeyType::ARRAY:
+                    return json_decode($value, true);
                 default:
                     return $value;
             }
@@ -520,27 +555,39 @@ abstract class AbstractRegistry implements RegistryInterface
             // regular
             switch ($type) {
                 case 'i':
+                case RegistryKeyType::INTEGER:
                     return (integer) $default;
                     break;
                 case 'b':
+                case RegistryKeyType::BOOLEAN:
                     return (boolean) $default;
                     break;
                 case 's':
+                case RegistryKeyType::STRING:
                     return (string) $default;
                     break;
                 case 'f':
+                case RegistryKeyType::FLOAT:
                     return (float) $default;
                     break;
                 case 'd':
                 case 't':
+                case RegistryKeyType::DATE:
+                case RegistryKeyType::TIME:
                     if ($default instanceof \DateTime) {
                         return $default;
                     } elseif (is_int($default)) {
                         return $default;
-                    } elseif (is_string($default)) {
+                    } else { //if (is_string($default)) {
                         return strtotime($default);
                     }
                     break;
+                case 'a':
+                case RegistryKeyType::ARRAY:
+                    if (is_string($default)) {
+                        return json_decode($default, true);
+                    }
+                    return $default; // is_array()
                 default:
                     return $default;
             }
@@ -552,7 +599,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see SystemReadDefault
      */
-    public function srd(string $k, string $n, string $t, $d)
+    public function srd(string $k, string $n, string|RegistryKeyType $t, $d)
     {
         return $this->systemReadDefault($k, $n, $t, $d);
     }
@@ -562,10 +609,10 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function systemRead(string $key, string $name, string $type)
+    public function systemRead(string $key, string $name, string|RegistryKeyType $type)
     {
         $result = $this->systemReadDefault($key, $name, $type, null);
 
@@ -582,7 +629,7 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @see SystemRead
      */
-    public function sr(string $k, string $n, string $t)
+    public function sr(string $k, string $n, string|RegistryKeyType $t)
     {
         return $this->systemRead($k, $n, $t);
     }
@@ -592,10 +639,10 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function systemReadOnce(string $key, string $name, string $type)
+    public function systemReadOnce(string $key, string $name, string|RegistryKeyType $type)
     {
         $r = $this->systemRead($key, $name, $type);
 
@@ -607,7 +654,7 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Short method to SystemReadOnce.
      */
-    public function sro(string $k, string $n, string $t)
+    public function sro(string $k, string $n, string|RegistryKeyType $t)
     {
         return $this->systemReadOnce($k, $n, $t);
     }
@@ -617,12 +664,12 @@ abstract class AbstractRegistry implements RegistryInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $value
      * @return bool
      * @throws \Exception
      */
-    public function systemWrite(string $key, string $name, string $type, $value): bool
+    public function systemWrite(string $key, string $name, string|RegistryKeyType $type, $value): bool
     {
         // validate registry key - delimiter is not allowed
         if (strpos($key, $this->delimiter) !== false) {
@@ -641,6 +688,8 @@ abstract class AbstractRegistry implements RegistryInterface
         switch ($type) {
             case 'd':
             case 't':
+            case RegistryKeyType::DATE:
+            case RegistryKeyType::TIME:
                 if ($value instanceof \DateTime) {
                     // convert DateTime to string
                     $value = $value->format('c');
@@ -649,6 +698,10 @@ abstract class AbstractRegistry implements RegistryInterface
                 } elseif (is_string($value)) {
                     // nothing to do
                 }
+                break;
+            case 'a':
+            case RegistryKeyType::ARRAY:
+                $value = json_encode($value);
                 break;
         }
 
@@ -662,7 +715,7 @@ abstract class AbstractRegistry implements RegistryInterface
      * @throws \Exception
      * @see SystemWrite
      */
-    public function sw(string $k, string $n, string $t, $v): bool
+    public function sw(string $k, string $n, string|RegistryKeyType $t, $v): bool
     {
         return $this->systemWrite($k, $n, $t, $v);
     }

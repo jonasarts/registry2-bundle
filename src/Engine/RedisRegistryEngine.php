@@ -134,30 +134,30 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     // exists
-    public function systemExists(string $systemkey, string $name, string $type): bool
+    public function systemExists(string $key, string $name, string $type): bool
     {
-        return $this->redis->hExists($this->getHashKey($systemkey), $name.$this->delimiter.$type) > 0;
+        return $this->redis->hExists($this->getHashKey($key), $name.$this->delimiter.$type) > 0;
     }
 
     // del
-    public function systemDelete(string $systemkey, string $name, string $type): bool
+    public function systemDelete(string $key, string $name, string $type): bool
     {
-        // false if failure, 0 if doesnt exist, long number of deleted keys
-        $r = $this->redis->hDel($this->getHashKey($systemkey), $name.$this->delimiter.$type) > 0;
+        // false if failure, 0 if doesn't exist, long number of deleted keys
+        $r = $this->redis->hDel($this->getHashKey($key), $name.$this->delimiter.$type) > 0;
 
         return ($r != false) && ($r > 0);
     }
 
     // get
-    public function systemRead(string $systemkey, string $name, string $type)
+    public function systemRead(string $key, string $name, string $type)
     {
-        return $this->redis->hGet($this->getHashKey($systemkey), $name.$this->delimiter.$type);
+        return $this->redis->hGet($this->getHashKey($key), $name.$this->delimiter.$type);
     }
 
     // set
-    public function systemWrite(string $systemkey, string $name, string $type, $value): bool
+    public function systemWrite(string $key, string $name, string $type, $value): bool
     {
-        return $this->redis->hSet($this->getHashKey($systemkey), $name.$this->delimiter.$type, $value) !== false;
+        return $this->redis->hSet($this->getHashKey($key), $name.$this->delimiter.$type, $value) !== false;
     }
 
     /**

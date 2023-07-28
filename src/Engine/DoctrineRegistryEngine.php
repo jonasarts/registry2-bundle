@@ -26,10 +26,10 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     private EntityManagerInterface $em;
 
     // doctrine repository for registry keys
-    private $registry;
+    private \Doctrine\ORM\EntityRepository $registry;
 
     // doctrine repository for system keys
-    private $system;
+    private \Doctrine\ORM\EntityRepository $system;
 
     /**
      * Constructor.
@@ -90,7 +90,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $entity->setType($type);
         // entity value must be of type 'string'
         if (is_array($value)) {
-            $entity->setValue(json_encode($value, true));
+            $entity->setValue(json_encode($value));
         } else if (is_object($value)) {
             $entity->setValue((string) $value);
         } else {
@@ -110,7 +110,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     public function registryAll(): array
     {
         $entities = $this->em
-            ->getRepository(RegistryKeyEntity::class)
+            ->getRepository(RegKey::class)
             ->findAll();
 
         return $entities;
@@ -161,7 +161,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $entity->setType($type);
         // entity value must be of type 'string'
         if (is_array($value)) {
-            $entity->setValue(json_encode($value, true));
+            $entity->setValue(json_encode($value));
         } else if (is_object($value)) {
             $entity->setValue((string) $value);
         } else {
@@ -181,7 +181,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     public function systemAll(): array
     {
         $entities = $this->em
-            ->getRepository(SystemKeyEntity::class)
+            ->getRepository(SysKey::class)
             ->findAll();
 
         return $entities;

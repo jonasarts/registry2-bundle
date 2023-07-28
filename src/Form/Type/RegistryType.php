@@ -26,7 +26,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
  */
 class RegistryType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $read_only = $options['mode'] == 'edit';
 
