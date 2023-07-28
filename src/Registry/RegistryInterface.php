@@ -20,9 +20,40 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
  */
 interface RegistryInterface
 {
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function registryExists(int $user_id, string $key, string $name, string $type): bool;
+
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function re(int $uid, string $k, string $n, string $t): bool;
+
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function registryDelete(int $user_id, string $key, string $name, string $type): bool;
+
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function rd(int $uid, string $k, string $n, string $t): bool;
 
     /**
@@ -101,10 +132,36 @@ interface RegistryInterface
      */
     public function rw(int $uid, string $k, string $n, string $t, mixed $v): bool;
 
-
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function systemExists(string $key, string $name, string $type): bool;
+
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function se(string $k, string $n, string $t): bool;
+
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function systemDelete(string $key, string $name, string $type): bool;
+
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function sd(string $k, string $n, string $t): bool;
 
     /**
@@ -175,6 +232,8 @@ interface RegistryInterface
      */
     public function sw(string $k, string $n, string $t, mixed $v): bool;
 
-    /** @return array<int, mixed> */
+    /**
+     * @return array<int, mixed>
+     */
     public function registryAll(): array;
 }

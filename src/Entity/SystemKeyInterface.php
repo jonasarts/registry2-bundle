@@ -20,6 +20,9 @@ namespace jonasarts\Bundle\RegistryBundle\Entity;
  */
 interface SystemKeyInterface
 {
+    /**
+     * @return string
+     */
     public function getKey(): string;
 
     /**
@@ -28,6 +31,9 @@ interface SystemKeyInterface
      */
     public function setKey(string $key): SystemKeyInterface;
 
+    /**
+     * @return string
+     */
     public function getName(): string;
 
     /**
@@ -36,6 +42,9 @@ interface SystemKeyInterface
      */
     public function setName(string $name): SystemKeyInterface;
 
+    /**
+     * @return string
+     */
     public function getType(): string;
 
     /**
@@ -44,6 +53,9 @@ interface SystemKeyInterface
      */
     public function setType(string $type): SystemKeyInterface;
 
+    /**
+     * @return string
+     */
     public function getValue(): string;
 
     /**
@@ -52,7 +64,9 @@ interface SystemKeyInterface
      */
     public function setValue(string $value): SystemKeyInterface;
 
-    /** @return string */
+    /**
+     * @return string
+     */
     public function serialize(): string;
 
     /**

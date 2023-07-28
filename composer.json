@@ -13,13 +13,12 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "symfony/config": "^6.0|^7.0",
         "symfony/dependency-injection": "^6.0|^7.0",
         "snc/redis-bundle": "^4.10"
     },
     "suggest": {
-        "doctrine/annotations": "If you want to use DoctrineRegistry",
         "doctrine/doctrine-bundle": "If you want to use the DoctrineRegistry.",
         "snc/redis-bundle": "If you want to use RedisRegistry.",
         "predis/predis": "If you want to use predis for RedisRegistry.",

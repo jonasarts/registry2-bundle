@@ -20,5 +20,4 @@ namespace jonasarts\Bundle\RegistryBundle\Registry;
  */
 interface RedisRegistryInterface extends RegistryInterface
 {
-
 }

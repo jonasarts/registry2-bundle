@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
-
 /**
  * RegistryKey.
  *
@@ -52,7 +50,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->user_id.' - '.$this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
     }
@@ -178,7 +176,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      */
     public function serialize(): string
     {
-        $a = array();
+        $a = [];
         $a['user_id'] = $this->user_id;
         $a['key'] = $this->key;
         $a['name'] = $this->name;

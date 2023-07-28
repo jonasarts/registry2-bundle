@@ -16,7 +16,6 @@ namespace jonasarts\Bundle\RegistryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'registry')]
@@ -51,11 +50,11 @@ class RegistryKeyEntity implements RegistryKeyInterface
     private string $value;
 
     /**
-     * Entitiy to string.
+     * Entity to string.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->user_id.' - '.$this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
     }
@@ -191,7 +190,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
      */
     public function serialize(): string
     {
-        $a = array();
+        $a = [];
         $a['user_id'] = $this->user_id;
         $a['key'] = $this->key;
         $a['name'] = $this->name;

@@ -19,19 +19,23 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 
 /**
- *
+ * DoctrineRegistryEngine
  */
 class DoctrineRegistryEngine implements RegistryEngineInterface
 {
-    // entity manager
+    /**
+     * @var EntityManagerInterface entity manager
+     */
     private EntityManagerInterface $em;
 
-    // doctrine repository for registry keys
-    /** @var ObjectRepository<RegKey> */
+    /**
+     * @var ObjectRepository<RegKey> doctrine repository for registry keys
+     */
     private ObjectRepository $registry;
 
-    // doctrine repository for system keys
-    /** @var ObjectRepository<SysKey> */
+    /**
+     * @var ObjectRepository<SysKey> doctrine repository for system keys
+     */
     private ObjectRepository $system;
 
     /**
@@ -47,16 +51,32 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $this->system = $this->em->getRepository(SysKey::class);
     }
 
-    // exists
+    /**
+     * exists
+     *
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function registryExists(int $user_id, string $key, string $name, string $type): bool
     {
-        return $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type)) instanceof RegKey;
+        return $this->registry->findOneBy(['user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type]) instanceof RegKey;
     }
 
-    // del
+    /**
+     * del
+     *
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function registryDelete(int $user_id, string $key, string $name, string $type): bool
     {
-        $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type));
+        $entity = $this->registry->findOneBy(['user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type]);
 
         if ($entity instanceof RegKey) {
             $this->em->remove($entity);
@@ -66,10 +86,18 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         return $entity instanceof RegKey;
     }
 
-    // get
+    /**
+     * get
+     *
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool|string
+     */
     public function registryRead(int $user_id, string $key, string $name, string $type): bool|string
     {
-        $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
+        $entity = $this->registry->findOneBy(['user_id' => $user_id, 'key' => $key, 'name' => $name]);
 
         if ($entity instanceof RegKey) {
             return (string) $entity->getValue();
@@ -78,15 +106,20 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         }
     }
 
-    // set
-
     /**
+     * set
+     *
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $value
+     * @return bool
      * @throws \JsonException
      */
-    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
+    public function registryWrite(int $user_id, string $key, string $name, string $type, mixed $value): bool
     {
-        $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
+        $entity = $this->registry->findOneBy(['user_id' => $user_id, 'key' => $key, 'name' => $name]);
 
         if (!$entity instanceof RegKey) {
             $entity = new RegKey();
@@ -122,16 +155,30 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         return $entities;
     }
 
-    // exists
+    /**
+     * exists
+     *
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function systemExists(string $key, string $name, string $type): bool
     {
-        return $this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type)) instanceof SysKey;
+        return $this->system->findOneBy(['key' => $key, 'name' => $name, 'type' => $type]) instanceof SysKey;
     }
 
-    // del
+    /**
+     * del
+     *
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function systemDelete(string $key, string $name, string $type): bool
     {
-        $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type));
+        $entity = $this->system->findOneBy(['key' => $key, 'name' => $name, 'type' => $type]);
 
         if ($entity instanceof SysKey) {
             $this->em->remove($entity);
@@ -141,10 +188,17 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         return $entity instanceof SysKey;
     }
 
-    // get
+    /**
+     * get
+     *
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool|string
+     */
     public function systemRead(string $key, string $name, string $type): bool|string
     {
-        $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
+        $entity = $this->system->findOneBy(['key' => $key, 'name' => $name]);
 
         if ($entity instanceof SysKey) {
             return (string) $entity->getValue();
@@ -153,15 +207,19 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         }
     }
 
-    // set
-
     /**
+     * set
+     *
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $value
+     * @return bool
      * @throws \JsonException
      */
-    public function systemWrite(string $key, string $name, string $type, $value): bool
+    public function systemWrite(string $key, string $name, string $type, mixed $value): bool
     {
-        $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
+        $entity = $this->system->findOneBy(['key' => $key, 'name' => $name]);
 
         if (!$entity instanceof SysKey) {
             $entity = new SysKey();
@@ -198,9 +256,10 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
 
     /**
      * @param mixed $value
+     * @return string
      * @throws \JsonException
      */
-    private function stringify($value): string
+    private function stringify(mixed $value): string
     {
         if (is_string($value)) {
             return $value;

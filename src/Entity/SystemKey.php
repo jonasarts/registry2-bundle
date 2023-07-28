@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
-use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
-
 /**
  * SystemKey.
  *
@@ -47,7 +45,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
     }
@@ -150,7 +148,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      */
     public function serialize(): string
     {
-        $array = array();
+        $array = [];
         $array['key'] = $this->key;
         $array['name'] = $this->name;
         $array['type'] = $this->type;

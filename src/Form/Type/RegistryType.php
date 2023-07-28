@@ -22,7 +22,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
-
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
 
 /**
@@ -40,39 +39,39 @@ class RegistryType extends AbstractType
         $read_only = $options['mode'] == 'edit';
 
         $builder
-            ->add('userid', IntegerType::class, array(
+            ->add('userid', IntegerType::class, [
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],
-            ))
-            ->add('key', TextType::class, array(
-                'constraints' => array(
+            ])
+            ->add('key', TextType::class, [
+                'constraints' => [
                     new NotBlank(),
                     new Length(max: 255),
-                ),
+                ],
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],
-            ))
-            ->add('name', TextType::class, array(
-                'constraints' => array(
+            ])
+            ->add('name', TextType::class, [
+                'constraints' => [
                     new NotBlank(),
                     new Length(max: 255),
-                ),
+                ],
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],
-            ))
-            ->add('type', ChoiceType::class, array(
-                'choices' => array('i' => 'Integer', 'b' => 'Boolean', 's' => 'String', 'f' => 'Float', 'd' => 'DateTime'),
+            ])
+            ->add('type', ChoiceType::class, [
+                'choices' => ['i' => 'Integer', 'b' => 'Boolean', 's' => 'String', 'f' => 'Float', 'd' => 'DateTime'],
                 'required' => true,
                 'disabled' => $read_only,
-            ))
+            ])
             ->add('value', TextareaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => RegistryKey::class,
             'mode' => null,
-        ));
+        ]);
     }
 }

@@ -47,7 +47,9 @@ abstract class AbstractRegistry implements RegistryInterface
         };
     }
 
-    /** Constructor. */
+    /**
+     * Constructor.
+     */
     public function __construct(?string $default_values_filename = null)
     {
         $this->use_yaml = false;
@@ -76,21 +78,49 @@ abstract class AbstractRegistry implements RegistryInterface
         }
     }
 
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function registryExists(int $user_id, string $key, string $name, string $type): bool
     {
         return $this->engine->registryExists($user_id, $key, $name, $this->optimizeType($type));
     }
 
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function re(int $uid, string $k, string $n, string $t): bool
     {
         return $this->registryExists($uid, $k, $n, $t);
     }
 
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function registryDelete(int $user_id, string $key, string $name, string $type): bool
     {
         return $this->engine->registryDelete($user_id, $key, $name, $this->optimizeType($type));
     }
 
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function rd(int $uid, string $k, string $n, string $t): bool
     {
         return $this->registryDelete($uid, $k, $n, $t);
@@ -235,27 +265,53 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->registryWrite($uid, $k, $n, $t, $v);
     }
 
-    /** @return array<int, mixed> */
+    /**
+     * @return array<int, mixed>
+     */
     public function registryAll(): array
     {
         return $this->engine->registryAll();
     }
 
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function systemExists(string $key, string $name, string $type): bool
     {
         return $this->engine->systemExists($key, $name, $this->optimizeType($type));
     }
 
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function se(string $k, string $n, string $t): bool
     {
         return $this->systemExists($k, $n, $t);
     }
 
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return bool
+     */
     public function systemDelete(string $key, string $name, string $type): bool
     {
         return $this->engine->systemDelete($key, $name, $this->optimizeType($type));
     }
 
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return bool
+     */
     public function sd(string $k, string $n, string $t): bool
     {
         return $this->systemDelete($k, $n, $t);
@@ -381,7 +437,9 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->systemWrite($k, $n, $t, $v);
     }
 
-    /** @return array<int, mixed> */
+    /**
+     * @return array<int, mixed>
+     */
     public function systemAll(): array
     {
         return $this->engine->systemAll();

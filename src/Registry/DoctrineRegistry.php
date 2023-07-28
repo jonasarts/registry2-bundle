@@ -24,6 +24,10 @@ use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
  */
 class DoctrineRegistry extends AbstractRegistry implements DoctrineRegistryInterface
 {
+    /**
+     * @param EntityManagerInterface $em
+     * @param string|null $default_values_filename
+     */
     public function __construct(EntityManagerInterface $em, ?string $default_values_filename = null)
     {
         parent::__construct($default_values_filename);

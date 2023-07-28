@@ -16,7 +16,6 @@ namespace jonasarts\Bundle\RegistryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: '`system`')]
@@ -52,7 +51,7 @@ class SystemKeyEntity implements SystemKeyInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->key.'/'.$this->name.' => '.$this->value.' ('.$this->type.')';
     }
@@ -165,7 +164,7 @@ class SystemKeyEntity implements SystemKeyInterface
      */
     public function serialize(): string
     {
-        $array = array();
+        $array = [];
         $array['key'] = $this->key;
         $array['name'] = $this->name;
         $array['type'] = $this->type;

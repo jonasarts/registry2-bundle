@@ -36,13 +36,13 @@ class SystemController extends AbstractController
      * Lists all Registry entities.
      */
     #[Route('/', name: 'system_index')]
-    public function indexAction(Request $request): Response
+    public function indexAction(): Response
     {
         $entities = $this->all();
 
-        return $this->render('@Registry/System/index.html.twig', array(
+        return $this->render('@Registry/System/index.html.twig', [
             'entities' => $entities,
-        ));
+        ]);
     }
 
     /**
@@ -53,12 +53,12 @@ class SystemController extends AbstractController
     {
         $entity = new SysKey();
 
-        $form = $this->createForm(SystemType::class, $entity, array('mode' => 'new'));
+        $form = $this->createForm(SystemType::class, $entity, ['mode' => 'new']);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // systemWrite will create a new systemkey
+            // systemWrite will create a new systemKey
             $r = $this->write(
                 $entity->getKey(),
                 $entity->getName(),
@@ -73,15 +73,16 @@ class SystemController extends AbstractController
             return $this->redirectToRoute('system_index');
         }
 
-        return $this->render('@Registry/System/new.html.twig', array(
+        return $this->render('@Registry/System/new.html.twig', [
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('system_index'),
-        ));
+        ]);
     }
 
     /**
      * Displays a form to edit a System entity.
+     * @throws \JsonException
      */
     #[Route('/edit', name: 'system_edit')]
     public function editAction(Request $request): Response
@@ -92,7 +93,7 @@ class SystemController extends AbstractController
         }
         $entity = SysKey::deserialize($s);
 
-        $form = $this->createForm(SystemType::class, $entity, array('mode' => 'edit'));
+        $form = $this->createForm(SystemType::class, $entity, ['mode' => 'edit']);
 
         $form->handleRequest($request);
 
@@ -112,15 +113,16 @@ class SystemController extends AbstractController
             return $this->redirectToRoute('system_index');
         }
 
-        return $this->render('@Registry/System/edit.html.twig', array(
+        return $this->render('@Registry/System/edit.html.twig', [
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('system_index'),
-        ));
+        ]);
     }
 
     /**
      * Delete a System entity.
+     * @throws \JsonException
      */
     #[Route('/delete', name: 'system_delete')]
     public function deleteAction(Request $request): Response

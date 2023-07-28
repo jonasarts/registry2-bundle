@@ -36,13 +36,13 @@ class RegistryController extends AbstractController
      * Lists all Registry entities.
      */
     #[Route('/', name: 'registry_index')]
-    public function indexAction(Request $request): Response
+    public function indexAction(): Response
     {
         $entities = $this->all();
 
-        return $this->render('@Registry/Registry/index.html.twig', array(
+        return $this->render('@Registry/Registry/index.html.twig', [
             'entities' => $entities,
-        ));
+        ]);
     }
 
     /**
@@ -53,12 +53,12 @@ class RegistryController extends AbstractController
     {
         $entity = new RegKey();
 
-        $form = $this->createForm(RegistryType::class, $entity, array('mode' => 'new'));
+        $form = $this->createForm(RegistryType::class, $entity, ['mode' => 'new']);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // registryWrite will create a new registrykey
+            // registryWrite will create a new registryKey
             $r = $this->write(
                 $entity->getUserId(),
                 $entity->getKey(),
@@ -74,15 +74,16 @@ class RegistryController extends AbstractController
             return $this->redirectToRoute('registry_index');
         }
 
-        return $this->render('@Registry/Registry/new.html.twig', array(
+        return $this->render('@Registry/Registry/new.html.twig', [
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('registry_index'),
-        ));
+        ]);
     }
 
     /**
      * Displays a form to edit a Registry entity.
+     * @throws \JsonException
      */
     #[Route('/edit', name: 'registry_edit')]
     public function editAction(Request $request): Response
@@ -93,7 +94,7 @@ class RegistryController extends AbstractController
         }
         $entity = RegKey::deserialize($s);
 
-        $form = $this->createForm(RegistryType::class, $entity, array('mode' => 'edit'));
+        $form = $this->createForm(RegistryType::class, $entity, ['mode' => 'edit']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $request->isMethod('POST')) {
@@ -113,15 +114,16 @@ class RegistryController extends AbstractController
             return $this->redirectToRoute('registry_index');
         }
 
-        return $this->render('@Registry/Registry/edit.html.twig', array(
+        return $this->render('@Registry/Registry/edit.html.twig', [
             'entity' => $entity,
             'form' => $form->createView(),
             'back_url' => $this->generateUrl('registry_index'),
-        ));
+        ]);
     }
 
     /**
      * Delete a Registry entity.
+     * @throws \JsonException
      */
     #[Route('/delete', name: 'registry_delete')]
     public function deleteAction(Request $request): Response
