@@ -24,7 +24,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
  * Doctrine-mapped SystemKey entity
  *
  * @ORM\Entity()
- * @ORM\Table(name="system",
+ * @ORM\Table(name="`system`",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="uix_key_name", columns={"systemkey", "name"})}
  * )
  * @UniqueEntity({"name", "systemkey"})
