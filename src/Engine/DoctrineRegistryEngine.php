@@ -98,7 +98,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
             $entity->setValue(strval($value));
         }
 
-        $this->em->merge($entity);
+        $this->em->persist($entity);
         $this->em->flush();
 
         return !is_null($entity);
@@ -110,7 +110,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     public function registryAll(): array
     {
         $entities = $this->em
-            ->getRepository(RegistryKeyEntity::class)
+            ->getRepository(RegKey::class)
             ->findAll();
 
         return $entities;
@@ -169,7 +169,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
             $entity->setValue(strval($value));
         }
 
-        $this->em->merge($entity);
+        $this->em->persist($entity);
         $this->em->flush();
 
         return !is_null($entity);
@@ -181,7 +181,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     public function systemAll(): array
     {
         $entities = $this->em
-            ->getRepository(SystemKeyEntity::class)
+            ->getRepository(SysKey::class)
             ->findAll();
 
         return $entities;

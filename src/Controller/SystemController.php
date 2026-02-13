@@ -13,26 +13,29 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
-use jonasarts\Bundle\RegistryBundle\Form\SystemType;
+use jonasarts\Bundle\RegistryBundle\Form\Type\SystemType;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * System controller.
- *
- * @Route("/system")
  */
-class SystemController extends Controller
+#[Route('/system')]
+class SystemController extends AbstractController
 {
+    public function __construct(
+        private readonly RegistryInterface $registry,
+    ) {
+    }
+
     /**
      * Lists all Registry entities.
-     *
-     * @Route("/", name="system_index")
-     * @Template()
      */
+    #[Route('/', name: 'system_index')]
     public function indexAction(Request $request): Response
     {
         $entities = $this->all();
@@ -44,18 +47,17 @@ class SystemController extends Controller
 
     /**
      * Displays a form to create a new System entity.
-     *
-     * @Route("/new", name="system_new")
      */
+    #[Route('/new', name: 'system_new')]
     public function newAction(Request $request): Response
     {
         $entity = new SysKey();
 
-        $form = $this->createForm(new SystemType(), $entity, array('mode' => 'new'));
+        $form = $this->createForm(SystemType::class, $entity, array('mode' => 'new'));
 
         $form->handleRequest($request);
 
-        if ($form->isSumitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // systemWrite will create a new systemkey
             $r = $this->write(
                 $entity->getKey(),
@@ -80,19 +82,17 @@ class SystemController extends Controller
 
     /**
      * Displays a form to edit a System entity.
-     *
-     * @Route("/edit", name="system_edit")
      */
+    #[Route('/edit', name: 'system_edit')]
     public function editAction(Request $request): Response
     {
         $s = $request->query->get('entity');
         $entity = SysKey::deserialize($s);
 
-        $form = $this->createForm(new SystemType(), $entity, array('mode' => 'edit'));
+        $form = $this->createForm(SystemType::class, $entity, array('mode' => 'edit'));
 
         $form->handleRequest($request);
 
-        //if ($form->isValid()) {
         if ($form->isSubmitted() && $request->isMethod('POST')) {
             // systemWrite can only update the value !!!
             $r = $this->write(
@@ -118,9 +118,8 @@ class SystemController extends Controller
 
     /**
      * Delete a System entity.
-     *
-     * @Route("/delete", name="system_delete")
      */
+    #[Route('/delete', name: 'system_delete')]
     public function deleteAction(Request $request): Response
     {
         $s = $request->query->get('entity');
@@ -142,40 +141,32 @@ class SystemController extends Controller
     /**
      * Delete system key from database.
      */
-    private function delete($key, $name, $type)
+    private function delete(string $key, string $name, string $type): bool
     {
-        $rm = $this->get('registry');
-
-        return $rm->systemDelete($key, $name, $type);
+        return $this->registry->systemDelete($key, $name, $type);
     }
 
     /**
      * Read system key from database.
      */
-    public function read($key, $name, $type)
+    public function read(string $key, string $name, string $type): mixed
     {
-        $rm = $this->get('registry');
-
-        return $rm->systemRead($key, $name, $type);
+        return $this->registry->systemRead($key, $name, $type);
     }
 
     /**
      * Write system key to database.
      */
-    public function write($key, $name, $type, $value)
+    public function write(string $key, string $name, string $type, mixed $value): bool
     {
-        $rm = $this->get('registry');
-
-        return $rm->systemWrite($key, $name, $type, $value);
+        return $this->registry->systemWrite($key, $name, $type, $value);
     }
 
     /**
      * Return all registry keys from database.
      */
-    public function all()
+    public function all(): array
     {
-        $rm = $this->get('registry');
-
-        return $rm->systemAll();
+        return $this->registry->systemAll();
     }
 }

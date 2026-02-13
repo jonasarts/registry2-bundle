@@ -1,9 +1,18 @@
 services:
-    jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry: 
-        arguments: [ "@service_container", "@doctrine.orm.entity_manager" ]
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry:
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+            $default_values_filename: "%registry.globals.default_values%"
 
     jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry:
-        #arguments: [ "@service_container", "@snc_redis.phpredis.registry" ]
-        arguments: [ "@service_container", "@snc_redis.registry" ]
+        arguments:
+            $redis: "@snc_redis.registry"
+            $registry_prefix: "%registry.redis.prefix%"
+            $registry_delimiter: "%registry.globals.delimiter%"
+            $default_values_filename: "%registry.globals.default_values%"
 
     #jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface:  '@jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry'

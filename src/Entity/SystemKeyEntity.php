@@ -18,60 +18,33 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyInterface;
 
-/**
- * SystemKeyEntity.
- *
- * Doctrine-mapped SystemKey entity
- *
- * @ORM\Entity()
- * @ORM\Table(name="`system`",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="uix_key_name", columns={"systemkey", "name"})}
- * )
- * @UniqueEntity({"name", "systemkey"})
- */
+#[ORM\Entity]
+#[ORM\Table(name: '`system`')]
+#[ORM\UniqueConstraint(name: 'uix_key_name', columns: ['systemkey', 'name'])]
+#[UniqueEntity(fields: ['name', 'key'])]
 class SystemKeyEntity implements SystemKeyInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="systemkey", type="string", length=255, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(max = 255)
-     */
+    #[ORM\Column(name: 'systemkey', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private string $key;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(max = 255)
-     */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private string $name;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=1, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(min = 1, max = 1))
-     */
+    #[ORM\Column(name: 'type', type: 'string', length: 1, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 1)]
     private string $type;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="value", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'value', type: 'text', nullable: true)]
     private string $value;
 
     /**

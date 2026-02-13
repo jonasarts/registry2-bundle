@@ -94,7 +94,7 @@ abstract class AbstractRegistry implements RegistryInterface
     /**
      * Constructor.
      */
-    public function __construct(string $default_values_filename = null)
+    public function __construct(?string $default_values_filename = null)
     {
         $this->use_yaml = false;
         $this->yaml = [];
@@ -204,10 +204,10 @@ abstract class AbstractRegistry implements RegistryInterface
             // return value
             switch ($type) {
                 case 'i':
-                    return (integer) $value;
+                    return (int) $value;
                     break;
                 case 'b':
-                    return (boolean) $value;
+                    return (bool) $value;
                     break;
                 case 's':
                     return (string) $value;
@@ -219,7 +219,7 @@ abstract class AbstractRegistry implements RegistryInterface
                 case 't':
                     $value = $value; // this always is a string
                     if (is_numeric($value)) { // don't use is_int here
-                        return (integer) $value;
+                        return (int) $value;
                     } else {
                         return strtotime($value);
                     }
@@ -236,10 +236,10 @@ abstract class AbstractRegistry implements RegistryInterface
             // regular
             switch ($type) {
                 case 'i':
-                    return (integer) $default;
+                    return (int) $default;
                     break;
                 case 'b':
-                    return (boolean) $default;
+                    return (bool) $default;
                     break;
                 case 's':
                     return (string) $default;
@@ -344,12 +344,12 @@ abstract class AbstractRegistry implements RegistryInterface
     public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
         // validate registry key - delimiter is not allowed
-        if (strpos($key, $this->delimiter) !== false) {
+        if (str_contains($key, $this->delimiter)) {
             // why not ?
         }
 
         // validate name - delimiter is not allowed in name
-        if (strpos($name, $this->delimiter) !== false) {
+        if (str_contains($name, $this->delimiter)) {
             throw new \Exception('delimiter is not allowed in name');
         }
 
@@ -488,10 +488,10 @@ abstract class AbstractRegistry implements RegistryInterface
             // return value
             switch ($type) {
                 case 'i':
-                    return (integer) $value;
+                    return (int) $value;
                     break;
                 case 'b':
-                    return (boolean) $value;
+                    return (bool) $value;
                     break;
                 case 's':
                     return (string) $value;
@@ -503,7 +503,7 @@ abstract class AbstractRegistry implements RegistryInterface
                 case 't':
                     $value = $value; // this always is a string
                     if (is_numeric($value)) { // don't use is_int here
-                        return (integer) $value;
+                        return (int) $value;
                     } else {
                         return strtotime($value);
                     }
@@ -520,10 +520,10 @@ abstract class AbstractRegistry implements RegistryInterface
             // regular
             switch ($type) {
                 case 'i':
-                    return (integer) $default;
+                    return (int) $default;
                     break;
                 case 'b':
-                    return (boolean) $default;
+                    return (bool) $default;
                     break;
                 case 's':
                     return (string) $default;
@@ -625,12 +625,12 @@ abstract class AbstractRegistry implements RegistryInterface
     public function systemWrite(string $key, string $name, string $type, $value): bool
     {
         // validate registry key - delimiter is not allowed
-        if (strpos($key, $this->delimiter) !== false) {
+        if (str_contains($key, $this->delimiter)) {
             // why not ?
         }
 
         // validate name - delimiter is not allowed in name
-        if (strpos($name, $this->delimiter) !== false) {
+        if (str_contains($name, $this->delimiter)) {
             throw new \Exception('delimiter is not allowed in name');
         }
 
