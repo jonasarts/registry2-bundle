@@ -52,7 +52,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
      *
      * @return string
      */
-    private function getHashKey(string $key, int $user_id = null): string
+    private function getHashKey(string $key, ?int $user_id = null): string
     {
         if (is_null($user_id)) {
             return $this->prefix.$this->delimiter.static::SYSTEM_TYPE.$this->delimiter.$key;
