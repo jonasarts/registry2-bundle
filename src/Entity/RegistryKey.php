@@ -23,7 +23,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
 class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 {
     /**
-     * @var int;
+     * @var int
      */
     private int $user_id;
 
@@ -184,7 +184,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
         $a['type'] = $this->type;
         $a['value'] = $this->value;
 
-        return json_encode($a);
+        return json_encode($a, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -193,21 +193,22 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      */
     public static function deserialize($string)
     {
-        $object = json_decode($string);
+        /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
+        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
 
         $registry_key = new self();
 
-        $registry_key->user_id = $object->user_id;
-        $registry_key->key = $object->key;
-        $registry_key->name = $object->name;
-        $registry_key->type = $object->type;
-        $registry_key->value = $object->value;
+        $registry_key->user_id = $object['user_id'];
+        $registry_key->key = $object['key'];
+        $registry_key->name = $object['name'];
+        $registry_key->type = $object['type'];
+        $registry_key->value = $object['value'];
 
         return $registry_key;
     }
 
     /**
-     * @param array $array
+     * @param array{user_id:int, key:string, name:string, type:string, value:string} $array
      * @return RegistryKey
      */
     public static function fromArray(array $array)

@@ -6,7 +6,7 @@ Registry Key List
 
 {% block body %}
 <h1>Registry Key List</h1>
-{% for flashMessage in app.session.flashbag.get('error') %}
+{% for flashMessage in app.flashes('error') %}
     <div class="alert alert-danger">
         {{ flashMessage }}
     </div>

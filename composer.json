@@ -13,19 +13,27 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
-        "friendsofphp/proxy-manager-lts": "*",
-        "symfony/config": "^5.0|^6.0",
-        "symfony/dependency-injection": "^5.0|^6.0",
-        "snc/redis-bundle": "^4.6"
+        "php": ">=8.2",
+        "symfony/config": "^6.4|^7.0",
+        "symfony/dependency-injection": "^6.4|^7.0",
+        "snc/redis-bundle": "^4.10"
     },
     "suggest": {
-        "doctrine/annotations": "If you want to use DoctrineRegistry",
-        "doctrine/doctrine-bundle": "If you want to use the DoctrineRegistry.",
+        "doctrine/orm": "^3.0 - If you want to use DoctrineRegistry",
+        "doctrine/doctrine-bundle": "^2.13 - If you want to use the DoctrineRegistry.",
         "snc/redis-bundle": "If you want to use RedisRegistry.",
-        "predis/predis": "If you want to use predis for RedisRegistry."
+        "predis/predis": "If you want to use predis for RedisRegistry.",
+        "symfony/form": "If you want to use the built-in controllers.",
+        "symfony/twig-bundle": "If you want to use the built-in controllers."
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\Tests\\": "tests/" }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0|^11.0",
+        "symfony/yaml": "^7.0"
     }
 }

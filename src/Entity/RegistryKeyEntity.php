@@ -18,67 +18,36 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
 
-/**
- * RegistryKeyEntity.
- *
- * Doctrine-mapped RegistryKey entity
- *
- * @ORM\Entity()
- * @ORM\Table(name="registry",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="uix_userid_key_name", columns={"userid", "registrykey", "name"})}
- * )
- * @UniqueEntity({"name", "registrykey", "userid"})
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'registry')]
+#[ORM\UniqueConstraint(name: 'uix_userid_key_name', columns: ['userid', 'registrykey', 'name'])]
+#[UniqueEntity(fields: ['name', 'key', 'user_id'])]
 class RegistryKeyEntity implements RegistryKeyInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private int $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private int $id = 0;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="userid", type="integer")
-     */
+    #[ORM\Column(name: 'userid', type: 'integer')]
     private int $user_id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="registrykey", type="string", length=255, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(max = 255)
-     */
+    #[ORM\Column(name: 'registrykey', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private string $key;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(max = 255)
-     */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private string $name;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=1, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(min = 1, max = 1)
-     */
+    #[ORM\Column(name: 'type', type: 'string', length: 1, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 1)]
     private string $type;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="value", type="text", nullable=true)
-     */
+    #[ORM\Column(name: 'value', type: 'text', nullable: true)]
     private string $value;
 
     /**
@@ -228,7 +197,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
         $a['type'] = $this->type;
         $a['value'] = $this->value;
 
-        return json_encode($a);
+        return json_encode($a, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -237,15 +206,16 @@ class RegistryKeyEntity implements RegistryKeyInterface
      */
     public static function deserialize($string)
     {
-        $object = json_decode($string);
+        /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
+        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
 
         $registry_key = new RegistryKey();
 
-        $registry_key->setUserId($object->user_id);
-        $registry_key->setKey($object->key);
-        $registry_key->setName($object->name);
-        $registry_key->setType($object->type);
-        $registry_key->setValue($object->value);
+        $registry_key->setUserId($object['user_id']);
+        $registry_key->setKey($object['key']);
+        $registry_key->setName($object['name']);
+        $registry_key->setType($object['type']);
+        $registry_key->setValue($object['value']);
 
         return $registry_key;
     }

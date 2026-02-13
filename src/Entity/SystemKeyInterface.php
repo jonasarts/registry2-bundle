@@ -22,21 +22,30 @@ interface SystemKeyInterface
 {
     public function getKey(): string;
 
+    /** @return self */
     public function setKey(string $key);
 
     public function getName(): string;
 
+    /** @return self */
     public function setName(string $name);
 
     public function getType(): string;
 
+    /** @return self */
     public function setType(string $type);
 
     public function getValue(): string;
 
+    /** @return self */
     public function setValue(string $value);
 
+    /** @return string */
     public function serialize();
 
+    /**
+     * @param string $string
+     * @return self
+     */
     public static function deserialize($string);
 }

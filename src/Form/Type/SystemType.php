@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -23,36 +26,41 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
 
 /**
  * Symfony Form
+ *
+ * @extends AbstractType<SystemKey>
  */
 class SystemType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param array{mode: 'new'|'edit'|null} $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $read_only = $options['mode'] == 'edit';
 
         $builder
-            ->add('key', 'text', array(
+            ->add('key', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),
-                    new Length(array('max' => 255)),
+                    new Length(max: 255),
                 ),
                 'required' => true,
-                'read_only' => $read_only,
+                'attr' => $read_only ? ['readonly' => true] : [],
             ))
-            ->add('name', 'text', array(
+            ->add('name', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),
-                    new Length(array('max' => 255)),
+                    new Length(max: 255),
                 ),
                 'required' => true,
-                'read_only' => $read_only,
+                'attr' => $read_only ? ['readonly' => true] : [],
             ))
-            ->add('type', 'choice', array(
+            ->add('type', ChoiceType::class, array(
                 'choices' => array('i' => 'Integer', 'b' => 'Boolean', 's' => 'String', 'f' => 'Float', 'd' => 'DateTime'),
                 'required' => true,
                 'disabled' => $read_only,
             ))
-            ->add('value', 'textarea');
+            ->add('value', TextareaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -61,10 +69,5 @@ class SystemType extends AbstractType
             'data_class' => SystemKey::class,
             'mode' => null,
         ));
-    }
-
-    public function getName(): string
-    {
-        return 'registry_system';
     }
 }

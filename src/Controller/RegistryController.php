@@ -13,25 +13,29 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
-use jonasarts\Bundle\RegistryBundle\Form\RegistryType;
+use jonasarts\Bundle\RegistryBundle\Form\Type\RegistryType;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * Registry controller.
- *
- * @Route("/registry")
  */
-class RegistryController extends Controller
+#[Route('/registry')]
+class RegistryController extends AbstractController
 {
+    public function __construct(
+        private readonly RegistryInterface $registry,
+    ) {
+    }
+
     /**
      * Lists all Registry entities.
-     *
-     * @Route("/", name="registry_index")
      */
+    #[Route('/', name: 'registry_index')]
     public function indexAction(Request $request): Response
     {
         $entities = $this->all();
@@ -43,14 +47,13 @@ class RegistryController extends Controller
 
     /**
      * Displays a form to create a new Registry entity.
-     *
-     * @Route("/new", name="registry_new")
      */
+    #[Route('/new', name: 'registry_new')]
     public function newAction(Request $request): Response
     {
         $entity = new RegKey();
 
-        $form = $this->createForm(new RegistryType(), $entity, array('mode' => 'new'));
+        $form = $this->createForm(RegistryType::class, $entity, array('mode' => 'new'));
 
         $form->handleRequest($request);
 
@@ -80,19 +83,20 @@ class RegistryController extends Controller
 
     /**
      * Displays a form to edit a Registry entity.
-     *
-     * @Route("/edit", name="registry_edit")
      */
+    #[Route('/edit', name: 'registry_edit')]
     public function editAction(Request $request): Response
     {
         $s = $request->query->get('entity');
+        if (!is_string($s)) {
+            throw $this->createNotFoundException('Missing entity');
+        }
         $entity = RegKey::deserialize($s);
 
-        $form = $this->createForm(new RegistryType(), $entity, array('mode' => 'edit'));
+        $form = $this->createForm(RegistryType::class, $entity, array('mode' => 'edit'));
         $form->handleRequest($request);
 
-        //if ($form->isValid()) {
-        if ($form->isSumitted() && $request->isMethod('POST')) {
+        if ($form->isSubmitted() && $request->isMethod('POST')) {
             // registryWrite can only update the value !!!
             $r = $this->write(
                 $entity->getUserId(),
@@ -118,12 +122,14 @@ class RegistryController extends Controller
 
     /**
      * Delete a Registry entity.
-     *
-     * @Route("/delete", name="registry_delete")
      */
+    #[Route('/delete', name: 'registry_delete')]
     public function deleteAction(Request $request): Response
     {
         $s = $request->query->get('entity');
+        if (!is_string($s)) {
+            throw $this->createNotFoundException('Missing entity');
+        }
         $entity = RegKey::deserialize($s);
 
         $r = $this->delete(
@@ -143,40 +149,26 @@ class RegistryController extends Controller
     /**
      * Delete registry key from database.
      */
-    private function delete($userid, $key, $name, $type)
+    private function delete(int $userid, string $key, string $name, string $type): bool
     {
-        $rm = $this->get('registry');
-
-        return $rm->registryDelete($userid, $key, $name, $type);
-    }
-
-    /**
-     * Read registry key from database.
-     */
-    public function read($userid, $key, $name, $type)
-    {
-        $rm = $this->get('registry');
-
-        return $rm->readRegistry($userid, $key, $name, $type);
+        return $this->registry->registryDelete($userid, $key, $name, $type);
     }
 
     /**
      * Write registry key to database.
      */
-    public function write($userid, $key, $name, $type, $value)
+    private function write(int $userid, string $key, string $name, string $type, mixed $value): bool
     {
-        $rm = $this->get('registry');
-
-        return $rm->registryWrite($userid, $key, $name, $type, $value);
+        return $this->registry->registryWrite($userid, $key, $name, $type, $value);
     }
 
     /**
      * Return all registry keys from database.
+     *
+     * @return array<int, mixed>
      */
-    public function all()
+    private function all(): array
     {
-        $rm = $this->get('registry');
-
-        return $rm->registryAll();
+        return $this->registry->registryAll();
     }
 }

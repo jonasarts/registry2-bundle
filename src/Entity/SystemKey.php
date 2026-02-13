@@ -155,7 +155,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
         $array['type'] = $this->type;
         $array['value'] = $this->value;
 
-        return json_encode($array);
+        return json_encode($array, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -164,20 +164,21 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      */
     public static function deserialize($string)
     {
-        $object = json_decode($string);
+        /** @var array{key:string, name:string, type:string, value:string} $object */
+        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
 
         $system_key = new self();
 
-        $system_key->key = $object->key;
-        $system_key->name = $object->name;
-        $system_key->type = $object->type;
-        $system_key->value = $object->value;
+        $system_key->key = $object['key'];
+        $system_key->name = $object['name'];
+        $system_key->type = $object['type'];
+        $system_key->value = $object['value'];
 
         return $system_key;
     }
 
     /**
-     * @param array $array
+     * @param array{key:string, name:string, type:string, value:string} $array
      * @return SystemKey
      */
     public static function fromArray(array $array)
