@@ -46,5 +46,5 @@ interface RegistryInterface
     public function sro(string $k, string $n, string $t);
     public function systemWrite(string $key, string $name, string $type, $value): bool;
     public function sw(string $k, string $n, string $t, $v): bool;
-    
+    public function registryAll(): array;
 }

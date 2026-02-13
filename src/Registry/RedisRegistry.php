@@ -23,11 +23,6 @@ use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
  */
 class RedisRegistry extends AbstractRegistry implements RedisRegistryInterface
 {
-    /**
-     * Constructor
-     *
-     * @var $redis \Redis|\Predis
-     */
     public function __construct($redis, string $registry_prefix, string $registry_delimiter, ?string $default_values_filename = null)
     {
         parent::__construct($default_values_filename);
