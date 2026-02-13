@@ -27,7 +27,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private int $id;
+    private int $id = 0;
 
     #[ORM\Column(name: 'userid', type: 'integer')]
     private int $user_id;
@@ -197,7 +197,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
         $a['type'] = $this->type;
         $a['value'] = $this->value;
 
-        return json_encode($a);
+        return json_encode($a, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -206,15 +206,16 @@ class RegistryKeyEntity implements RegistryKeyInterface
      */
     public static function deserialize($string)
     {
-        $object = json_decode($string);
+        /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
+        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
 
         $registry_key = new RegistryKey();
 
-        $registry_key->setUserId($object->user_id);
-        $registry_key->setKey($object->key);
-        $registry_key->setName($object->name);
-        $registry_key->setType($object->type);
-        $registry_key->setValue($object->value);
+        $registry_key->setUserId($object['user_id']);
+        $registry_key->setKey($object['key']);
+        $registry_key->setName($object['name']);
+        $registry_key->setType($object['type']);
+        $registry_key->setValue($object['value']);
 
         return $registry_key;
     }

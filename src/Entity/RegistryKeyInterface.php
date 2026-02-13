@@ -22,5 +22,6 @@ interface RegistryKeyInterface extends SystemKeyInterface
 {
     public function getUserId(): int;
 
+    /** @return self */
     public function setUserId(int $user_id);
 }

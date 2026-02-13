@@ -27,9 +27,14 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
 
 /**
  * Symfony Form
+ *
+ * @extends AbstractType<RegistryKey>
  */
 class RegistryType extends AbstractType
 {
+    /**
+     * @param array{mode: 'new'|'edit'|null} $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $read_only = $options['mode'] == 'edit';
@@ -42,7 +47,7 @@ class RegistryType extends AbstractType
             ->add('key', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),
-                    new Length(array('max' => 255)),
+                    new Length(max: 255),
                 ),
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],
@@ -50,7 +55,7 @@ class RegistryType extends AbstractType
             ->add('name', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),
-                    new Length(array('max' => 255)),
+                    new Length(max: 255),
                 ),
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],

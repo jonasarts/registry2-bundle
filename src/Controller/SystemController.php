@@ -87,6 +87,9 @@ class SystemController extends AbstractController
     public function editAction(Request $request): Response
     {
         $s = $request->query->get('entity');
+        if (!is_string($s)) {
+            throw $this->createNotFoundException('Missing entity');
+        }
         $entity = SysKey::deserialize($s);
 
         $form = $this->createForm(SystemType::class, $entity, array('mode' => 'edit'));
@@ -123,6 +126,9 @@ class SystemController extends AbstractController
     public function deleteAction(Request $request): Response
     {
         $s = $request->query->get('entity');
+        if (!is_string($s)) {
+            throw $this->createNotFoundException('Missing entity');
+        }
         $entity = SysKey::deserialize($s);
 
         $r = $this->delete(
@@ -164,9 +170,18 @@ class SystemController extends AbstractController
 
     /**
      * Return all registry keys from database.
+     *
+     * @return array<int, mixed>
      */
     public function all(): array
     {
-        return $this->registry->systemAll();
+        if (!method_exists($this->registry, 'systemAll')) {
+            return [];
+        }
+
+        /** @var array<int, mixed> $all */
+        $all = $this->registry->systemAll();
+
+        return $all;
     }
 }

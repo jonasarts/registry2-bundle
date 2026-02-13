@@ -88,6 +88,9 @@ class RegistryController extends AbstractController
     public function editAction(Request $request): Response
     {
         $s = $request->query->get('entity');
+        if (!is_string($s)) {
+            throw $this->createNotFoundException('Missing entity');
+        }
         $entity = RegKey::deserialize($s);
 
         $form = $this->createForm(RegistryType::class, $entity, array('mode' => 'edit'));
@@ -124,6 +127,9 @@ class RegistryController extends AbstractController
     public function deleteAction(Request $request): Response
     {
         $s = $request->query->get('entity');
+        if (!is_string($s)) {
+            throw $this->createNotFoundException('Missing entity');
+        }
         $entity = RegKey::deserialize($s);
 
         $r = $this->delete(
@@ -149,25 +155,19 @@ class RegistryController extends AbstractController
     }
 
     /**
-     * Read registry key from database.
-     */
-    public function read(int $userid, string $key, string $name, string $type): mixed
-    {
-        return $this->registry->registryRead($userid, $key, $name, $type);
-    }
-
-    /**
      * Write registry key to database.
      */
-    public function write(int $userid, string $key, string $name, string $type, mixed $value): bool
+    private function write(int $userid, string $key, string $name, string $type, mixed $value): bool
     {
         return $this->registry->registryWrite($userid, $key, $name, $type, $value);
     }
 
     /**
      * Return all registry keys from database.
+     *
+     * @return array<int, mixed>
      */
-    public function all(): array
+    private function all(): array
     {
         return $this->registry->registryAll();
     }

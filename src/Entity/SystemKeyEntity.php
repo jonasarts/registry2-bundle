@@ -27,7 +27,7 @@ class SystemKeyEntity implements SystemKeyInterface
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private int $id;
+    private int $id = 0;
 
     #[ORM\Column(name: 'systemkey', type: 'string', length: 255, nullable: false)]
     #[Assert\NotBlank]
@@ -170,7 +170,7 @@ class SystemKeyEntity implements SystemKeyInterface
         $array['type'] = $this->type;
         $array['value'] = $this->value;
 
-        return json_encode($array);
+        return json_encode($array, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -179,14 +179,15 @@ class SystemKeyEntity implements SystemKeyInterface
      */
     public static function deserialize($string)
     {
-        $object = json_decode($string);
+        /** @var array{key:string, name:string, type:string, value:string} $object */
+        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
 
         $system_key = new SystemKey();
 
-        $system_key->setKey($object->key);
-        $system_key->setName($object->name);
-        $system_key->setType($object->type);
-        $system_key->setValue($object->value);
+        $system_key->setKey($object['key']);
+        $system_key->setName($object['name']);
+        $system_key->setType($object['type']);
+        $system_key->setValue($object['value']);
 
         return $system_key;
     }

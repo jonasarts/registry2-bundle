@@ -26,9 +26,14 @@ use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
 
 /**
  * Symfony Form
+ *
+ * @extends AbstractType<SystemKey>
  */
 class SystemType extends AbstractType
 {
+    /**
+     * @param array{mode: 'new'|'edit'|null} $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $read_only = $options['mode'] == 'edit';
@@ -37,7 +42,7 @@ class SystemType extends AbstractType
             ->add('key', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),
-                    new Length(array('max' => 255)),
+                    new Length(max: 255),
                 ),
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],
@@ -45,7 +50,7 @@ class SystemType extends AbstractType
             ->add('name', TextType::class, array(
                 'constraints' => array(
                     new NotBlank(),
-                    new Length(array('max' => 255)),
+                    new Length(max: 255),
                 ),
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],

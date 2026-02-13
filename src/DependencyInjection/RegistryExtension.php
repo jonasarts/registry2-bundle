@@ -25,10 +25,17 @@ class RegistryExtension extends Extension
 {
     /**
      * {@inheritdoc}
+     *
+     * @param array<int, array<string, mixed>> $configs
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = new Configuration($container->getParameter('kernel.debug'));
+        $configuration = new Configuration();
+        /** @var array{
+         *   globals: array{default_values: ?string, delimiter: string},
+         *   redis: array{prefix: string}
+         * } $config
+         */
         $config = $this->processConfiguration($configuration, $configs);
 
         // apply config globals

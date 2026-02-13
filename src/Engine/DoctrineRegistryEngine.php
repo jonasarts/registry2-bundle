@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Engine;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 
@@ -26,10 +27,12 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     private EntityManagerInterface $em;
 
     // doctrine repository for registry keys
-    private $registry;
+    /** @var ObjectRepository<RegKey> */
+    private ObjectRepository $registry;
 
     // doctrine repository for system keys
-    private $system;
+    /** @var ObjectRepository<SysKey> */
+    private ObjectRepository $system;
 
     /**
      * Constructor.
@@ -47,7 +50,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     // exists
     public function registryExists(int $user_id, string $key, string $name, string $type): bool
     {
-        return !is_null($this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type)));
+        return $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type)) instanceof RegKey;
     }
 
     // del
@@ -55,12 +58,12 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type));
 
-        if ($entity) {
+        if ($entity instanceof RegKey) {
             $this->em->remove($entity);
             $this->em->flush();
         }
 
-        return !is_null($entity);
+        return $entity instanceof RegKey;
     }
 
     // get
@@ -68,7 +71,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
 
-        if ($entity) {
+        if ($entity instanceof RegKey) {
             return (string) $entity->getValue();
         } else {
             return false;
@@ -76,11 +79,14 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     // set
+    /**
+     * @param mixed $value
+     */
     public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
         $entity = $this->registry->findOneBy(array('user_id' => $user_id, 'key' => $key, 'name' => $name));
 
-        if (!$entity) {
+        if (!$entity instanceof RegKey) {
             $entity = new RegKey();
             $entity->setUserId($user_id);
             $entity->setKey($key);
@@ -90,25 +96,23 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $entity->setType($type);
         // entity value must be of type 'string'
         if (is_array($value)) {
-            $entity->setValue(json_encode($value, true));
-        } else if (is_object($value)) {
-            $entity->setValue((string) $value);
+            $entity->setValue(json_encode($value, JSON_THROW_ON_ERROR));
         } else {
-            // works for string, int, float, bool
-            $entity->setValue(strval($value));
+            $entity->setValue($this->stringify($value));
         }
 
         $this->em->persist($entity);
         $this->em->flush();
 
-        return !is_null($entity);
+        return true;
     }
 
     /**
-     * @return array
+     * @return array<int, RegKey>
      */
     public function registryAll(): array
     {
+        /** @var array<int, RegKey> $entities */
         $entities = $this->em
             ->getRepository(RegKey::class)
             ->findAll();
@@ -119,7 +123,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     // exists
     public function systemExists(string $key, string $name, string $type): bool
     {
-        return !is_null($this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type)));
+        return $this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type)) instanceof SysKey;
     }
 
     // del
@@ -127,12 +131,12 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name, 'type' => $type));
 
-        if ($entity) {
+        if ($entity instanceof SysKey) {
             $this->em->remove($entity);
             $this->em->flush();
         }
 
-        return !is_null($entity);
+        return $entity instanceof SysKey;
     }
 
     // get
@@ -140,7 +144,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
 
-        if ($entity) {
+        if ($entity instanceof SysKey) {
             return (string) $entity->getValue();
         } else {
             return false;
@@ -148,11 +152,14 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     // set
+    /**
+     * @param mixed $value
+     */
     public function systemWrite(string $key, string $name, string $type, $value): bool
     {
         $entity = $this->system->findOneBy(array('key' => $key, 'name' => $name));
 
-        if (!$entity) {
+        if (!$entity instanceof SysKey) {
             $entity = new SysKey();
             $entity->setKey($key);
             $entity->setName($name);
@@ -161,29 +168,47 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $entity->setType($type);
         // entity value must be of type 'string'
         if (is_array($value)) {
-            $entity->setValue(json_encode($value, true));
-        } else if (is_object($value)) {
-            $entity->setValue((string) $value);
+            $entity->setValue(json_encode($value, JSON_THROW_ON_ERROR));
         } else {
-            // works for string, int, float, bool
-            $entity->setValue(strval($value));
+            $entity->setValue($this->stringify($value));
         }
 
         $this->em->persist($entity);
         $this->em->flush();
 
-        return !is_null($entity);
+        return true;
     }
 
     /**
-     * @return array
+     * @return array<int, SysKey>
      */
     public function systemAll(): array
     {
+        /** @var array<int, SysKey> $entities */
         $entities = $this->em
             ->getRepository(SysKey::class)
             ->findAll();
 
         return $entities;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function stringify($value): string
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_int($value) || is_float($value) || is_bool($value) || $value === null) {
+            return (string) $value;
+        }
+
+        if (is_object($value) && method_exists($value, '__toString')) {
+            return (string) $value;
+        }
+
+        return json_encode($value, JSON_THROW_ON_ERROR);
     }
 }
