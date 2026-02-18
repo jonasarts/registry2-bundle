@@ -97,10 +97,14 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $default
      * @return mixed
      */
-    public function registryReadDefault(int $user_id, string $key, string $name, string $type, $default)
+    public function registryReadDefault(int $user_id, string $key, string $name, string $type, mixed $default): mixed
     {
         $type = $this->optimizeType($type);
 
@@ -117,16 +121,26 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
      * @param mixed $d
      * @return mixed
      */
-    public function rrd(int $uid, string $k, string $n, string $t, $d)
+    public function rrd(int $uid, string $k, string $n, string $t, mixed $d): mixed
     {
         return $this->registryReadDefault($uid, $k, $n, $t, $d);
     }
 
-    /** @return mixed */
-    public function registryRead(int $user_id, string $key, string $name, string $type)
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function registryRead(int $user_id, string $key, string $name, string $type): mixed
     {
         $result = $this->registryReadDefault($user_id, $key, $name, $type, null);
 
@@ -137,14 +151,26 @@ abstract class AbstractRegistry implements RegistryInterface
         return $result;
     }
 
-    /** @return mixed */
-    public function rr(int $uid, string $k, string $n, string $t)
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function rr(int $uid, string $k, string $n, string $t): mixed
     {
         return $this->registryRead($uid, $k, $n, $t);
     }
 
-    /** @return mixed */
-    public function registryReadOnce(int $user_id, string $key, string $name, string $type)
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function registryReadOnce(int $user_id, string $key, string $name, string $type): mixed
     {
         $r = $this->registryRead($user_id, $key, $name, $type);
         $this->registryDelete($user_id, $key, $name, $type);
@@ -152,20 +178,31 @@ abstract class AbstractRegistry implements RegistryInterface
         return $r;
     }
 
-    /** @return mixed */
-    public function rro(int $uid, string $k, string $n, string $t)
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function rro(int $uid, string $k, string $n, string $t): mixed
     {
         return $this->registryReadOnce($uid, $k, $n, $t);
     }
 
     /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $value
-     * @throws \Exception
+     * @return bool
+     * @throws \RuntimeException
      */
-    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
+    public function registryWrite(int $user_id, string $key, string $name, string $type, mixed $value): bool
     {
         if (str_contains($name, $this->delimiter)) {
-            throw new \Exception('delimiter is not allowed in name');
+            throw new \RuntimeException('delimiter is not allowed in name');
         }
 
         $type = $this->optimizeType($type);
@@ -185,10 +222,15 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
      * @param mixed $v
-     * @throws \Exception
+     * @return bool
+     * @throws \RuntimeException
      */
-    public function rw(int $uid, string $k, string $n, string $t, $v): bool
+    public function rw(int $uid, string $k, string $n, string $t, mixed $v): bool
     {
         return $this->registryWrite($uid, $k, $n, $t, $v);
     }
@@ -220,10 +262,13 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $default
      * @return mixed
      */
-    public function systemReadDefault(string $key, string $name, string $type, $default)
+    public function systemReadDefault(string $key, string $name, string $type, mixed $default): mixed
     {
         $type = $this->optimizeType($type);
 
@@ -236,16 +281,24 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
      * @param mixed $d
      * @return mixed
      */
-    public function srd(string $k, string $n, string $t, $d)
+    public function srd(string $k, string $n, string $t, mixed $d): mixed
     {
         return $this->systemReadDefault($k, $n, $t, $d);
     }
 
-    /** @return mixed */
-    public function systemRead(string $key, string $name, string $type)
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function systemRead(string $key, string $name, string $type): mixed
     {
         $result = $this->systemReadDefault($key, $name, $type, null);
 
@@ -256,14 +309,24 @@ abstract class AbstractRegistry implements RegistryInterface
         return $result;
     }
 
-    /** @return mixed */
-    public function sr(string $k, string $n, string $t)
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function sr(string $k, string $n, string $t): mixed
     {
         return $this->systemRead($k, $n, $t);
     }
 
-    /** @return mixed */
-    public function systemReadOnce(string $key, string $name, string $type)
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function systemReadOnce(string $key, string $name, string $type): mixed
     {
         $r = $this->systemRead($key, $name, $type);
         $this->systemDelete($key, $name, $type);
@@ -271,20 +334,29 @@ abstract class AbstractRegistry implements RegistryInterface
         return $r;
     }
 
-    /** @return mixed */
-    public function sro(string $k, string $n, string $t)
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function sro(string $k, string $n, string $t): mixed
     {
         return $this->systemReadOnce($k, $n, $t);
     }
 
     /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $value
-     * @throws \Exception
+     * @return bool
+     * @throws \RuntimeException
      */
-    public function systemWrite(string $key, string $name, string $type, $value): bool
+    public function systemWrite(string $key, string $name, string $type, mixed $value): bool
     {
         if (str_contains($name, $this->delimiter)) {
-            throw new \Exception('delimiter is not allowed in name');
+            throw new \RuntimeException('delimiter is not allowed in name');
         }
 
         $type = $this->optimizeType($type);
@@ -297,10 +369,14 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
      * @param mixed $v
-     * @throws \Exception
+     * @return bool
+     * @throws \RuntimeException
      */
-    public function sw(string $k, string $n, string $t, $v): bool
+    public function sw(string $k, string $n, string $t, mixed $v): bool
     {
         return $this->systemWrite($k, $n, $t, $v);
     }
@@ -312,9 +388,13 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param string $scope
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @return mixed
      */
-    private function readDefaultKeyValue(string $scope, string $key, string $name, string $type)
+    private function readDefaultKeyValue(string $scope, string $key, string $name, string $type): mixed
     {
         $path = $key . $this->delimiter . $name;
 
@@ -331,8 +411,12 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->normalizeDefaultValue($this->optimizeType($type), $value);
     }
 
-    /** @return mixed */
-    private function decodeTypedValue(string $type, string $value)
+    /**
+     * @param string $type
+     * @param string $value
+     * @return mixed
+     */
+    private function decodeTypedValue(string $type, string $value): mixed
     {
         return match ($type) {
             'i' => (int) $value,
@@ -345,10 +429,11 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
+     * @param string $type
      * @param mixed $default
      * @return mixed
      */
-    private function normalizeDefaultValue(string $type, $default)
+    private function normalizeDefaultValue(string $type, mixed $default): mixed
     {
         if ($default === null) {
             return null;

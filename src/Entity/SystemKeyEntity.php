@@ -161,8 +161,9 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * @return string
+     * @throws \JsonException
      */
-    public function serialize()
+    public function serialize(): string
     {
         $array = array();
         $array['key'] = $this->key;
@@ -176,8 +177,9 @@ class SystemKeyEntity implements SystemKeyInterface
     /**
      * @param string $string
      * @return SystemKey
+     * @throws \JsonException
      */
-    public static function deserialize($string)
+    public static function deserialize(string $string): SystemKey
     {
         /** @var array{key:string, name:string, type:string, value:string} $object */
         $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);

@@ -27,6 +27,7 @@ class RegistryExtension extends Extension
      * {@inheritdoc}
      *
      * @param array<int, array<string, mixed>> $configs
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

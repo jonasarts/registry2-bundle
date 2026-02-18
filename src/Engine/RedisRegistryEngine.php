@@ -58,6 +58,8 @@ class RedisRegistryEngine implements RegistryEngineInterface
      * Constructor.
      *
      * @param object $redis
+     * @param string $registry_prefix
+     * @param string $registry_delimiter
      */
     public function __construct(object $redis, string $registry_prefix, string $registry_delimiter)
     {
@@ -107,8 +109,10 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     // set
+
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
     public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
@@ -155,39 +159,41 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     // exists
-    public function systemExists(string $systemkey, string $name, string $type): bool
+    public function systemExists(string $key, string $name, string $type): bool
     {
         // @phpstan-ignore-next-line
-        return $this->redis->hExists($this->getHashKey($systemkey), $name.$this->delimiter.$type) > 0;
+        return $this->redis->hExists($this->getHashKey($key), $name.$this->delimiter.$type) > 0;
     }
 
     // del
-    public function systemDelete(string $systemkey, string $name, string $type): bool
+    public function systemDelete(string $key, string $name, string $type): bool
     {
         // false if failure, 0 if doesnt exist, long number of deleted keys
         // @phpstan-ignore-next-line
-        $r = $this->redis->hDel($this->getHashKey($systemkey), $name.$this->delimiter.$type);
+        $r = $this->redis->hDel($this->getHashKey($key), $name.$this->delimiter.$type);
 
         return ($r !== false) && ($r > 0);
     }
 
     // get
-    public function systemRead(string $systemkey, string $name, string $type): bool|string
+    public function systemRead(string $key, string $name, string $type): bool|string
     {
         // @phpstan-ignore-next-line
-        $value = $this->redis->hGet($this->getHashKey($systemkey), $name.$this->delimiter.$type);
+        $value = $this->redis->hGet($this->getHashKey($key), $name.$this->delimiter.$type);
 
         return is_string($value) ? $value : false;
     }
 
     // set
+
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
-    public function systemWrite(string $systemkey, string $name, string $type, $value): bool
+    public function systemWrite(string $key, string $name, string $type, $value): bool
     {
         // @phpstan-ignore-next-line
-        return $this->redis->hSet($this->getHashKey($systemkey), $name.$this->delimiter.$type, $this->stringify($value)) !== false;
+        return $this->redis->hSet($this->getHashKey($key), $name.$this->delimiter.$type, $this->stringify($value)) !== false;
     }
 
     /**
@@ -229,6 +235,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
 
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
     private function stringify($value): string
     {

@@ -25,6 +25,9 @@ class RedisRegistry extends AbstractRegistry implements RedisRegistryInterface
 {
     /**
      * @param object $redis
+     * @param string $registry_prefix
+     * @param string $registry_delimiter
+     * @param string|null $default_values_filename
      */
     public function __construct(object $redis, string $registry_prefix, string $registry_delimiter, ?string $default_values_filename = null)
     {

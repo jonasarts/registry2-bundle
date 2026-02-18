@@ -187,8 +187,9 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * @return string
+     * @throws \JsonException
      */
-    public function serialize()
+    public function serialize(): string
     {
         $a = array();
         $a['user_id'] = $this->user_id;
@@ -203,8 +204,9 @@ class RegistryKeyEntity implements RegistryKeyInterface
     /**
      * @param string $string
      * @return RegistryKey
+     * @throws \JsonException
      */
-    public static function deserialize($string)
+    public static function deserialize(string $string): RegistryKey
     {
         /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
         $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);

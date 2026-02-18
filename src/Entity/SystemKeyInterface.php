@@ -22,30 +22,42 @@ interface SystemKeyInterface
 {
     public function getKey(): string;
 
-    /** @return self */
-    public function setKey(string $key);
+    /**
+     * @param string $key
+     * @return self
+     */
+    public function setKey(string $key): SystemKeyInterface;
 
     public function getName(): string;
 
-    /** @return self */
-    public function setName(string $name);
+    /**
+     * @param string $name
+     * @return self
+     */
+    public function setName(string $name): SystemKeyInterface;
 
     public function getType(): string;
 
-    /** @return self */
-    public function setType(string $type);
+    /**
+     * @param string $type
+     * @return self
+     */
+    public function setType(string $type): SystemKeyInterface;
 
     public function getValue(): string;
 
-    /** @return self */
-    public function setValue(string $value);
+    /**
+     * @param string $value
+     * @return self
+     */
+    public function setValue(string $value): SystemKeyInterface;
 
     /** @return string */
-    public function serialize();
+    public function serialize(): string;
 
     /**
      * @param string $string
      * @return self
      */
-    public static function deserialize($string);
+    public static function deserialize(string $string): SystemKeyInterface;
 }

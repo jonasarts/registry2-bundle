@@ -117,7 +117,7 @@ class RegistryTest extends WebTestCase
     {
         $r = self::$registry->registryReadDefault(0, 'key', 'name_bln', 'bln', true);
 
-        $this->assertEquals($r, true);
+        $this->assertTrue($r);
     }
 
     public function testRegistryReadDefaultInt(): void
@@ -180,7 +180,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(0, 'key', 'name_bln', 'bln');
 
-        $this->assertEquals($r, self::_bln);
+        $this->assertEquals(self::_bln, $r);
     }
 
     public function testRegistryWriteUserBln(): void
@@ -191,7 +191,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(self::_user, 'key', 'name_bln', 'bln');
 
-        $this->assertEquals($r, false);
+        $this->assertFalse($r);
     }
 
     /*
@@ -214,7 +214,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(self::_user, 'key', 'name_bln', 'bln', false); // this must read WriteBln value
 
-        $this->assertEquals($r, self::_bln);
+        $this->assertEquals(self::_bln, $r);
     }
 
     /**
@@ -228,7 +228,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(0, 'key', 'name_bln', 'bln', false);
 
-        $this->assertEquals($r, false);
+        $this->assertFalse($r);
     }
 
     public function testRegistryWriteInt(): void
@@ -239,7 +239,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(0, 'key', 'name_int', 'int');
 
-        $this->assertEquals($r, self::_int);
+        $this->assertEquals(self::_int, $r);
     }
 
     public function testRegistryWriteUserInt(): void
@@ -250,7 +250,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(self::_user, 'key', 'name_int', 'int');
 
-        $this->assertEquals($r, self::_int - 1);
+        $this->assertEquals(self::_int - 1, $r);
     }
 
     /*
@@ -273,7 +273,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(self::_user, 'key', 'name_int', 'int', self::_int - 1); // this must read WriteInt value
 
-        $this->assertEquals($r, self::_int);
+        $this->assertEquals(self::_int, $r);
     }
 
     /**
@@ -287,7 +287,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(0, 'key', 'name_int', 'int', self::_int + 1);
 
-        $this->assertEquals($r, self::_int + 1);
+        $this->assertEquals(self::_int + 1, $r);
     }
 
     public function testRegistryWriteStr(): void
@@ -298,7 +298,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(0, 'key', 'name_str', 'str');
 
-        $this->assertEquals($r, self::_str);
+        $this->assertEquals(self::_str, $r);
     }
 
     public function testRegistryWriteUserStr(): void
@@ -309,7 +309,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(self::_user, 'key', 'name_str', 'str');
 
-        $this->assertEquals($r, self::_str.self::_str);
+        $this->assertEquals(self::_str.self::_str, $r);
     }
 
     /*
@@ -332,7 +332,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(self::_user, 'key', 'name_str', 'str', self::_str.'default'); // this must read WriteStr value
 
-        $this->assertEquals($r, self::_str);
+        $this->assertEquals(self::_str, $r);
     }
 
     /**
@@ -346,7 +346,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(0, 'key', 'name_str', 'str', self::_str.'default');
 
-        $this->assertEquals($r, self::_str.'default');
+        $this->assertEquals(self::_str.'default', $r);
     }
 
     public function testRegistryWriteFlt(): void
@@ -357,7 +357,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(0, 'key', 'name_flt', 'flt');
 
-        $this->assertEquals($r, self::_flt);
+        $this->assertEquals(self::_flt, $r);
     }
 
     public function testRegistryWriteUserFlt(): void
@@ -368,7 +368,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(self::_user, 'key', 'name_flt', 'flt');
 
-        $this->assertEquals($r, self::_flt + 0.1);
+        $this->assertEquals(self::_flt + 0.1, $r);
     }
 
     /*
@@ -391,7 +391,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(self::_user, 'key', 'name_flt', 'flt', self::_flt + 0.25); // this must read WriteFlt value
 
-        $this->assertEquals($r, self::_flt);
+        $this->assertEquals(self::_flt, $r);
     }
 
     /**
@@ -405,7 +405,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(0, 'key', 'name_flt', 'flt', self::_flt + 0.25);
 
-        $this->assertEquals($r, self::_flt + 0.25);
+        $this->assertEquals(self::_flt + 0.25, $r);
     }
 
     public function testRegistryWriteDat(): void
@@ -416,7 +416,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(0, 'key', 'name_dat', 'dat');
 
-        $this->assertEquals($r, strtotime(self::_dat));
+        $this->assertEquals(strtotime(self::_dat), $r);
     }
 
     public function testRegistryWriteUserDat(): void
@@ -427,7 +427,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(self::_user, 'key', 'name_dat', 'dat');
 
-        $this->assertEquals($r, strtotime('1980-01-01'));
+        $this->assertEquals(strtotime('1980-01-01'), $r);
     }
 
     /*
@@ -450,7 +450,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(self::_user, 'key', 'name_dat', 'dat', strtotime('now')); // this must read WriteDat value
 
-        $this->assertEquals($r, strtotime(self::_dat));
+        $this->assertEquals(strtotime(self::_dat), $r);
     }
 
     /**
@@ -464,7 +464,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryReadDefault(0, 'key', 'name_dat', 'dat', strtotime('now'));
 
-        $this->assertEquals($r, strtotime('now'));
+        $this->assertEquals(strtotime('now'), $r);
     }
 
     public function testRegistryWriteUser0MatchingVale(): void
@@ -476,7 +476,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->registryRead(1, 'key', 'name_int', 'int');
 
-        $this->assertEquals($r, self::_int + 1);
+        $this->assertEquals(self::_int + 1, $r);
 
         self::$registry->registryWrite(1, 'key', 'name_int', 'int', self::_int); // this must delete the user-key-value
 
@@ -484,7 +484,7 @@ class RegistryTest extends WebTestCase
         $r = self::$registry->registryExists(1, 'key', 'name_int', 'int');
 
         //$this->assertEquals($r, self::_int);
-        $this->assertEquals($r, false);
+        $this->assertFalse($r);
 
         self::$registry->registryDelete(0, 'key', 'name_int', 'int');
     }
@@ -496,7 +496,7 @@ class RegistryTest extends WebTestCase
     {
         $r = self::$registry->systemReadDefault('key', 'name_bln', 'bln', true);
 
-        $this->assertEquals(true, $r);
+        $this->assertTrue($r);
     }
 
     public function testSystemReadDefaultInt(): void
@@ -568,7 +568,7 @@ class RegistryTest extends WebTestCase
 
         $r = self::$registry->systemReadDefault('key', 'name_bln', 'bln', false);
 
-        $this->assertEquals(false, $r);
+        $this->assertFalse($r);
     }
 
     public function testSystemWriteInt(): void

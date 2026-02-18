@@ -26,34 +26,80 @@ interface RegistryInterface
     public function rd(int $uid, string $k, string $n, string $t): bool;
 
     /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $default
      * @return mixed
      */
-    public function registryReadDefault(int $user_id, string $key, string $name, string $type, $default);
+    public function registryReadDefault(int $user_id, string $key, string $name, string $type, mixed $default): mixed;
 
     /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
      * @param mixed $d
      * @return mixed
      */
-    public function rrd(int $uid, string $k, string $n, string $t, $d);
+    public function rrd(int $uid, string $k, string $n, string $t, mixed $d): mixed;
 
-    /** @return mixed */
-    public function registryRead(int $user_id, string $key, string $name, string $type);
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function registryRead(int $user_id, string $key, string $name, string $type): mixed;
 
-    /** @return mixed */
-    public function rr(int $uid, string $k, string $n, string $t);
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function rr(int $uid, string $k, string $n, string $t): mixed;
 
-    /** @return mixed */
-    public function registryReadOnce(int $user_id, string $key, string $name, string $type);
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function registryReadOnce(int $user_id, string $key, string $name, string $type): mixed;
 
-    /** @return mixed */
-    public function rro(int $uid, string $k, string $n, string $t);
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function rro(int $uid, string $k, string $n, string $t): mixed;
 
-    /** @param mixed $value */
-    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool;
+    /**
+     * @param int $user_id
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @param mixed $value
+     * @return bool
+     */
+    public function registryWrite(int $user_id, string $key, string $name, string $type, mixed $value): bool;
 
-    /** @param mixed $v */
-    public function rw(int $uid, string $k, string $n, string $t, $v): bool;
+    /**
+     * @param int $uid
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @param mixed $v
+     * @return bool
+     */
+    public function rw(int $uid, string $k, string $n, string $t, mixed $v): bool;
 
 
     public function systemExists(string $key, string $name, string $type): bool;
@@ -62,34 +108,72 @@ interface RegistryInterface
     public function sd(string $k, string $n, string $t): bool;
 
     /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
      * @param mixed $default
      * @return mixed
      */
-    public function systemReadDefault(string $key, string $name, string $type, $default);
+    public function systemReadDefault(string $key, string $name, string $type, mixed $default): mixed;
 
     /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
      * @param mixed $d
      * @return mixed
      */
-    public function srd(string $k, string $n, string $t, $d);
+    public function srd(string $k, string $n, string $t, mixed $d): mixed;
 
-    /** @return mixed */
-    public function systemRead(string $key, string $name, string $type);
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function systemRead(string $key, string $name, string $type): mixed;
 
-    /** @return mixed */
-    public function sr(string $k, string $n, string $t);
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function sr(string $k, string $n, string $t): mixed;
 
-    /** @return mixed */
-    public function systemReadOnce(string $key, string $name, string $type);
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @return mixed
+     */
+    public function systemReadOnce(string $key, string $name, string $type): mixed;
 
-    /** @return mixed */
-    public function sro(string $k, string $n, string $t);
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @return mixed
+     */
+    public function sro(string $k, string $n, string $t): mixed;
 
-    /** @param mixed $value */
-    public function systemWrite(string $key, string $name, string $type, $value): bool;
+    /**
+     * @param string $key
+     * @param string $name
+     * @param string $type
+     * @param mixed $value
+     * @return bool
+     */
+    public function systemWrite(string $key, string $name, string $type, mixed $value): bool;
 
-    /** @param mixed $v */
-    public function sw(string $k, string $n, string $t, $v): bool;
+    /**
+     * @param string $k
+     * @param string $n
+     * @param string $t
+     * @param mixed $v
+     * @return bool
+     */
+    public function sw(string $k, string $n, string $t, mixed $v): bool;
 
     /** @return array<int, mixed> */
     public function registryAll(): array;

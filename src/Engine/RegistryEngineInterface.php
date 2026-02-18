@@ -25,15 +25,15 @@ interface RegistryEngineInterface
      */
 
     // exists
-    public function registryExists(int $userid, string $key, string $name, string $type): bool;
+    public function registryExists(int $user_id, string $key, string $name, string $type): bool;
     // del
-    public function registryDelete(int $userid, string $key, string $name, string $type): bool;
+    public function registryDelete(int $user_id, string $key, string $name, string $type): bool;
     // get - must return any value as string!
     /** @return mixed */
-    public function registryRead(int $userid, string $key, string $name, string $type); // mixed
+    public function registryRead(int $user_id, string $key, string $name, string $type); // mixed
     // set
     /** @param mixed $value */
-    public function registryWrite(int $userid, string $key, string $name, string $type, $value): bool; // mixed value
+    public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool; // mixed value
 
     // all registry keys
     /** @return array<int, mixed> */

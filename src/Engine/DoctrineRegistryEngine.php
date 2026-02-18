@@ -79,8 +79,10 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     // set
+
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
     public function registryWrite(int $user_id, string $key, string $name, string $type, $value): bool
     {
@@ -152,8 +154,10 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     // set
+
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
     public function systemWrite(string $key, string $name, string $type, $value): bool
     {
@@ -194,6 +198,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
 
     /**
      * @param mixed $value
+     * @throws \JsonException
      */
     private function stringify($value): string
     {

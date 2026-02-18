@@ -174,8 +174,9 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * @return string
+     * @throws \JsonException
      */
-    public function serialize()
+    public function serialize(): string
     {
         $a = array();
         $a['user_id'] = $this->user_id;
@@ -190,8 +191,9 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     /**
      * @param string $string
      * @return RegistryKey
+     * @throws \JsonException
      */
-    public static function deserialize($string)
+    public static function deserialize(string $string): RegistryKey
     {
         /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
         $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
@@ -211,7 +213,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
      * @param array{user_id:int, key:string, name:string, type:string, value:string} $array
      * @return RegistryKey
      */
-    public static function fromArray(array $array)
+    public static function fromArray(array $array): RegistryKey
     {
         $registry_key = new self();
 
