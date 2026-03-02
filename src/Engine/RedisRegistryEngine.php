@@ -15,6 +15,7 @@ namespace jonasarts\Bundle\RegistryBundle\Engine;
 
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 
 /**
  * RedisRegistryEngine
