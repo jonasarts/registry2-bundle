@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Engine;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+
 /**
  * RegistryEngineInterface.
  *
@@ -30,10 +32,10 @@ interface RegistryEngineInterface
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return bool
      */
-    public function registryExists(int $user_id, string $key, string $name, string $type): bool;
+    public function registryExists(int $user_id, string $key, string $name, RegistryKeyType $type): bool;
 
     /**
      * del
@@ -41,10 +43,10 @@ interface RegistryEngineInterface
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return bool
      */
-    public function registryDelete(int $user_id, string $key, string $name, string $type): bool;
+    public function registryDelete(int $user_id, string $key, string $name, RegistryKeyType $type): bool;
 
     /**
      * get - must return any value as string!
@@ -52,10 +54,10 @@ interface RegistryEngineInterface
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return mixed
      */
-    public function registryRead(int $user_id, string $key, string $name, string $type): mixed;
+    public function registryRead(int $user_id, string $key, string $name, RegistryKeyType $type): mixed;
 
     /**
      * set
@@ -63,11 +65,11 @@ interface RegistryEngineInterface
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @param mixed $value
      * @return bool
      */
-    public function registryWrite(int $user_id, string $key, string $name, string $type, mixed $value): bool;
+    public function registryWrite(int $user_id, string $key, string $name, RegistryKeyType $type, mixed $value): bool;
 
     /**
      * all registry keys
@@ -84,41 +86,41 @@ interface RegistryEngineInterface
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return bool
      */
-    public function systemExists(string $key, string $name, string $type): bool;
+    public function systemExists(string $key, string $name, RegistryKeyType $type): bool;
 
     /**
      * del
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return bool
      */
-    public function systemDelete(string $key, string $name, string $type): bool;
+    public function systemDelete(string $key, string $name, RegistryKeyType $type): bool;
 
     /**
      * get - must return any value as string!
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return mixed
      */
-    public function systemRead(string $key, string $name, string $type): mixed;
+    public function systemRead(string $key, string $name, RegistryKeyType $type): mixed;
 
     /**
      * set
      *
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param RegistryKeyType $type
      * @param mixed $value
      * @return bool
      */
-    public function systemWrite(string $key, string $name, string $type, mixed $value): bool;
+    public function systemWrite(string $key, string $name, RegistryKeyType $type, mixed $value): bool;
 
     /**
      * all system keys

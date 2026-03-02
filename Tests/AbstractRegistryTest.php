@@ -48,7 +48,7 @@ class AbstractRegistryTest extends TestCase
     // --- optimizeType via registryExists (the only way to observe it) ---
 
     #[DataProvider('typeAliasProvider')]
-    public function testOptimizeTypeAliases(string $alias, string $expected): void
+    public function testOptimizeTypeAliases(string $alias, RegistryKeyType $expected): void
     {
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
@@ -60,33 +60,33 @@ class AbstractRegistryTest extends TestCase
     }
 
     /**
-     * @return array<string, array{string, string}>
+     * @return array<string, array{string, RegistryKeyType}>
      */
     public static function typeAliasProvider(): array
     {
         return [
-            'i' => ['i', 'i'],
-            'int' => ['int', 'i'],
-            'integer' => ['integer', 'i'],
-            'b' => ['b', 'b'],
-            'bln' => ['bln', 'b'],
-            'boolean' => ['boolean', 'b'],
-            's' => ['s', 's'],
-            'str' => ['str', 's'],
-            'string' => ['string', 's'],
-            'f' => ['f', 'f'],
-            'flt' => ['flt', 'f'],
-            'float' => ['float', 'f'],
-            'd' => ['d', 'd'],
-            'dat' => ['dat', 'd'],
-            'date' => ['date', 'd'],
-            't' => ['t', 't'],
-            'tim' => ['tim', 't'],
-            'time' => ['time', 't'],
-            'a' => ['a', 'a'],
-            'arr' => ['arr', 'a'],
-            'array' => ['array', 'a'],
-            'unknown defaults to s' => ['xyz', 's'],
+            'i' => ['i', RegistryKeyType::INTEGER],
+            'int' => ['int', RegistryKeyType::INTEGER],
+            'integer' => ['integer', RegistryKeyType::INTEGER],
+            'b' => ['b', RegistryKeyType::BOOLEAN],
+            'bln' => ['bln', RegistryKeyType::BOOLEAN],
+            'boolean' => ['boolean', RegistryKeyType::BOOLEAN],
+            's' => ['s', RegistryKeyType::STRING],
+            'str' => ['str', RegistryKeyType::STRING],
+            'string' => ['string', RegistryKeyType::STRING],
+            'f' => ['f', RegistryKeyType::FLOAT],
+            'flt' => ['flt', RegistryKeyType::FLOAT],
+            'float' => ['float', RegistryKeyType::FLOAT],
+            'd' => ['d', RegistryKeyType::DATE],
+            'dat' => ['dat', RegistryKeyType::DATE],
+            'date' => ['date', RegistryKeyType::DATE],
+            't' => ['t', RegistryKeyType::TIME],
+            'tim' => ['tim', RegistryKeyType::TIME],
+            'time' => ['time', RegistryKeyType::TIME],
+            'a' => ['a', RegistryKeyType::ARRAY],
+            'arr' => ['arr', RegistryKeyType::ARRAY],
+            'array' => ['array', RegistryKeyType::ARRAY],
+            'unknown defaults to s' => ['xyz', RegistryKeyType::STRING],
         ];
     }
 
@@ -95,7 +95,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('registryExists')
-            ->with(1, 'k', 'n', 'i')
+            ->with(1, 'k', 'n', RegistryKeyType::INTEGER)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->registryExists(1, 'k', 'n', RegistryKeyType::INTEGER));
@@ -107,7 +107,7 @@ class AbstractRegistryTest extends TestCase
             $engine = $this->useMockEngine();
             $engine->expects($this->once())
                 ->method('systemExists')
-                ->with('k', 'n', $case->value)
+                ->with('k', 'n', $case)
                 ->willReturn(true);
 
             $this->assertTrue($this->registry->systemExists('k', 'n', $case));
@@ -346,7 +346,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
 
         $engine->method('registryRead')
-            ->willReturnCallback(function (int $uid, string $k, string $n, string $t): bool|string {
+            ->willReturnCallback(function (int $uid, string $k, string $n, RegistryKeyType $t): bool|string {
                 if ($uid === 0) {
                     return '10';
                 }
@@ -355,7 +355,7 @@ class AbstractRegistryTest extends TestCase
 
         $engine->expects($this->once())
             ->method('registryDelete')
-            ->with(1, 'k', 'n', 'i')
+            ->with(1, 'k', 'n', RegistryKeyType::INTEGER)
             ->willReturn(true);
 
         $result = $this->registry->registryWrite(1, 'k', 'n', 'i', 10);
@@ -368,7 +368,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('registryWrite')
-            ->with(0, 'k', 'n', 'i', 10)
+            ->with(0, 'k', 'n', RegistryKeyType::INTEGER, 10)
             ->willReturn(true);
 
         $result = $this->registry->registryWrite(0, 'k', 'n', 'i', 10);
@@ -412,7 +412,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('registryDelete')
-            ->with(1, 'k', 'n', 'b')
+            ->with(1, 'k', 'n', RegistryKeyType::BOOLEAN)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->registryDelete(1, 'k', 'n', RegistryKeyType::BOOLEAN));
@@ -432,7 +432,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('systemWrite')
-            ->with('k', 'n', 'f', 1.5)
+            ->with('k', 'n', RegistryKeyType::FLOAT, 1.5)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->systemWrite('k', 'n', RegistryKeyType::FLOAT, 1.5));
@@ -443,7 +443,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('systemDelete')
-            ->with('k', 'n', 'd')
+            ->with('k', 'n', RegistryKeyType::DATE)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->systemDelete('k', 'n', RegistryKeyType::DATE));
@@ -454,7 +454,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('systemExists')
-            ->with('k', 'n', 't')
+            ->with('k', 'n', RegistryKeyType::TIME)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->systemExists('k', 'n', RegistryKeyType::TIME));
@@ -467,7 +467,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('registryExists')
-            ->with(1, 'k', 'n', 'i')
+            ->with(1, 'k', 'n', RegistryKeyType::INTEGER)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->re(1, 'k', 'n', 'i'));
@@ -478,7 +478,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('registryDelete')
-            ->with(1, 'k', 'n', 's')
+            ->with(1, 'k', 'n', RegistryKeyType::STRING)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->rd(1, 'k', 'n', 's'));
@@ -489,7 +489,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('systemExists')
-            ->with('k', 'n', 'b')
+            ->with('k', 'n', RegistryKeyType::BOOLEAN)
             ->willReturn(false);
 
         $this->assertFalse($this->registry->se('k', 'n', 'b'));
@@ -500,7 +500,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('systemDelete')
-            ->with('k', 'n', 'f')
+            ->with('k', 'n', RegistryKeyType::FLOAT)
             ->willReturn(true);
 
         $this->assertTrue($this->registry->sd('k', 'n', 'f'));
@@ -516,7 +516,7 @@ class AbstractRegistryTest extends TestCase
         $engine->method('registryRead')->willReturn(false);
         $engine->expects($this->once())
             ->method('registryWrite')
-            ->with(0, 'k', 'n', 'd', $dt->format('c'))
+            ->with(0, 'k', 'n', RegistryKeyType::DATE, $dt->format('c'))
             ->willReturn(true);
 
         $this->assertTrue($this->registry->registryWrite(0, 'k', 'n', 'd', $dt));
@@ -529,7 +529,7 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
         $engine->expects($this->once())
             ->method('systemWrite')
-            ->with('k', 'n', 't', $dt->format('c'))
+            ->with('k', 'n', RegistryKeyType::TIME, $dt->format('c'))
             ->willReturn(true);
 
         $this->assertTrue($this->registry->systemWrite('k', 'n', 't', $dt));
@@ -543,7 +543,7 @@ class AbstractRegistryTest extends TestCase
         $engine->method('registryRead')->willReturn('val');
         $engine->expects($this->once())
             ->method('registryDelete')
-            ->with(1, 'k', 'n', 's')
+            ->with(1, 'k', 'n', RegistryKeyType::STRING)
             ->willReturn(true);
 
         $result = $this->registry->registryReadOnce(1, 'k', 'n', 's');
@@ -557,7 +557,7 @@ class AbstractRegistryTest extends TestCase
         $engine->method('systemRead')->willReturn('val');
         $engine->expects($this->once())
             ->method('systemDelete')
-            ->with('k', 'n', 's')
+            ->with('k', 'n', RegistryKeyType::STRING)
             ->willReturn(true);
 
         $result = $this->registry->systemReadOnce('k', 'n', 's');

@@ -23,6 +23,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 
 /**
  * Symfony Form
@@ -39,7 +40,7 @@ class RegistryType extends AbstractType
         $read_only = $options['mode'] == 'edit';
 
         $builder
-            ->add('userid', IntegerType::class, [
+            ->add('user_id', IntegerType::class, [
                 'required' => true,
                 'attr' => $read_only ? ['readonly' => true] : [],
             ])
@@ -60,7 +61,15 @@ class RegistryType extends AbstractType
                 'attr' => $read_only ? ['readonly' => true] : [],
             ])
             ->add('type', ChoiceType::class, [
-                'choices' => ['i' => 'Integer', 'b' => 'Boolean', 's' => 'String', 'f' => 'Float', 'd' => 'DateTime'],
+                'choices' => [
+                    'Integer' => RegistryKeyType::INTEGER->value,
+                    'Boolean' => RegistryKeyType::BOOLEAN->value,
+                    'String' => RegistryKeyType::STRING->value,
+                    'Float' => RegistryKeyType::FLOAT->value,
+                    'DateTime' => RegistryKeyType::DATE->value,
+                    'Time' => RegistryKeyType::TIME->value,
+                    'Array' => RegistryKeyType::ARRAY->value,
+                ],
                 'required' => true,
                 'disabled' => $read_only,
             ])

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -115,12 +116,12 @@ class SystemKeyEntity implements SystemKeyInterface
     /**
      * Set type.
      *
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return SystemKeyEntity
      */
-    public function setType(string $type): self
+    public function setType(RegistryKeyType $type): self
     {
-        $this->type = $type;
+        $this->type = $type->value;
 
         return $this;
     }
@@ -128,11 +129,11 @@ class SystemKeyEntity implements SystemKeyInterface
     /**
      * Get type.
      *
-     * @return string
+     * @return RegistryKeyType
      */
-    public function getType(): string
+    public function getType(): RegistryKeyType
     {
-        return $this->type;
+        return RegistryKeyType::from($this->type);
     }
 
     /**
@@ -187,7 +188,7 @@ class SystemKeyEntity implements SystemKeyInterface
 
         $system_key->setKey($object['key']);
         $system_key->setName($object['name']);
-        $system_key->setType($object['type']);
+        $system_key->setType(RegistryKeyType::from($object['type']));
         $system_key->setValue($object['value']);
 
         return $system_key;

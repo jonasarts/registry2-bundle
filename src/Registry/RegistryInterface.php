@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+
 /**
  * RegistryInterface.
  *
@@ -24,213 +26,213 @@ interface RegistryInterface
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function registryExists(int $user_id, string $key, string $name, string $type): bool;
+    public function registryExists(int $user_id, string $key, string $name, string|RegistryKeyType $type): bool;
 
     /**
      * @param int $uid
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return bool
      */
-    public function re(int $uid, string $k, string $n, string $t): bool;
+    public function re(int $uid, string $k, string $n, string|RegistryKeyType $t): bool;
 
     /**
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function registryDelete(int $user_id, string $key, string $name, string $type): bool;
+    public function registryDelete(int $user_id, string $key, string $name, string|RegistryKeyType $type): bool;
 
     /**
      * @param int $uid
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return bool
      */
-    public function rd(int $uid, string $k, string $n, string $t): bool;
+    public function rd(int $uid, string $k, string $n, string|RegistryKeyType $t): bool;
 
     /**
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $default
      * @return mixed
      */
-    public function registryReadDefault(int $user_id, string $key, string $name, string $type, mixed $default): mixed;
+    public function registryReadDefault(int $user_id, string $key, string $name, string|RegistryKeyType $type, mixed $default): mixed;
 
     /**
      * @param int $uid
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @param mixed $d
      * @return mixed
      */
-    public function rrd(int $uid, string $k, string $n, string $t, mixed $d): mixed;
+    public function rrd(int $uid, string $k, string $n, string|RegistryKeyType $t, mixed $d): mixed;
 
     /**
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function registryRead(int $user_id, string $key, string $name, string $type): mixed;
+    public function registryRead(int $user_id, string $key, string $name, string|RegistryKeyType $type): mixed;
 
     /**
      * @param int $uid
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return mixed
      */
-    public function rr(int $uid, string $k, string $n, string $t): mixed;
+    public function rr(int $uid, string $k, string $n, string|RegistryKeyType $t): mixed;
 
     /**
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function registryReadOnce(int $user_id, string $key, string $name, string $type): mixed;
+    public function registryReadOnce(int $user_id, string $key, string $name, string|RegistryKeyType $type): mixed;
 
     /**
      * @param int $uid
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return mixed
      */
-    public function rro(int $uid, string $k, string $n, string $t): mixed;
+    public function rro(int $uid, string $k, string $n, string|RegistryKeyType $t): mixed;
 
     /**
      * @param int $user_id
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $value
      * @return bool
      */
-    public function registryWrite(int $user_id, string $key, string $name, string $type, mixed $value): bool;
+    public function registryWrite(int $user_id, string $key, string $name, string|RegistryKeyType $type, mixed $value): bool;
 
     /**
      * @param int $uid
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @param mixed $v
      * @return bool
      */
-    public function rw(int $uid, string $k, string $n, string $t, mixed $v): bool;
+    public function rw(int $uid, string $k, string $n, string|RegistryKeyType $t, mixed $v): bool;
 
     /**
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function systemExists(string $key, string $name, string $type): bool;
+    public function systemExists(string $key, string $name, string|RegistryKeyType $type): bool;
 
     /**
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return bool
      */
-    public function se(string $k, string $n, string $t): bool;
+    public function se(string $k, string $n, string|RegistryKeyType $t): bool;
 
     /**
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return bool
      */
-    public function systemDelete(string $key, string $name, string $type): bool;
+    public function systemDelete(string $key, string $name, string|RegistryKeyType $type): bool;
 
     /**
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return bool
      */
-    public function sd(string $k, string $n, string $t): bool;
+    public function sd(string $k, string $n, string|RegistryKeyType $t): bool;
 
     /**
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $default
      * @return mixed
      */
-    public function systemReadDefault(string $key, string $name, string $type, mixed $default): mixed;
+    public function systemReadDefault(string $key, string $name, string|RegistryKeyType $type, mixed $default): mixed;
 
     /**
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @param mixed $d
      * @return mixed
      */
-    public function srd(string $k, string $n, string $t, mixed $d): mixed;
+    public function srd(string $k, string $n, string|RegistryKeyType $t, mixed $d): mixed;
 
     /**
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function systemRead(string $key, string $name, string $type): mixed;
+    public function systemRead(string $key, string $name, string|RegistryKeyType $type): mixed;
 
     /**
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return mixed
      */
-    public function sr(string $k, string $n, string $t): mixed;
+    public function sr(string $k, string $n, string|RegistryKeyType $t): mixed;
 
     /**
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @return mixed
      */
-    public function systemReadOnce(string $key, string $name, string $type): mixed;
+    public function systemReadOnce(string $key, string $name, string|RegistryKeyType $type): mixed;
 
     /**
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @return mixed
      */
-    public function sro(string $k, string $n, string $t): mixed;
+    public function sro(string $k, string $n, string|RegistryKeyType $t): mixed;
 
     /**
      * @param string $key
      * @param string $name
-     * @param string $type
+     * @param string|RegistryKeyType $type
      * @param mixed $value
      * @return bool
      */
-    public function systemWrite(string $key, string $name, string $type, mixed $value): bool;
+    public function systemWrite(string $key, string $name, string|RegistryKeyType $type, mixed $value): bool;
 
     /**
      * @param string $k
      * @param string $n
-     * @param string $t
+     * @param string|RegistryKeyType $t
      * @param mixed $v
      * @return bool
      */
-    public function sw(string $k, string $n, string $t, mixed $v): bool;
+    public function sw(string $k, string $n, string|RegistryKeyType $t, mixed $v): bool;
 
     /**
      * @return array<int, mixed>

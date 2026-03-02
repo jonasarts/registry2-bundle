@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+
 /**
  * RegistryKey.
  *
@@ -36,9 +38,9 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     private string $name;
 
     /**
-     * @var string
+     * @var RegistryKeyType
      */
-    private string $type;
+    private RegistryKeyType $type;
 
     /**
      * @var string
@@ -46,13 +48,13 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     private string $value;
 
     /**
-     * Entitiy to string.
+     * Entity to string.
      *
      * @return string
      */
     public function __toString(): string
     {
-        return $this->user_id.' - '.$this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
+        return $this->user_id.' - '.$this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type->name.')';
     }
 
     /**
@@ -127,9 +129,9 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     /**
      * Get type.
      *
-     * @return string
+     * @return RegistryKeyType
      */
-    public function getType(): string
+    public function getType(): RegistryKeyType
     {
         return $this->type;
     }
@@ -137,10 +139,10 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     /**
      * Set type.
      *
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return RegistryKey
      */
-    public function setType(string $type): self
+    public function setType(RegistryKeyType $type): self
     {
         $this->type = $type;
 
@@ -180,7 +182,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
         $a['user_id'] = $this->user_id;
         $a['key'] = $this->key;
         $a['name'] = $this->name;
-        $a['type'] = $this->type;
+        $a['type'] = $this->type->value;
         $a['value'] = $this->value;
 
         return json_encode($a, JSON_THROW_ON_ERROR);
@@ -201,7 +203,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
         $registry_key->user_id = $object['user_id'];
         $registry_key->key = $object['key'];
         $registry_key->name = $object['name'];
-        $registry_key->type = $object['type'];
+        $registry_key->type = RegistryKeyType::from($object['type']);
         $registry_key->value = $object['value'];
 
         return $registry_key;
@@ -218,7 +220,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
         $registry_key->user_id = $array['user_id'];
         $registry_key->key = $array['key'];
         $registry_key->name = $array['name'];
-        $registry_key->type = $array['type'];
+        $registry_key->type = RegistryKeyType::from($array['type']);
         $registry_key->value = $array['value'];
 
         return $registry_key;

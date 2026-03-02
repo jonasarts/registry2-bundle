@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+
 /**
  * SystemKeyInterface.
  *
@@ -43,15 +45,15 @@ interface SystemKeyInterface
     public function setName(string $name): SystemKeyInterface;
 
     /**
-     * @return string
+     * @return RegistryKeyType
      */
-    public function getType(): string;
+    public function getType(): RegistryKeyType;
 
     /**
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return self
      */
-    public function setType(string $type): SystemKeyInterface;
+    public function setType(RegistryKeyType $type): SystemKeyInterface;
 
     /**
      * @return string

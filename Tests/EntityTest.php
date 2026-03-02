@@ -8,6 +8,7 @@ use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use PHPUnit\Framework\TestCase;
 
 class EntityTest extends TestCase
@@ -20,7 +21,7 @@ class EntityTest extends TestCase
         $key->setUserId(42);
         $key->setKey('app');
         $key->setName('theme');
-        $key->setType('s');
+        $key->setType(RegistryKeyType::STRING);
         $key->setValue('dark');
 
         $json = $key->serialize();
@@ -29,7 +30,7 @@ class EntityTest extends TestCase
         $this->assertSame(42, $restored->getUserId());
         $this->assertSame('app', $restored->getKey());
         $this->assertSame('theme', $restored->getName());
-        $this->assertSame('s', $restored->getType());
+        $this->assertSame(RegistryKeyType::STRING, $restored->getType());
         $this->assertSame('dark', $restored->getValue());
     }
 
@@ -48,7 +49,7 @@ class EntityTest extends TestCase
         $this->assertSame(7, $key->getUserId());
         $this->assertSame('settings', $key->getKey());
         $this->assertSame('lang', $key->getName());
-        $this->assertSame('s', $key->getType());
+        $this->assertSame(RegistryKeyType::STRING, $key->getType());
         $this->assertSame('en', $key->getValue());
     }
 
@@ -58,10 +59,10 @@ class EntityTest extends TestCase
         $key->setUserId(1);
         $key->setKey('k');
         $key->setName('n');
-        $key->setType('i');
+        $key->setType(RegistryKeyType::INTEGER);
         $key->setValue('99');
 
-        $this->assertSame('1 - k/n = 99 (i)', (string) $key);
+        $this->assertSame('1 - k/n = 99 (INTEGER)', (string) $key);
     }
 
     public function testRegistryKeySettersReturnSelf(): void
@@ -71,7 +72,7 @@ class EntityTest extends TestCase
         $this->assertSame($key, $key->setUserId(1));
         $this->assertSame($key, $key->setKey('k'));
         $this->assertSame($key, $key->setName('n'));
-        $this->assertSame($key, $key->setType('s'));
+        $this->assertSame($key, $key->setType(RegistryKeyType::STRING));
         $this->assertSame($key, $key->setValue('v'));
     }
 
@@ -82,7 +83,7 @@ class EntityTest extends TestCase
         $key = new SystemKey();
         $key->setKey('global');
         $key->setName('version');
-        $key->setType('s');
+        $key->setType(RegistryKeyType::STRING);
         $key->setValue('1.0.0');
 
         $json = $key->serialize();
@@ -90,7 +91,7 @@ class EntityTest extends TestCase
 
         $this->assertSame('global', $restored->getKey());
         $this->assertSame('version', $restored->getName());
-        $this->assertSame('s', $restored->getType());
+        $this->assertSame(RegistryKeyType::STRING, $restored->getType());
         $this->assertSame('1.0.0', $restored->getValue());
     }
 
@@ -107,7 +108,7 @@ class EntityTest extends TestCase
 
         $this->assertSame('config', $key->getKey());
         $this->assertSame('debug', $key->getName());
-        $this->assertSame('b', $key->getType());
+        $this->assertSame(RegistryKeyType::BOOLEAN, $key->getType());
         $this->assertSame('1', $key->getValue());
     }
 
@@ -116,10 +117,10 @@ class EntityTest extends TestCase
         $key = new SystemKey();
         $key->setKey('sys');
         $key->setName('flag');
-        $key->setType('b');
+        $key->setType(RegistryKeyType::BOOLEAN);
         $key->setValue('1');
 
-        $this->assertSame('sys/flag = 1 (b)', (string) $key);
+        $this->assertSame('sys/flag = 1 (BOOLEAN)', (string) $key);
     }
 
     public function testSystemKeySettersReturnSelf(): void
@@ -128,7 +129,7 @@ class EntityTest extends TestCase
 
         $this->assertSame($key, $key->setKey('k'));
         $this->assertSame($key, $key->setName('n'));
-        $this->assertSame($key, $key->setType('s'));
+        $this->assertSame($key, $key->setType(RegistryKeyType::STRING));
         $this->assertSame($key, $key->setValue('v'));
     }
 
@@ -140,7 +141,7 @@ class EntityTest extends TestCase
         $entity->setUserId(10);
         $entity->setKey('app');
         $entity->setName('color');
-        $entity->setType('s');
+        $entity->setType(RegistryKeyType::STRING);
         $entity->setValue('blue');
 
         $json = $entity->serialize();
@@ -159,7 +160,7 @@ class EntityTest extends TestCase
         $entity->setUserId(5);
         $entity->setKey('k');
         $entity->setName('n');
-        $entity->setType('i');
+        $entity->setType(RegistryKeyType::INTEGER);
         $entity->setValue('42');
 
         $json = $entity->serialize();
@@ -177,7 +178,7 @@ class EntityTest extends TestCase
         $entity->setUserId(3);
         $entity->setKey('k');
         $entity->setName('n');
-        $entity->setType('f');
+        $entity->setType(RegistryKeyType::FLOAT);
         $entity->setValue('3.14');
 
         $this->assertSame('3 - k/n = 3.14 (f)', (string) $entity);
@@ -197,7 +198,7 @@ class EntityTest extends TestCase
         $entity = new SystemKeyEntity();
         $entity->setKey('sys');
         $entity->setName('timeout');
-        $entity->setType('i');
+        $entity->setType(RegistryKeyType::INTEGER);
         $entity->setValue('30');
 
         $json = $entity->serialize();
@@ -214,7 +215,7 @@ class EntityTest extends TestCase
         $entity = new SystemKeyEntity();
         $entity->setKey('sys');
         $entity->setName('flag');
-        $entity->setType('b');
+        $entity->setType(RegistryKeyType::BOOLEAN);
         $entity->setValue('1');
 
         $json = $entity->serialize();
@@ -231,7 +232,7 @@ class EntityTest extends TestCase
         $entity = new SystemKeyEntity();
         $entity->setKey('cfg');
         $entity->setName('rate');
-        $entity->setType('f');
+        $entity->setType(RegistryKeyType::FLOAT);
         $entity->setValue('0.75');
 
         // SystemKeyEntity uses '=>' not '='

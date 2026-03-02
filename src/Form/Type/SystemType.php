@@ -22,6 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 
 /**
  * Symfony Form
@@ -55,7 +56,15 @@ class SystemType extends AbstractType
                 'attr' => $read_only ? ['readonly' => true] : [],
             ])
             ->add('type', ChoiceType::class, [
-                'choices' => ['i' => 'Integer', 'b' => 'Boolean', 's' => 'String', 'f' => 'Float', 'd' => 'DateTime'],
+                'choices' => [
+                    'Integer' => RegistryKeyType::INTEGER->value,
+                    'Boolean' => RegistryKeyType::BOOLEAN->value,
+                    'String' => RegistryKeyType::STRING->value,
+                    'Float' => RegistryKeyType::FLOAT->value,
+                    'DateTime' => RegistryKeyType::DATE->value,
+                    'Time' => RegistryKeyType::TIME->value,
+                    'Array' => RegistryKeyType::ARRAY->value,
+                ],
                 'required' => true,
                 'disabled' => $read_only,
             ])

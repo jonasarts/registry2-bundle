@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -149,7 +150,7 @@ class SystemController extends AbstractController
     /**
      * Delete system key from database.
      */
-    private function delete(string $key, string $name, string $type): bool
+    private function delete(string $key, string $name, RegistryKeyType $type): bool
     {
         return $this->registry->systemDelete($key, $name, $type);
     }
@@ -157,7 +158,7 @@ class SystemController extends AbstractController
     /**
      * Read system key from database.
      */
-    public function read(string $key, string $name, string $type): mixed
+    public function read(string $key, string $name, RegistryKeyType $type): mixed
     {
         return $this->registry->systemRead($key, $name, $type);
     }
@@ -165,7 +166,7 @@ class SystemController extends AbstractController
     /**
      * Write system key to database.
      */
-    public function write(string $key, string $name, string $type, mixed $value): bool
+    public function write(string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
         return $this->registry->systemWrite($key, $name, $type, $value);
     }

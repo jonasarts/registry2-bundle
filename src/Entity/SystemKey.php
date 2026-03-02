@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+
 /**
  * SystemKey.
  *
@@ -31,9 +33,9 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
     private string $name;
 
     /**
-     * @var string
+     * @var RegistryKeyType
      */
-    private string $type;
+    private RegistryKeyType $type;
 
     /**
      * @var string
@@ -47,7 +49,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
      */
     public function __toString(): string
     {
-        return $this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type.')';
+        return $this->key.'/'.$this->name.' = '.$this->value.' ('.$this->type->name.')';
     }
 
     /**
@@ -99,9 +101,9 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
     /**
      * Get type.
      *
-     * @return string
+     * @return RegistryKeyType
      */
-    public function getType(): string
+    public function getType(): RegistryKeyType
     {
         return $this->type;
     }
@@ -109,10 +111,10 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
     /**
      * Set type.
      *
-     * @param string $type
+     * @param RegistryKeyType $type
      * @return SystemKey
      */
-    public function setType(string $type): self
+    public function setType(RegistryKeyType $type): self
     {
         $this->type = $type;
 
@@ -151,7 +153,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
         $array = [];
         $array['key'] = $this->key;
         $array['name'] = $this->name;
-        $array['type'] = $this->type;
+        $array['type'] = $this->type->value;
         $array['value'] = $this->value;
 
         return json_encode($array, JSON_THROW_ON_ERROR);
@@ -171,7 +173,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
         $system_key->key = $object['key'];
         $system_key->name = $object['name'];
-        $system_key->type = $object['type'];
+        $system_key->type = RegistryKeyType::from($object['type']);
         $system_key->value = $object['value'];
 
         return $system_key;
@@ -187,7 +189,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
         $system_key->key = $array['key'];
         $system_key->name = $array['name'];
-        $system_key->type = $array['type'];
+        $system_key->type = RegistryKeyType::from($array['type']);
         $system_key->value = $array['value'];
 
         return $system_key;

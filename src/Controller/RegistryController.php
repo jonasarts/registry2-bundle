@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
+use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -151,7 +152,7 @@ class RegistryController extends AbstractController
     /**
      * Delete registry key from database.
      */
-    private function delete(int $userid, string $key, string $name, string $type): bool
+    private function delete(int $userid, string $key, string $name, RegistryKeyType $type): bool
     {
         return $this->registry->registryDelete($userid, $key, $name, $type);
     }
@@ -159,7 +160,7 @@ class RegistryController extends AbstractController
     /**
      * Write registry key to database.
      */
-    private function write(int $userid, string $key, string $name, string $type, mixed $value): bool
+    private function write(int $userid, string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
         return $this->registry->registryWrite($userid, $key, $name, $type, $value);
     }

@@ -6,10 +6,10 @@ namespace jonasarts\Bundle\RegistryBundle\Enum;
 
 enum RegistryKeyType: string
 {
-    case INTEGER = 'i';
     case BOOLEAN = 'b';
-    case STRING = 's';
+    case INTEGER = 'i';
     case FLOAT = 'f';
+    case STRING = 's';
     case DATE = 'd';
     case TIME = 't';
     case ARRAY = 'a';

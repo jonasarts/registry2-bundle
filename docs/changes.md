@@ -1,6 +1,22 @@
 CHANGE LOG
 ==========
 
+V 7.0.1
+-------
+
+- Adding enum for registry-key type
+  - WARNING: eventually needs a data migration for the type string of existing registry keys in the registry database!  
+    Use the short version as type string (b, i, f, s, d, t, a). See RegistryKeyType enum.
+- Breaking change in SystemKeyInterface getType() and setType()
+- Code cleanup
+- Adding more tests
+
+V 7.0.0
+-------
+
+- Requires PHP 8.2
+- Updated for Symfony 7.0 Branch
+ 
 V 6.3.0
 -------
 
