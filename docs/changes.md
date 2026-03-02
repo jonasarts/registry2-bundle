@@ -1,6 +1,11 @@
 CHANGE LOG
 ==========
 
+V 7.0.4
+-------
+
+- Bugfixes for bugs introduced by RegistryKeyType enum
+
 V 7.0.3
 -------
 
