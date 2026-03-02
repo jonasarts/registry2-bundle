@@ -1,7 +1,7 @@
 CHANGE LOG
 ==========
 
-V 7.0.1
+V 7.0.2
 -------
 
 - Adding enum for registry-key type
