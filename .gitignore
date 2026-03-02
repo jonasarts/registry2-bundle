@@ -4,7 +4,6 @@ vendor
 .php-cs-fixer.cache
 .phpunit.result.cache
 
-### ignore composer in submodule, composer is only needed in submodule unit-testing
-composer.json
+### ignore locks
 composer.lock
 symfony.lock
