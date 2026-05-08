@@ -51,7 +51,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         // prefix
                         ->scalarNode('prefix')
-                            ->isRequired()
                             ->defaultValue('registry')
                         ->end()
                     ->end()
