@@ -12,6 +12,8 @@
             <file>tests/DoctrineRegistryEngineTest.php</file>
             <file>tests/RedisRegistryEngineTest.php</file>
             <file>tests/EntityTest.php</file>
+            <file>tests/EditableValueTest.php</file>
+            <file>tests/RegistryExtensionTest.php</file>
         </testsuite>
         <!-- Integration tests: require a live Redis server (auto-skipped if absent) -->
         <testsuite name="integration">

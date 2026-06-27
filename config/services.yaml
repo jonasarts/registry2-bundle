@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # The active registry implementation (DoctrineRegistry or RedisRegistry) and
+    # the RegistryInterface alias are registered programmatically by the bundle,
+    # based on the configured `engine`. This avoids any hard reference to a redis
+    # client service (and to snc/redis-bundle) when the default Doctrine engine
+    # is used.
+    #
+    # The built-in CRUD controllers are wired separately and only when
+    # `registry.ui.enabled` is true.

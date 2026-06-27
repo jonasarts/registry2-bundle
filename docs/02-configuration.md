@@ -64,6 +64,13 @@ snc_redis:
 The client only needs the hash methods used by the engine
 (`hExists`, `hDel`, `hGet`, `hSet`, `hGetAll`, `keys`).
 
+## Using both engines at once
+
+`registry.engine` selects a single engine, which is bound to
+`RegistryInterface`. If you need the Doctrine **and** Redis registries side by
+side, register the second concrete service yourself and inject it by class — see
+[UPGRADE-8.0.md](UPGRADE-8.0.md#running-both-engines-at-once-optional).
+
 ## That's all
 
 [Return to the index.](index.md)

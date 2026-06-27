@@ -54,8 +54,8 @@ The removed runtime engine-switching helpers (`switchEngineType()`,
 
 The `value` column of the `registry` and `system` tables changed from nullable
 to `NOT NULL DEFAULT ''`. Apply the change to existing databases — see
-[docs/04-migration.md](docs/04-migration.md) for ready-to-run SQL (PostgreSQL /
-MariaDB) and a sample Doctrine migration.
+[04-migration.md](04-migration.md) for ready-to-run SQL (PostgreSQL / MariaDB)
+and a sample Doctrine migration.
 
 ## CRUD UI is off by default
 
@@ -81,10 +81,35 @@ Security-relevant changes if you used the UI:
   removed `::base.html.twig` syntax.
 
 Import the controller routes only when the UI is enabled (see
-[docs/05-crud-ui.md](docs/05-crud-ui.md)).
+[05-crud-ui.md](05-crud-ui.md)).
 
 ## Removed internals
 
 - `AbstractRegistryKey` (empty base class) was removed. `RegistryKey` /
   `SystemKey` no longer extend it; they still implement
   `RegistryKeyInterface` / `SystemKeyInterface`.
+
+## Running both engines at once (optional)
+
+By default only the configured engine is wired and bound to
+`RegistryInterface`. To use the Doctrine **and** Redis registries side by side,
+register the second concrete service in your application and inject it by class:
+
+```yaml
+# config/services.yaml
+services:
+    jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+            $default_values_filename: '%registry.globals.default_values%'
+
+    jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry:
+        arguments:
+            $redis: '@snc_redis.registry'   # any \Redis / Predis / cache-adapter service
+            $registry_prefix: '%registry.redis.prefix%'
+            $registry_delimiter: '%registry.globals.delimiter%'
+            $default_values_filename: '%registry.globals.default_values%'
+```
+
+Then type-hint the concrete classes (`DoctrineRegistry`, `RedisRegistry`)
+instead of `RegistryInterface`.

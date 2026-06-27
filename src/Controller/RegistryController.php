@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
-use DateTimeInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use jonasarts\Bundle\RegistryBundle\Form\Type\RegistryType;
@@ -32,6 +31,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/registry')]
 class RegistryController extends AbstractController
 {
+    use EditableValue;
+
     public function __construct(
         private readonly RegistryInterface $registry,
         private readonly string $baseTemplate,
@@ -94,19 +95,9 @@ class RegistryController extends AbstractController
         $this->denyAccessUnlessGranted($this->adminRole);
 
         $entity = new RegKey();
-        $form = $this->createForm(RegistryType::class, $entity, ['mode' => 'edit']);
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                if (!$this->write($entity->getUserId(), $entity->getKey(), $entity->getName(), $entity->getType(), $entity->getValue())) {
-                    $this->addFlash('error', 'RegistryController.edit: error on write');
-                }
-
-                return $this->redirectToRoute('registry_index');
-            }
-        } else {
+        if (!$request->isMethod('POST')) {
+            // GET: prefill the form from validated discrete parameters
             $userId = $request->query->getInt('user_id');
             $key = (string) $request->query->get('key', '');
             $name = (string) $request->query->get('name', '');
@@ -120,9 +111,18 @@ class RegistryController extends AbstractController
             $entity->setKey($key);
             $entity->setName($name);
             $entity->setType($type);
-            $entity->setValue($this->valueToString($this->registry->registryRead($userId, $key, $name, $type)));
+            $entity->setValue($this->valueToString($type, $this->registry->registryRead($userId, $key, $name, $type)));
+        }
 
-            $form = $this->createForm(RegistryType::class, $entity, ['mode' => 'edit']);
+        $form = $this->createForm(RegistryType::class, $entity, ['mode' => 'edit']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->write($entity->getUserId(), $entity->getKey(), $entity->getName(), $entity->getType(), $entity->getValue())) {
+                $this->addFlash('error', 'RegistryController.edit: error on write');
+            }
+
+            return $this->redirectToRoute('registry_index');
         }
 
         return $this->render('@Registry/Registry/edit.html.twig', [
@@ -169,19 +169,5 @@ class RegistryController extends AbstractController
     private function write(int $userid, string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
         return $this->registry->registryWrite($userid, $key, $name, $type, $value);
-    }
-
-    /**
-     * Render a stored value as an editable string for the form.
-     */
-    private function valueToString(mixed $value): string
-    {
-        return match (true) {
-            null === $value => '',
-            \is_string($value) => $value,
-            \is_scalar($value) => (string) $value,
-            $value instanceof DateTimeInterface => $value->format(DateTimeInterface::ATOM),
-            default => json_encode($value, \JSON_THROW_ON_ERROR),
-        };
     }
 }

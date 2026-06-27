@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
-use DateTimeInterface;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use jonasarts\Bundle\RegistryBundle\Form\Type\SystemType;
@@ -32,6 +31,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/system')]
 class SystemController extends AbstractController
 {
+    use EditableValue;
+
     public function __construct(
         private readonly RegistryInterface $registry,
         private readonly string $baseTemplate,
@@ -94,19 +95,9 @@ class SystemController extends AbstractController
         $this->denyAccessUnlessGranted($this->adminRole);
 
         $entity = new SysKey();
-        $form = $this->createForm(SystemType::class, $entity, ['mode' => 'edit']);
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                if (!$this->write($entity->getKey(), $entity->getName(), $entity->getType(), $entity->getValue())) {
-                    $this->addFlash('error', 'SystemController.edit: error on write');
-                }
-
-                return $this->redirectToRoute('system_index');
-            }
-        } else {
+        if (!$request->isMethod('POST')) {
+            // GET: prefill the form from validated discrete parameters
             $key = (string) $request->query->get('key', '');
             $name = (string) $request->query->get('name', '');
             $type = RegistryKeyType::tryFrom((string) $request->query->get('type', ''));
@@ -118,9 +109,18 @@ class SystemController extends AbstractController
             $entity->setKey($key);
             $entity->setName($name);
             $entity->setType($type);
-            $entity->setValue($this->valueToString($this->registry->systemRead($key, $name, $type)));
+            $entity->setValue($this->valueToString($type, $this->registry->systemRead($key, $name, $type)));
+        }
 
-            $form = $this->createForm(SystemType::class, $entity, ['mode' => 'edit']);
+        $form = $this->createForm(SystemType::class, $entity, ['mode' => 'edit']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->write($entity->getKey(), $entity->getName(), $entity->getType(), $entity->getValue())) {
+                $this->addFlash('error', 'SystemController.edit: error on write');
+            }
+
+            return $this->redirectToRoute('system_index');
         }
 
         return $this->render('@Registry/System/edit.html.twig', [
@@ -166,19 +166,5 @@ class SystemController extends AbstractController
     private function write(string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
         return $this->registry->systemWrite($key, $name, $type, $value);
-    }
-
-    /**
-     * Render a stored value as an editable string for the form.
-     */
-    private function valueToString(mixed $value): string
-    {
-        return match (true) {
-            null === $value => '',
-            \is_string($value) => $value,
-            \is_scalar($value) => (string) $value,
-            $value instanceof DateTimeInterface => $value->format(DateTimeInterface::ATOM),
-            default => json_encode($value, \JSON_THROW_ON_ERROR),
-        };
     }
 }

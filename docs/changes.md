@@ -23,9 +23,13 @@ V 8.0.0
   base template (`registry.ui.base_template`).
 - Removed the empty `AbstractRegistryKey` base class; deduplicated the engine
   `stringify()` helper into a shared trait.
+- Modernized to the current bundle layout: `config/` and `templates/` at the
+  package root, single-class `AbstractBundle` (configuration tree and container
+  wiring in `RegistryBundle`; the separate Extension/Configuration classes are
+  gone). `symfony/http-kernel` is now an explicit dependency.
 - Full unit-test suite (engine clients mocked, DB/Redis-independent) plus a
   skippable real-redis integration suite; CI with Rector & PHP-CS-Fixer gates.
-- See [UPGRADE-8.0.md](../UPGRADE-8.0.md) for migration steps.
+- See [UPGRADE-8.0.md](UPGRADE-8.0.md) for migration steps.
 
 V 7.0.5
 -------
