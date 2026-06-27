@@ -1,0 +1,7 @@
+# Default key-value fixture for AbstractRegistry YAML fallback tests.
+# Paths are "<key><delimiter><name>" with the default delimiter ':'.
+registry:
+    'app:theme': 'dark'
+    'app:count': '7'
+system:
+    'app:version': '2.0'

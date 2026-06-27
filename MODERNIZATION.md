@@ -1,6 +1,6 @@
 # Modernization Plan — jonasarts/registry2-bundle
 
-Owner decision 2026-06-27. Target: Symfony 8.1 · PHP 8.4 · Doctrine ORM 3 · PostgreSQL 18. Status: PLAN — standalone ausführbar.
+Owner decision 2026-06-27. Target: Symfony 8.1 · PHP 8.4 · Doctrine ORM 3 · PostgreSQL 18. Status: IMPLEMENTED — P0–P6 umgesetzt auf Branch `modernization/p0-baseline` (152 Tests grün; Tag/Release ausstehend). Siehe `EXECUTION_PLAN.md` und `UPGRADE-8.0.md`.
 
 ## Decision
 

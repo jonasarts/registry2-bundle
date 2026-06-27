@@ -592,4 +592,83 @@ class AbstractRegistryTest extends TestCase
 
         $this->assertSame([], $this->registry->systemAll());
     }
+
+    // --- YAML default fallback (readDefaultKeyValue) ---
+
+    private function yamlFixture(): string
+    {
+        return __DIR__.'/fixtures/registry_defaults.yaml';
+    }
+
+    /**
+     * Engine miss -> falls through to the YAML default file (registry scope).
+     */
+    public function testRegistryReadFallsBackToYamlStringDefault(): void
+    {
+        $engine = $this->createStub(RegistryEngineInterface::class);
+        $engine->method('registryRead')->willReturn(false);
+        $registry = new TestableRegistry($engine, $this->yamlFixture());
+
+        $this->assertSame('dark', $registry->registryRead(1, 'app', 'theme', RegistryKeyType::STRING));
+    }
+
+    /**
+     * YAML default is decoded according to the requested type.
+     */
+    public function testRegistryReadYamlDefaultDecodesType(): void
+    {
+        $engine = $this->createStub(RegistryEngineInterface::class);
+        $engine->method('registryRead')->willReturn(false);
+        $registry = new TestableRegistry($engine, $this->yamlFixture());
+
+        $this->assertSame(7, $registry->registryRead(1, 'app', 'count', RegistryKeyType::INTEGER));
+    }
+
+    /**
+     * System scope resolves against the YAML "system" section.
+     */
+    public function testSystemReadFallsBackToYamlDefault(): void
+    {
+        $engine = $this->createStub(RegistryEngineInterface::class);
+        $engine->method('systemRead')->willReturn(false);
+        $registry = new TestableRegistry($engine, $this->yamlFixture());
+
+        $this->assertSame('2.0', $registry->systemRead('app', 'version', RegistryKeyType::STRING));
+    }
+
+    /**
+     * The YAML lookup path is "<key><delimiter><name>"; an unknown path yields null.
+     */
+    public function testRegistryReadYamlMissReturnsNull(): void
+    {
+        $engine = $this->createStub(RegistryEngineInterface::class);
+        $engine->method('registryRead')->willReturn(false);
+        $registry = new TestableRegistry($engine, $this->yamlFixture());
+
+        $this->assertNull($registry->registryRead(1, 'app', 'unknown', RegistryKeyType::STRING));
+    }
+
+    /**
+     * An engine value takes precedence over the YAML default.
+     */
+    public function testEngineValueWinsOverYamlDefault(): void
+    {
+        $engine = $this->createStub(RegistryEngineInterface::class);
+        $engine->method('registryRead')->willReturn('light');
+        $registry = new TestableRegistry($engine, $this->yamlFixture());
+
+        $this->assertSame('light', $registry->registryRead(1, 'app', 'theme', RegistryKeyType::STRING));
+    }
+
+    /**
+     * Without a YAML file, an engine miss simply returns null (no fallback layer).
+     */
+    public function testRegistryReadWithoutYamlReturnsNull(): void
+    {
+        $engine = $this->createStub(RegistryEngineInterface::class);
+        $engine->method('registryRead')->willReturn(false);
+        $registry = new TestableRegistry($engine);
+
+        $this->assertNull($registry->registryRead(1, 'app', 'theme', RegistryKeyType::STRING));
+    }
 }

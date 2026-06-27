@@ -39,35 +39,24 @@ For lazy programmers, there are shortcuts to the above methods:
 * s, str, string
 * f, flt, float
 * d, dat, date, t, tim, time
+* a, arr, array
 
 \<Value\> can be of any type which \<TypeIdentifier\> can designate.
 
-Retrieve the Registry service like any other symfony service:
+The aliases (`rr`, `rw`, …) are documented in detail in
+[the alias reference](06-aliases.md).
+
+Inject the registry as `RegistryInterface` and use it as `$this->registry`:
 
 ```php
-    $rm = $this->get('registry');
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
+
+public function __construct(private readonly RegistryInterface $registry) {}
 ```
 
-In the php code examples, ``$this`` referes to a controller.
-
-
-Configuration Methods
-=====================
-
-registry.switchEngineType($engine_type, ContainerInterface $container)
-----------------------------------------------------------------------
-
-To switch the database engine used by the registry service, call
-`switchEngineType` with an engine type of
-
-- 'doctrine'
-- 'redis'
-
-and the service container.
-
-To query the current mode, there are following methods present
-- registry.getEngineType() -> string
-- registry.isEngineType($engine_type) -> boolean
+In the php code examples below, `$rm` refers to that injected service. The
+engine (`doctrine` or `redis`) is selected once via configuration
+(`registry.engine`), not switched at runtime.
 
 
 Registry
@@ -84,7 +73,7 @@ Following examples write some registry keys
 for the User with ID 1.
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $rm->registryWrite(1, 'App/Test', 'TestInteger', 'i', 1);
     $rm->registryWrite(1, 'App/Test', 'TestBoolean', 'b', true);
     $rm->registryWrite(1, 'App/Test', 'TestString', 's', 'test');
@@ -97,7 +86,7 @@ the key will not be written and an already older present user specific
 registry key will be removed.
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $rm->registryWrite(0, 'App/Test', 'TestInteger', 'i', 1); // writes a user-0 key (more info further below)
     $rm->registryWrite(1, 'App/Test', 'TestInteger', 'i', 100); // writes a user specific key
     $rm->registryWrite(1, 'App/Test', 'TestInteger', 'i', 1); // instead of writing a user specific key, this removes the before created user specific key (with value 100) to fall back on the user-0 key
@@ -113,7 +102,7 @@ different defaults for all users in different installations of your application.
 The handling of user-0 keys is absolutely the same as the user specific ones.
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $rm->registryWrite(0, 'App/Test', 'TestInteger', 'i', 2);
     $rm->registryWrite(0, 'App/Test', 'TestBoolean', 'b', false);
     $rm->registryWrite(0, 'App/Test', 'TestString', 's', 'one test more');
@@ -147,7 +136,7 @@ system:
 ```
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $value = $rm->registryRead(10, 'App/RegistryKey', 'Name', 's');
 
     // $value will hold 'Value' if no user-specific/user-0 value is stored in the database.
@@ -166,7 +155,7 @@ The retrieval hierarchy is:
 * programatic default key
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $value = $rm->registryRead(10, 'App/Test', 'TestString', 's');
 ```
 
@@ -177,7 +166,7 @@ The following example reads a registry key for user 11 and defines a default
 value of 'I am the default string'.
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $value = $rm->registryReadDefault(11, 'App/Test', 'TestString', 's', 'I am the default string');
 ```
 
@@ -187,7 +176,7 @@ Delete a key
 To remove a registry key (user specific or user-0), just call RegistryDelete.
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $rm->registryDelete(1, 'App/Test', 'TestString', 's');
 ```
 
@@ -210,7 +199,7 @@ Write a key
 -----------
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $rm->systemWrite('App/Test', 'TestInteger', 'i', 1);
     $rm->systemWrite('App/Test', 'TestBoolean', 'b', true);
     $rm->systemWrite('App/Test', 'TestString', 's', 'eins');
@@ -222,7 +211,7 @@ Read a key
 ----------
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
 
     $value = $rm->systemRead('App/Test', 'TestString', 's');
 
@@ -233,7 +222,7 @@ Delete a key
 ------------
 
 ```php
-    $rm = $this->get('registry');
+    $rm = $this->registry; // injected RegistryInterface
     $rm->systemDelete('App/Test', 'TestDate', 'd');
 ```
 

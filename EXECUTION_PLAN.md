@@ -4,6 +4,8 @@ Ableitung aus `MODERNIZATION.md` (Owner-Entscheid 2026-06-27). Ziel: Symfony 8.1
 
 Dieser Plan ordnet die Work-Items zu 7 sequenziellen Phasen mit Abhängigkeiten, je 1 PR pro Phase. Leitprinzip: **erst ein grünes Test-Fundament, dann modernisieren** — jede Phase landet mit eigenen Tests und hält CI grün.
 
+> **Status (Stand 2026-06-28):** P0–P6 umgesetzt auf Branch `modernization/p0-baseline`. 152 Tests grün, Rector/CS-Fixer sauber. Offen: finaler Commit von P6 (Doku) und das Taggen/Veröffentlichen von `8.0.0`.
+
 ---
 
 ## Phasenübersicht

@@ -9,27 +9,44 @@ Execute this console command in your project:
 composer require jonasarts/registry2-bundle
 ```
 
+The Doctrine engine is the default and works out of the box (it requires
+`doctrine/doctrine-bundle`). The Redis engine is optional — see
+[configuration](02-configuration.md).
+
 ## Enable the bundle
 
-Composer enables the bundle for you in config/bundles.php
+Symfony Flex enables the bundle for you in `config/bundles.php`.
 
-You can now use the
-`jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface` class.
+You can now type-hint
+`jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface` in your services
+and controllers; it is bound to the configured engine automatically.
 
-To use the RegistryController, register also the routes in
-*app/config/routing.yml* or *app/config/routing_dev.yml* (this is optional and
-can only be used on the 'doctrine' mode registry keys):
+```php
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
-```yaml
-#app/config/routing_dev.yml
-_registry:
-    resource: "@RegistryBundle/Controller/"
-    type:     annotation
-    prefix:   /
+final class MyService
+{
+    public function __construct(private readonly RegistryInterface $registry)
+    {
+    }
+}
 ```
 
-This will generate two routes to manage the registry keys: ``_registry`` and
-``_system``.
+## Optional CRUD controllers
+
+The bundle ships optional `RegistryController` / `SystemController`. They are
+**disabled by default**. To enable and import their (attribute-based) routes,
+see [the CRUD UI guide](05-crud-ui.md):
+
+```yaml
+# config/routes/registry.yaml  (only when registry.ui.enabled is true)
+registry_bundle:
+    resource: '@RegistryBundle/Controller/'
+    type: attribute
+```
+
+This registers the routes `registry_index`, `registry_new`, `registry_edit`,
+`registry_delete` and the `system_*` equivalents.
 
 ## Configuration options
 
@@ -37,33 +54,39 @@ This will generate two routes to manage the registry keys: ``_registry`` and
 
 ## Create the default key/name-values
 
-If you wish to use a central place to store all application defined default
-values, create the defaultkeys file *app/config/registry.yml* (or any other yaml
-file as configured):
+If you wish to use a central place to store all application-defined default
+values, create a defaults file and point `registry.globals.default_values` at
+it:
 
 ```yaml
-#app/config/registry.yml
+# config/packages/registry.yaml
 registry:
-    registrykey/name: value
-    settings/page_size: 10
-    settings/language: de_DE
-    multi/path/separator/with/name: multi path separator with name value string
-
-system:
-    systemkey/name: value
-    some/bln/value: true
-    some/int/value: 5
-    some/str/value: a string
-    some/flt/value: 0.5
-    some/dat/value: 2013-10-15
+    globals:
+        default_values: '%kernel.project_dir%/config/registry_defaults.yaml'
 ```
 
-This is **optional**, but highly recommended. On using doctrine as database
-engine and if the defaultkeys file is found, the default values are
-auto-enabled. On redis as database engine, no default values will be used. To
-override this behavior, call ``setDefaultKeysEnabled()`` on the registry object.
-Or just provide the required default values by the registry api calls (use
-``ReadRegistryDefault()`` instead of ``ReadRegistry()``).
+The file has a `registry` and a `system` section. Each entry key is the path
+`<key><delimiter><name>`, where `<delimiter>` is `registry.globals.delimiter`
+(default `:`):
+
+```yaml
+# config/registry_defaults.yaml
+registry:
+    'settings:page_size': 10
+    'settings:language': de_DE
+system:
+    'some:bln_value': true
+    'some:int_value': 5
+    'some:str_value': a string
+    'some:flt_value': 0.5
+    'some:dat_value': 2013-10-15
+```
+
+This is **optional**. When the file is configured, its values are used as the
+last step of the read fallback chain (user key → user-0 key → defaults file)
+for **both** engines — the fallback lives in `AbstractRegistry`, not in a
+specific engine. To supply a default for a single call instead, use
+`registryReadDefault()` / `systemReadDefault()`.
 
 ## That's it
 

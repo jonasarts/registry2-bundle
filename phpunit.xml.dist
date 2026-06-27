@@ -6,15 +6,15 @@
          cacheDirectory=".phpunit.cache"
          defaultTestSuite="unit">
     <testsuites>
-        <!-- Pure unit tests: no Kernel, no live DB/Redis -->
+        <!-- Pure unit tests: no Kernel, no live DB/Redis (engine clients mocked) -->
         <testsuite name="unit">
             <file>tests/AbstractRegistryTest.php</file>
             <file>tests/DoctrineRegistryEngineTest.php</file>
+            <file>tests/RedisRegistryEngineTest.php</file>
             <file>tests/EntityTest.php</file>
         </testsuite>
-        <!-- Integration tests: require Kernel / live Redis / live DB -->
+        <!-- Integration tests: require a live Redis server (auto-skipped if absent) -->
         <testsuite name="integration">
-            <file>tests/RedisRegistryEngineTest.php</file>
             <file>tests/RegistryTest.php</file>
         </testsuite>
     </testsuites>

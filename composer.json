@@ -44,6 +44,7 @@
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "rector": "rector process",
         "rector-check": "rector process --dry-run",
-        "test": "phpunit --testsuite unit"
+        "test": "phpunit --testsuite unit",
+        "test-integration": "phpunit --testsuite integration"
     }
 }

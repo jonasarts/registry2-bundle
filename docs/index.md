@@ -15,3 +15,10 @@ Usage
 -----
 
 * [Using the bundle](03-basic-usage.md)
+* [Method aliases (shortcuts)](06-aliases.md)
+
+Operations
+----------
+
+* [Optional CRUD UI](05-crud-ui.md)
+* [Database migration (value NOT NULL)](04-migration.md)

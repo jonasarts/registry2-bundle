@@ -1,6 +1,32 @@
 CHANGE LOG
 ==========
 
+V 8.0.0
+-------
+
+- Requires PHP 8.4, Symfony ^8 (config/dependency-injection ^7|^8), Doctrine
+  ORM ^3 / DBAL ^4
+- **snc/redis-bundle decoupled**: removed from `require`. The Doctrine engine is
+  the default and works without it. The Redis engine is selected explicitly via
+  `registry.engine: redis` and accepts any redis client through
+  `registry.redis.client_service` (native `\Redis`, Predis, a symfony/cache
+  adapter, or `snc_redis.registry`).
+- Engine is now chosen by configuration (`registry.engine`); the active
+  implementation is registered automatically and bound to `RegistryInterface`.
+- **Bugfix**: `value` column is now `NOT NULL DEFAULT ''` (was nullable while the
+  property was a non-nullable string → `TypeError` on NULL). See
+  [migration guide](04-migration.md).
+- Built-in CRUD UI is **off by default** (`registry.ui.enabled`), hardened:
+  delete is POST + CSRF only, access requires a configurable role
+  (`registry.ui.role`), edit/delete use validated discrete parameters instead of
+  deserializing a client-supplied entity, and templates extend a configurable
+  base template (`registry.ui.base_template`).
+- Removed the empty `AbstractRegistryKey` base class; deduplicated the engine
+  `stringify()` helper into a shared trait.
+- Full unit-test suite (engine clients mocked, DB/Redis-independent) plus a
+  skippable real-redis integration suite; CI with Rector & PHP-CS-Fixer gates.
+- See [UPGRADE-8.0.md](../UPGRADE-8.0.md) for migration steps.
+
 V 7.0.5
 -------
 

@@ -9,10 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  # Unit + static-check pipeline. The integration suite (Redis/PostgreSQL
-  # service containers) and blocking Rector/CS-Fixer gates are added in P4.
-  build:
-    name: "Unit & static checks (PHP ${{ matrix.php }})"
+  unit:
+    name: "Unit tests (PHP ${{ matrix.php }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -27,7 +25,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
-          coverage: none
+          coverage: pcov
 
       - name: Validate composer.json
         run: composer validate --strict
@@ -35,14 +33,75 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
 
-      - name: Unit tests
-        run: vendor/bin/phpunit --testsuite unit
+      - name: Unit tests (with coverage)
+        run: vendor/bin/phpunit --testsuite unit --coverage-text --coverage-clover=coverage.xml
 
-      # --- Non-blocking during introduction (P0); made blocking in P4. ---
+  integration:
+    name: "Integration tests (live redis)"
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: registry_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          extensions: redis
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress
+
+      - name: Integration tests
+        env:
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/registry_test?serverVersion=18&charset=utf8"
+        run: vendor/bin/phpunit --testsuite integration
+
+  static:
+    name: "Static analysis (Rector & CS-Fixer)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress
+
+      # Blocking gates: the build fails if code is not Rector-/CS-Fixer-clean.
       - name: CS-Fixer (dry-run)
-        continue-on-error: true
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: Rector (dry-run)
-        continue-on-error: true
         run: vendor/bin/rector process --dry-run

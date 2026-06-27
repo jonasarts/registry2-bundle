@@ -1,39 +1,68 @@
 Configure the bundle
 ====================
 
-Since verison 1.1 the registry service can use redis as database engine.
+The bundle works out of the box with the **Doctrine** engine and no
+configuration. All options below are optional.
 
-## Configuration options
+## Full configuration reference
 
 ```yaml
-#app/config/config.yml
+# config/packages/registry.yaml
 registry:
+    # persistence engine: 'doctrine' (default) or 'redis'
+    engine: doctrine
+
     globals:
-        default_values: %kernel.root_dir%/config/registry.yml # path and filename for the
-                                                              # default key/name-values
-        delimiter:      '/'
+        # path to the default key/name-values file (null = disabled)
+        default_values: '%kernel.project_dir%/config/registry_defaults.yaml'
+        # separator between <key> and <name> in storage and in the defaults file
+        delimiter: ':'
+
     redis:
-        prefix:         'registry' # prefix redis keys to make them 'unique'
-                                   # if multiple projects are using the same redis instance
+        # prefix for redis keys (avoids collisions when several projects share
+        # one redis instance)
+        prefix: 'registry'
+        # service id of the redis client to inject when engine = redis
+        client_service: 'snc_redis.registry'
+
+    ui:
+        # enable the built-in CRUD controllers (default: false)
+        enabled: false
+        # layout the bundle templates extend
+        base_template: 'base.html.twig'
+        # role required to access the CRUD controllers
+        role: 'ROLE_REGISTRY_ADMIN'
 ```
 
-## Required for Redis Mode
+## Using the Redis engine
 
-To use redis as database engine, you must install and configure the [SncRedisBundle](https://github.com/snc/SncRedisBundle).
-
-Configure the snc_redis client alias to 'registry' for the client to use for the 
-registy operations.
+The Redis engine is optional and has **no** hard dependency on
+`snc/redis-bundle`. Select it and point `client_service` at any redis client
+service — a native `\Redis`, a `Predis\Client`, a `symfony/cache` redis adapter,
+or the `snc_redis.registry` service:
 
 ```yaml
-#app/config/config.yml
+registry:
+    engine: redis
+    redis:
+        client_service: snc_redis.registry
+```
+
+If you use [SncRedisBundle](https://github.com/snc/SncRedisBundle), configure a
+client and reference its service:
+
+```yaml
+# config/packages/snc_redis.yaml
 snc_redis:
     clients:
-        [...]
         registry:
             type: phpredis
             alias: registry
-            dsn: "%env(REDIS_URL)%"
-``
+            dsn: '%env(REDIS_URL)%'
+```
+
+The client only needs the hash methods used by the engine
+(`hExists`, `hDel`, `hGet`, `hSet`, `hGetAll`, `keys`).
 
 ## That's all
 
