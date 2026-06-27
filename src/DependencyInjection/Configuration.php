@@ -28,6 +28,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                // persistence engine: doctrine (default) or redis
+                ->enumNode('engine')
+                    ->values(['doctrine', 'redis'])
+                    ->defaultValue('doctrine')
+                ->end()
                 ->arrayNode('globals')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -49,6 +54,22 @@ class Configuration implements ConfigurationInterface
                         // prefix
                         ->scalarNode('prefix')
                             ->defaultValue('registry')
+                        ->end()
+                        // service id of the redis client to inject (native \Redis,
+                        // Predis\Client, a symfony/cache redis adapter, or the
+                        // snc_redis.registry service). Only used when engine = redis.
+                        ->scalarNode('client_service')
+                            ->cannotBeEmpty()
+                            ->defaultValue('snc_redis.registry')
+                        ->end()
+                    ->end()
+                ->end()
+                // built-in CRUD controllers (default off, hardened in P5)
+                ->arrayNode('ui')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->defaultFalse()
                         ->end()
                     ->end()
                 ->end()
