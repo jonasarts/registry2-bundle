@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  # P0 baseline pipeline. PHP version is raised to 8.4 in P1; the test matrix,
+  # Redis/PostgreSQL service containers for the integration suite, and blocking
+  # Rector/CS-Fixer gates are added in P4.
+  build:
+    name: "Unit & static checks (PHP ${{ matrix.php }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.3' ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress
+
+      - name: Unit tests
+        run: vendor/bin/phpunit --testsuite unit
+
+      # --- Non-blocking during introduction (P0); made blocking in P4. ---
+      - name: CS-Fixer (dry-run)
+        continue-on-error: true
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Rector (dry-run)
+        continue-on-error: true
+        run: vendor/bin/rector process --dry-run

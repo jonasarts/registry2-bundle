@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnDeprecation="true">
+    <testsuites>
+        <!-- Pure unit tests: no Kernel, no live DB/Redis -->
+        <testsuite name="unit">
+            <file>tests/AbstractRegistryTest.php</file>
+            <file>tests/DoctrineRegistryEngineTest.php</file>
+            <file>tests/EntityTest.php</file>
+        </testsuite>
+        <!-- Integration tests: require Kernel / live Redis / live DB -->
+        <testsuite name="integration">
+            <file>tests/RedisRegistryEngineTest.php</file>
+            <file>tests/RegistryTest.php</file>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+</phpunit>
