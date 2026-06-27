@@ -74,4 +74,9 @@ interface RegistryInterface
      * @return array<int, mixed>
      */
     public function registryAll(): array;
+
+    /**
+     * @return array<int, mixed>
+     */
+    public function systemAll(): array;
 }

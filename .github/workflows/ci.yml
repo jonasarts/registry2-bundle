@@ -94,12 +94,16 @@ jobs:
         with:
           php-version: '8.4'
           tools: composer:v2
+          extensions: redis
           coverage: none
 
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
 
-      # Blocking gates: the build fails if code is not Rector-/CS-Fixer-clean.
+      # Blocking gates: the build fails if code is not clean.
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress
+
       - name: CS-Fixer (dry-run)
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 

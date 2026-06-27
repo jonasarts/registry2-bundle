@@ -27,8 +27,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Symfony Form.
- *
- * @extends AbstractType<RegistryKey>
  */
 class RegistryType extends AbstractType
 {

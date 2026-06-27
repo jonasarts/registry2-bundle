@@ -24,7 +24,10 @@
         "predis/predis": "A redis client usable as redis.client_service for the Redis engine.",
         "symfony/form": "Required for the built-in CRUD controllers (ui.enabled).",
         "symfony/twig-bundle": "Required for the built-in CRUD controllers (ui.enabled).",
-        "symfony/security-csrf": "Required for CSRF protection of the built-in CRUD controllers (ui.enabled)."
+        "symfony/security-csrf": "Required for CSRF protection of the built-in CRUD controllers (ui.enabled).",
+        "symfony/security-core": "Required for access control of the built-in CRUD controllers (ui.enabled).",
+        "symfony/validator": "Required to validate the entities (NotBlank/Length/UniqueEntity constraints).",
+        "symfony/doctrine-bridge": "Provides the UniqueEntity constraint used by the entities."
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "src/" }
@@ -37,14 +40,21 @@
         "symfony/yaml": "^7.0|^8.0",
         "doctrine/orm": "^3.0",
         "doctrine/dbal": "^4.0",
+        "symfony/framework-bundle": "^7.0|^8.0",
+        "symfony/form": "^7.0|^8.0",
+        "phpstan/phpstan": "^2.0",
         "rector/rector": "^2.0",
-        "friendsofphp/php-cs-fixer": "^3.64"
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "symfony/validator": "^7.0|^8.0",
+        "symfony/security-core": "^7.0|^8.0",
+        "symfony/doctrine-bridge": "^7.0|^8.0"
     },
     "scripts": {
         "cs": "php-cs-fixer fix",
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "rector": "rector process",
         "rector-check": "rector process --dry-run",
+        "phpstan": "phpstan analyse",
         "test": "phpunit --testsuite unit",
         "test-integration": "phpunit --testsuite integration"
     }

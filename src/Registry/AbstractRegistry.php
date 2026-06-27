@@ -324,7 +324,6 @@ abstract class AbstractRegistry implements RegistryInterface
             RegistryKeyType::FLOAT => (float) $value,
             RegistryKeyType::DATE, RegistryKeyType::TIME => is_numeric($value) ? (int) $value : strtotime($value),
             RegistryKeyType::ARRAY => json_decode($value, true),
-            default => $value,
         };
     }
 
@@ -345,7 +344,6 @@ abstract class AbstractRegistry implements RegistryInterface
                     ? $default
                     : (is_string($default) ? strtotime($default) : null)),
             RegistryKeyType::ARRAY => is_array($default) ? $default : [],
-            default => $default,
         };
     }
 }
