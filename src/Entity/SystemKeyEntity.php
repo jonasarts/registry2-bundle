@@ -46,8 +46,8 @@ class SystemKeyEntity implements SystemKeyInterface, Stringable
     #[Assert\Length(min: 1, max: 1)]
     private string $type;
 
-    #[ORM\Column(name: 'value', type: 'text', nullable: true)]
-    private string $value;
+    #[ORM\Column(name: 'value', type: 'text', nullable: false, options: ['default' => ''])]
+    private string $value = '';
 
     /**
      * Entitiy to string.

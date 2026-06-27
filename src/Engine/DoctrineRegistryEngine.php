@@ -25,6 +25,8 @@ use JsonException;
  */
 class DoctrineRegistryEngine implements RegistryEngineInterface
 {
+    use StringifyValue;
+
     /**
      * @var ObjectRepository<RegKey> doctrine repository for registry keys
      */
@@ -205,25 +207,5 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
             ->findAll();
 
         return $entities;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function stringify(mixed $value): string
-    {
-        if (is_string($value)) {
-            return $value;
-        }
-
-        if (is_int($value) || is_float($value) || is_bool($value) || null === $value) {
-            return (string) $value;
-        }
-
-        if (is_object($value) && method_exists($value, '__toString')) {
-            return (string) $value;
-        }
-
-        return json_encode($value, \JSON_THROW_ON_ERROR);
     }
 }

@@ -22,7 +22,7 @@ use Stringable;
  *
  * Stores a user value
  */
-class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface, Stringable
+class RegistryKey implements RegistryKeyInterface, Stringable
 {
     private int $user_id;
 

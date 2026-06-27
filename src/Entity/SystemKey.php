@@ -22,7 +22,7 @@ use Stringable;
  *
  * Stores a global/system value
  */
-class SystemKey extends AbstractRegistryKey implements SystemKeyInterface, Stringable
+class SystemKey implements SystemKeyInterface, Stringable
 {
     private string $key;
 

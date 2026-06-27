@@ -25,6 +25,8 @@ use RedisException;
  */
 class RedisRegistryEngine implements RegistryEngineInterface
 {
+    use StringifyValue;
+
     /**
      * @var object phpredis client or predis client
      */
@@ -37,14 +39,6 @@ class RedisRegistryEngine implements RegistryEngineInterface
         $scope = null === $user_id ? 'system' : sprintf('registry%s%d', $this->delimiter, $user_id);
 
         return $this->prefix.$this->delimiter.$scope.$this->delimiter.$key;
-
-        /*
-        if (is_null($user_id)) {
-            return $this->prefix.$this->delimiter.'system'.$this->delimiter.$key;
-        } else {
-            return $this->prefix.$this->delimiter.'registry'.$this->delimiter.(string) $user_id.$this->delimiter.$key;
-        }
-        */
     }
 
     /**
@@ -218,25 +212,5 @@ class RedisRegistryEngine implements RegistryEngineInterface
         }
 
         return $entities;
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function stringify(mixed $value): string
-    {
-        if (is_string($value)) {
-            return $value;
-        }
-
-        if (is_int($value) || is_float($value) || is_bool($value) || null === $value) {
-            return (string) $value;
-        }
-
-        if (is_object($value) && method_exists($value, '__toString')) {
-            return (string) $value;
-        }
-
-        return json_encode($value, \JSON_THROW_ON_ERROR);
     }
 }
