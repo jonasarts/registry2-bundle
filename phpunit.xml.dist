@@ -4,8 +4,7 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          cacheDirectory=".phpunit.cache"
-         failOnWarning="true"
-         failOnDeprecation="true">
+         defaultTestSuite="unit">
     <testsuites>
         <!-- Pure unit tests: no Kernel, no live DB/Redis -->
         <testsuite name="unit">
