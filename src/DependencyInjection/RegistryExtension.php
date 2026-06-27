@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\DependencyInjection;
 
 use Exception;
+use jonasarts\Bundle\RegistryBundle\Controller\RegistryController;
+use jonasarts\Bundle\RegistryBundle\Controller\SystemController;
 use jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
@@ -42,7 +44,7 @@ class RegistryExtension extends Extension
          *   engine: string,
          *   globals: array{default_values: ?string, delimiter: string},
          *   redis: array{prefix: string, client_service: string},
-         *   ui: array{enabled: bool}
+         *   ui: array{enabled: bool, base_template: string, role: string}
          * } $config
          */
         $config = $this->processConfiguration($configuration, $configs);
@@ -70,6 +72,13 @@ class RegistryExtension extends Extension
         } else {
             $this->registerDoctrineEngine($container);
         }
+
+        // Built-in CRUD controllers are wired only when explicitly enabled, so
+        // the UI is off by default. Even if an app imports the bundle routes,
+        // the controllers do not exist as services unless `ui.enabled` is true.
+        if ($config['ui']['enabled']) {
+            $this->registerUiControllers($container, $config['ui']['base_template'], $config['ui']['role']);
+        }
     }
 
     private function registerDoctrineEngine(ContainerBuilder $container): void
@@ -96,6 +105,21 @@ class RegistryExtension extends Extension
 
         $container->setDefinition(RedisRegistry::class, $definition);
         $container->setAlias(RegistryInterface::class, RedisRegistry::class);
+    }
+
+    private function registerUiControllers(ContainerBuilder $container, string $baseTemplate, string $adminRole): void
+    {
+        foreach ([RegistryController::class, SystemController::class] as $controllerClass) {
+            $definition = new Definition($controllerClass);
+            $definition->setAutowired(true);
+            $definition->setAutoconfigured(true);
+            $definition->setPublic(true);
+            $definition->setArgument('$registry', new Reference(RegistryInterface::class));
+            $definition->setArgument('$baseTemplate', $baseTemplate);
+            $definition->setArgument('$adminRole', $adminRole);
+
+            $container->setDefinition($controllerClass, $definition);
+        }
     }
 
     /**

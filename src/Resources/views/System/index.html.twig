@@ -1,4 +1,4 @@
-{% extends '::base.html.twig' %}
+{% extends base_template %}
 
 {% block title %}
 System Key List
@@ -28,9 +28,18 @@ System Key List
         <tr>
             <td>{{ entity.key }}</td>
             <td>{{ entity.name }}</td>
-            <td>{{ entity.type }}</td>
+            <td>{{ entity.type.value }}</td>
             <td>{{ entity.value }}</td>
-            <td><a href="{{ path( 'system_edit', { entity: entity.serialize }) }}" class="btn">Edit</a> <a href="{{ path( 'system_delete', { entity: entity.serialize }) }}" class="btn">Delete</a></td>
+            <td>
+                <a href="{{ path('system_edit', { key: entity.key, name: entity.name, type: entity.type.value }) }}" class="btn">Edit</a>
+                <form method="post" action="{{ path('system_delete') }}" style="display:inline" onsubmit="return confirm('Delete this key?');">
+                    <input type="hidden" name="key" value="{{ entity.key }}">
+                    <input type="hidden" name="name" value="{{ entity.name }}">
+                    <input type="hidden" name="type" value="{{ entity.type.value }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('system_delete') }}">
+                    <button type="submit" class="btn">Delete</button>
+                </form>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

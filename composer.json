@@ -18,11 +18,12 @@
         "symfony/dependency-injection": "^7.0|^8.0"
     },
     "suggest": {
-        "doctrine/doctrine-bundle": "If you want to use the DoctrineRegistry.",
-        "snc/redis-bundle": "If you want to use RedisRegistry.",
-        "predis/predis": "If you want to use predis for RedisRegistry.",
-        "symfony/form": "If you want to use the built-in controllers.",
-        "symfony/twig-bundle": "If you want to use the built-in controllers."
+        "doctrine/doctrine-bundle": "If you want to use the DoctrineRegistry (default engine).",
+        "snc/redis-bundle": "One way to provide a redis client service for the Redis engine.",
+        "predis/predis": "A redis client usable as redis.client_service for the Redis engine.",
+        "symfony/form": "Required for the built-in CRUD controllers (ui.enabled).",
+        "symfony/twig-bundle": "Required for the built-in CRUD controllers (ui.enabled).",
+        "symfony/security-csrf": "Required for CSRF protection of the built-in CRUD controllers (ui.enabled)."
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "src/" }
