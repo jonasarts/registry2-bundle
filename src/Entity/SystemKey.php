@@ -14,38 +14,26 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use JsonException;
+use Stringable;
 
 /**
  * SystemKey.
  *
  * Stores a global/system value
  */
-class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
+class SystemKey extends AbstractRegistryKey implements SystemKeyInterface, Stringable
 {
-    /**
-     * @var string
-     */
     private string $key;
 
-    /**
-     * @var string
-     */
     private string $name;
 
-    /**
-     * @var RegistryKeyType
-     */
     private RegistryKeyType $type;
 
-    /**
-     * @var string
-     */
     private string $value;
 
     /**
      * Entity to string.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -54,8 +42,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Get key.
-     *
-     * @return string
      */
     public function getKey(): string
     {
@@ -64,9 +50,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Set key.
-     *
-     * @param string $key
-     * @return SystemKey
      */
     public function setKey(string $key): self
     {
@@ -77,8 +60,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Get name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -87,9 +68,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Set name.
-     *
-     * @param string $name
-     * @return SystemKey
      */
     public function setName(string $name): self
     {
@@ -100,8 +78,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Get type.
-     *
-     * @return RegistryKeyType
      */
     public function getType(): RegistryKeyType
     {
@@ -110,9 +86,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Set type.
-     *
-     * @param RegistryKeyType $type
-     * @return SystemKey
      */
     public function setType(RegistryKeyType $type): self
     {
@@ -123,8 +96,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Get value.
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -133,9 +104,6 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * Set value.
-     *
-     * @param string $value
-     * @return SystemKey
      */
     public function setValue(string $value): self
     {
@@ -145,8 +113,7 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
     }
 
     /**
-     * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function serialize(): string
     {
@@ -156,18 +123,16 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
         $array['type'] = $this->type->value;
         $array['value'] = $this->value;
 
-        return json_encode($array, JSON_THROW_ON_ERROR);
+        return json_encode($array, \JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @param string $string
-     * @return SystemKey
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public static function deserialize(string $string): SystemKey
+    public static function deserialize(string $string): self
     {
         /** @var array{key:string, name:string, type:string, value:string} $object */
-        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
+        $object = json_decode($string, true, 512, \JSON_THROW_ON_ERROR);
 
         $system_key = new self();
 
@@ -181,9 +146,8 @@ class SystemKey extends AbstractRegistryKey implements SystemKeyInterface
 
     /**
      * @param array{key:string, name:string, type:string, value:string} $array
-     * @return SystemKey
      */
-    public static function fromArray(array $array): SystemKey
+    public static function fromArray(array $array): self
     {
         $system_key = new self();
 

@@ -13,44 +13,30 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Engine;
 
+use InvalidArgumentException;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey as SysKey;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use JsonException;
+use RedisException;
 
 /**
- * RedisRegistryEngine
+ * RedisRegistryEngine.
  */
 class RedisRegistryEngine implements RegistryEngineInterface
 {
-    private const REGISTRY_TYPE = 'registry';
-
-    private const SYSTEM_TYPE = 'system';
-
     /**
      * @var object phpredis client or predis client
      */
-    private object $redis;
+    private readonly object $redis;
 
-    /**
-     * @var string
-     */
-    private string $prefix;
+    private readonly string $delimiter;
 
-    /**
-     * @var string
-     */
-    private string $delimiter;
-
-    /**
-     * @param string $key
-     * @param int|null $user_id
-     * @return string
-     */
     private function getHashKey(string $key, ?int $user_id = null): string
     {
-        $scope = $user_id === null ? 'system' : "registry{$this->delimiter}{$user_id}";
+        $scope = null === $user_id ? 'system' : sprintf('registry%s%d', $this->delimiter, $user_id);
 
-        return "{$this->prefix}{$this->delimiter}{$scope}{$this->delimiter}{$key}";
+        return $this->prefix.$this->delimiter.$scope.$this->delimiter.$key;
 
         /*
         if (is_null($user_id)) {
@@ -63,16 +49,13 @@ class RedisRegistryEngine implements RegistryEngineInterface
 
     /**
      * Constructor.
-     *
-     * @param object $redis
-     * @param string $registry_prefix
-     * @param string $registry_delimiter
      */
-    public function __construct(object $redis, string $registry_prefix, string $registry_delimiter)
+    public function __construct(object $redis, private readonly string $prefix, string $registry_delimiter)
     {
-        if ($registry_delimiter === '') {
-            throw new \InvalidArgumentException('registry_delimiter must be non-empty');
+        if ('' === $registry_delimiter) {
+            throw new InvalidArgumentException('registry_delimiter must be non-empty');
         }
+
         if (
             !method_exists($redis, 'hExists')
             || !method_exists($redis, 'hDel')
@@ -81,22 +64,15 @@ class RedisRegistryEngine implements RegistryEngineInterface
             || !method_exists($redis, 'hGetAll')
             || !method_exists($redis, 'keys')
         ) {
-            throw new \InvalidArgumentException('Unsupported redis client');
+            throw new InvalidArgumentException('Unsupported redis client');
         }
 
         $this->redis = $redis;
-        $this->prefix = $registry_prefix;
         $this->delimiter = $registry_delimiter;
     }
 
     /**
-     * exists
-     *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * exists.
      */
     public function registryExists(int $user_id, string $key, string $name, RegistryKeyType $type): bool
     {
@@ -104,30 +80,18 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * del
-     *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * del.
      */
     public function registryDelete(int $user_id, string $key, string $name, RegistryKeyType $type): bool
     {
         // false if failure, 0 if doesn't exist, long number of deleted keys
         $r = $this->redis->hDel($this->getHashKey($key, $user_id), $name.$this->delimiter.$type->value);
 
-        return ($r != false) && ($r > 0);
+        return (false != $r) && ($r > 0);
     }
 
     /**
-     * get
-     *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool|string
+     * get.
      */
     public function registryRead(int $user_id, string $key, string $name, RegistryKeyType $type): bool|string
     {
@@ -137,24 +101,19 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * set
+     * set.
      *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @param mixed $value
-     * @return bool
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function registryWrite(int $user_id, string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
-        return $this->redis->hSet($this->getHashKey($key, $user_id), $name.$this->delimiter.$type->value, $this->stringify($value)) !== false;
+        return false !== $this->redis->hSet($this->getHashKey($key, $user_id), $name.$this->delimiter.$type->value, $this->stringify($value));
     }
 
     /**
      * @return array<int, RegKey>
-     * @throws \RedisException
+     *
+     * @throws RedisException
      */
     public function registryAll(): array
     {
@@ -188,11 +147,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
         return $entities;
     }
 
-    /** exists
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+    /** exists.
      */
     public function systemExists(string $key, string $name, RegistryKeyType $type): bool
     {
@@ -200,28 +155,18 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * del
-     *
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * del.
      */
     public function systemDelete(string $key, string $name, RegistryKeyType $type): bool
     {
         // false if failure, 0 if doesn't exist, long number of deleted keys
         $r = $this->redis->hDel($this->getHashKey($key), $name.$this->delimiter.$type->value);
 
-        return ($r !== false) && ($r > 0);
+        return (false !== $r) && ($r > 0);
     }
 
     /**
-     * get
-     *
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool|string
+     * get.
      */
     public function systemRead(string $key, string $name, RegistryKeyType $type): bool|string
     {
@@ -231,23 +176,18 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     // set
-
     /**
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @param mixed $value
-     * @return bool
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function systemWrite(string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
-        return $this->redis->hSet($this->getHashKey($key), $name.$this->delimiter.$type->value, $this->stringify($value)) !== false;
+        return false !== $this->redis->hSet($this->getHashKey($key), $name.$this->delimiter.$type->value, $this->stringify($value));
     }
 
     /**
      * @return array<int, SysKey>
-     * @throws \RedisException
+     *
+     * @throws RedisException
      */
     public function systemAll(): array
     {
@@ -281,9 +221,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * @param mixed $value
-     * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function stringify(mixed $value): string
     {
@@ -291,7 +229,7 @@ class RedisRegistryEngine implements RegistryEngineInterface
             return $value;
         }
 
-        if (is_int($value) || is_float($value) || is_bool($value) || $value === null) {
+        if (is_int($value) || is_float($value) || is_bool($value) || null === $value) {
             return (string) $value;
         }
 
@@ -299,6 +237,6 @@ class RedisRegistryEngine implements RegistryEngineInterface
             return (string) $value;
         }
 
-        return json_encode($value, JSON_THROW_ON_ERROR);
+        return json_encode($value, \JSON_THROW_ON_ERROR);
     }
 }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Tests;
 
+use InvalidArgumentException;
 use jonasarts\Bundle\RegistryBundle\Engine\RedisRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKey;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * Interface matching the Redis methods required by RedisRegistryEngine.
@@ -32,8 +34,9 @@ interface TestRedisClient
 
 class RedisRegistryEngineTest extends TestCase
 {
-    private const PREFIX = 'reg';
-    private const DELIMITER = ':';
+    private const string PREFIX = 'reg';
+
+    private const string DELIMITER = ':';
 
     private function createEngine(TestRedisClient&MockObject $redis): RedisRegistryEngine
     {
@@ -46,7 +49,7 @@ class RedisRegistryEngineTest extends TestCase
     {
         $redis = $this->createStub(TestRedisClient::class);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('registry_delimiter must be non-empty');
 
         new RedisRegistryEngine($redis, 'prefix', '');
@@ -54,10 +57,10 @@ class RedisRegistryEngineTest extends TestCase
 
     public function testConstructorRejectsUnsupportedClient(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Unsupported redis client');
 
-        new RedisRegistryEngine(new \stdClass(), 'prefix', ':');
+        new RedisRegistryEngine(new stdClass(), 'prefix', ':');
     }
 
     // --- Registry: type->value used in field names ---

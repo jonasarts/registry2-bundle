@@ -15,6 +15,8 @@ namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use JsonException;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'registry')]
 #[ORM\UniqueConstraint(name: 'uix_userid_key_name', columns: ['userid', 'registrykey', 'name'])]
 #[UniqueEntity(fields: ['name', 'key', 'user_id'])]
-class RegistryKeyEntity implements RegistryKeyInterface
+class RegistryKeyEntity implements RegistryKeyInterface, Stringable
 {
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
@@ -52,8 +54,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Entity to string.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -62,8 +62,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Get id.
-     *
-     * @return int
      */
     public function getId(): int
     {
@@ -72,9 +70,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Set user_id.
-     *
-     * @param int $user_id
-     * @return RegistryKeyEntity
      */
     public function setUserId(int $user_id): self
     {
@@ -85,8 +80,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Get user_id.
-     *
-     * @return int
      */
     public function getUserId(): int
     {
@@ -95,9 +88,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Set key.
-     *
-     * @param string $key
-     * @return RegistryKeyEntity
      */
     public function setKey(string $key): self
     {
@@ -108,8 +98,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Get key.
-     *
-     * @return string
      */
     public function getKey(): string
     {
@@ -118,9 +106,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Set name.
-     *
-     * @param string $name
-     * @return RegistryKeyEntity
      */
     public function setName(string $name): self
     {
@@ -131,8 +116,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Get name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -141,9 +124,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Set type.
-     *
-     * @param RegistryKeyType $type
-     * @return RegistryKeyEntity
      */
     public function setType(RegistryKeyType $type): self
     {
@@ -154,8 +134,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Get type.
-     *
-     * @return RegistryKeyType
      */
     public function getType(): RegistryKeyType
     {
@@ -164,9 +142,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Set value.
-     *
-     * @param string $value
-     * @return RegistryKeyEntity
      */
     public function setValue(string $value): self
     {
@@ -177,8 +152,6 @@ class RegistryKeyEntity implements RegistryKeyInterface
 
     /**
      * Get value.
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -186,8 +159,7 @@ class RegistryKeyEntity implements RegistryKeyInterface
     }
 
     /**
-     * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function serialize(): string
     {
@@ -198,18 +170,16 @@ class RegistryKeyEntity implements RegistryKeyInterface
         $a['type'] = $this->type;
         $a['value'] = $this->value;
 
-        return json_encode($a, JSON_THROW_ON_ERROR);
+        return json_encode($a, \JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @param string $string
-     * @return RegistryKey
-     * @throws \JsonException
+     * @throws JsonException
      */
     public static function deserialize(string $string): RegistryKey
     {
         /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
-        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
+        $object = json_decode($string, true, 512, \JSON_THROW_ON_ERROR);
 
         $registry_key = new RegistryKey();
 

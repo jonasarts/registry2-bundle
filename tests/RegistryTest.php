@@ -14,52 +14,49 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Tests;
 
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-use jonasarts\Bundle\RegistryBundle\Registry\DoctrineRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RedisRegistry;
 use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
+use Override;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * These tests are executed on a real database!
  * Therefore, they need a proper database setup.
  * Best practice is to use config_test.yml.
- * 
+ *
  * DO NOT TEST ON A PRODUCTION SYSTEM!
- * 
+ *
  * Important assumption:
  * The tests below must be executed in order
  * (to maintain write before delete operations).
  */
 class RegistryTest extends WebTestCase
 {
-    /**
-     * @var RegistryInterface
-     */
     private static RegistryInterface $registry;
 
-    private const _user = 2;
-    private const _bln = true;
-    private const _int = 10;
-    private const _str = 'test string';
-    private const _flt = 0.5;
-    private const _dat = '2013-10-16';
-    private const _arr = ['a' => 'b', 'b' => 0.0, 'c' => true];
+    private const int _user = 2;
 
-    /**
-     * {@inheritdoc}
-     */
+    private const bool _bln = true;
+
+    private const int _int = 10;
+
+    private const string _str = 'test string';
+
+    private const float _flt = 0.5;
+
+    private const string _dat = '2013-10-16';
+
+    private const array _arr = ['a' => 'b', 'b' => 0.0, 'c' => true];
+
     public static function setUpBeforeClass(): void
     {
-        //echo "setUpBeforeClass()";
+        // echo "setUpBeforeClass()";
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public static function tearDownAfterClass(): void
     {
-        //echo "tearDownAfterClass()";
+        // echo "tearDownAfterClass()";
 
         // remove all test keys so no key remains in storage
         self::$registry->registryDelete(self::_user, 'key', 'name_bln', 'bln');
@@ -80,12 +77,9 @@ class RegistryTest extends WebTestCase
         self::$registry->systemDelete('key', 'name_dat', 'dat');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp(): void
+    protected function setUp(): void
     {
-        //echo "setUp()";
+        // echo "setUp()";
 
         parent::setUp();
 
@@ -99,17 +93,14 @@ class RegistryTest extends WebTestCase
 
         // phpredis
         $redis = $container->get('snc_redis.registry');
-        $prefix = "bundle-dev";
-        $delimiter = "/";
-        self::$registry = new RedisRegistry($redis, $prefix, $delimiter, null);
+        $prefix = 'bundle-dev';
+        $delimiter = '/';
+        self::$registry = new RedisRegistry($redis, $prefix, $delimiter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
-        //echo "tearDown()";
+        // echo "tearDown()";
 
         parent::tearDown();
     }
@@ -156,7 +147,7 @@ class RegistryTest extends WebTestCase
     {
         $r = self::$registry->registryReadDefault(0, 'key', 'name_null', 'int', null);
 
-        $this->assertEquals(null, $r);
+        $this->assertNull($r);
     }
 
     public function testRegistryReadOnce(): void
@@ -503,10 +494,10 @@ class RegistryTest extends WebTestCase
 
         self::$registry->registryWrite(1, 'key', 'name_int', 'int', self::_int); // this must delete the user-key-value
 
-        //$r = self::$registry->registryRead(1, 'key', 'name_int', 'int');
+        // $r = self::$registry->registryRead(1, 'key', 'name_int', 'int');
         $r = self::$registry->registryExists(1, 'key', 'name_int', 'int');
 
-        //$this->assertEquals($r, self::_int);
+        // $this->assertEquals($r, self::_int);
         $this->assertFalse($r);
 
         self::$registry->registryDelete(0, 'key', 'name_int', 'int');
@@ -554,7 +545,7 @@ class RegistryTest extends WebTestCase
     {
         $r = self::$registry->systemReadDefault('key', 'name_null', 'int', null);
 
-        $this->assertEquals(null, $r);
+        $this->assertNull($r);
     }
 
     public function testSystemReadOnce(): void
@@ -732,5 +723,4 @@ class RegistryTest extends WebTestCase
         self::$registry->registryDelete(self::_user, 'key', 'name_str', RegistryKeyType::STRING);
         self::$registry->registryDelete(self::_user, 'key', 'name_int', RegistryKeyType::INTEGER);
     }
-
 }

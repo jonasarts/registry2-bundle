@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\DependencyInjection;
 
+use Exception;
+use Override;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -24,10 +26,9 @@ use Symfony\Component\DependencyInjection\Loader;
 class RegistryExtension extends Extension
 {
     /**
-     * {@inheritdoc}
-     *
      * @param array<int, array<string, mixed>> $configs
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -51,10 +52,11 @@ class RegistryExtension extends Extension
     }
 
     /**
-     * Define a custom bundle_alias
+     * Define a custom bundle_alias.
      *
      * {@inheritdoc}
      */
+    #[Override]
     public function getAlias(): string
     {
         return 'registry';

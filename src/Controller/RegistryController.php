@@ -13,14 +13,15 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Controller;
 
+use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use jonasarts\Bundle\RegistryBundle\Form\Type\RegistryType;
+use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
+use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKey as RegKey;
-use jonasarts\Bundle\RegistryBundle\Form\Type\RegistryType;
-use jonasarts\Bundle\RegistryBundle\Registry\RegistryInterface;
 
 /**
  * Registry controller.
@@ -84,7 +85,8 @@ class RegistryController extends AbstractController
 
     /**
      * Displays a form to edit a Registry entity.
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     #[Route('/edit', name: 'registry_edit')]
     public function editAction(Request $request): Response
@@ -93,6 +95,7 @@ class RegistryController extends AbstractController
         if (!is_string($s)) {
             throw $this->createNotFoundException('Missing entity');
         }
+
         $entity = RegKey::deserialize($s);
 
         $form = $this->createForm(RegistryType::class, $entity, ['mode' => 'edit']);
@@ -124,7 +127,8 @@ class RegistryController extends AbstractController
 
     /**
      * Delete a Registry entity.
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     #[Route('/delete', name: 'registry_delete')]
     public function deleteAction(Request $request): Response
@@ -133,6 +137,7 @@ class RegistryController extends AbstractController
         if (!is_string($s)) {
             throw $this->createNotFoundException('Missing entity');
         }
+
         $entity = RegKey::deserialize($s);
 
         $r = $this->delete(

@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle;
 
+use Override;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class RegistryBundle extends Bundle
 {
+    #[Override]
     public function getPath(): string
     {
         return \dirname(__DIR__);

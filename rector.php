@@ -14,8 +14,8 @@ return RectorConfig::configure()
     ->withPhpSets(php84: true)
     // Generic quality / dead-code / coding-style sets.
     ->withPreparedSets(
-        codeQuality: true,
         deadCode: true,
+        codeQuality: true,
         codingStyle: true,
     )
     // Framework sets are applied automatically based on installed composer
@@ -23,7 +23,7 @@ return RectorConfig::configure()
     // packages (rector/rector-symfony, rector/rector-doctrine,
     // rector/rector-phpunit) are present; harmless no-op otherwise.
     ->withComposerBased(
-        symfony: true,
         doctrine: true,
         phpunit: true,
+        symfony: true,
     );

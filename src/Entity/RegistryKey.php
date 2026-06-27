@@ -14,43 +14,28 @@ declare(strict_types=1);
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use JsonException;
+use Stringable;
 
 /**
  * RegistryKey.
  *
  * Stores a user value
  */
-class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
+class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface, Stringable
 {
-    /**
-     * @var int
-     */
     private int $user_id;
 
-    /**
-     * @var string
-     */
     private string $key;
 
-    /**
-     * @var string
-     */
     private string $name;
 
-    /**
-     * @var RegistryKeyType
-     */
     private RegistryKeyType $type;
 
-    /**
-     * @var string
-     */
     private string $value;
 
     /**
      * Entity to string.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -59,8 +44,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Get user_id.
-     *
-     * @return int
      */
     public function getUserId(): int
     {
@@ -69,9 +52,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Set user_id.
-     *
-     * @param int $user_id
-     * @return RegistryKey
      */
     public function setUserId(int $user_id): self
     {
@@ -82,8 +62,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Get key.
-     *
-     * @return string
      */
     public function getKey(): string
     {
@@ -92,9 +70,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Set key.
-     *
-     * @param string $key
-     * @return RegistryKey
      */
     public function setKey(string $key): self
     {
@@ -105,8 +80,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Get name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -115,9 +88,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Set name.
-     *
-     * @param string $name
-     * @return RegistryKey
      */
     public function setName(string $name): self
     {
@@ -128,8 +98,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Get type.
-     *
-     * @return RegistryKeyType
      */
     public function getType(): RegistryKeyType
     {
@@ -138,9 +106,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Set type.
-     *
-     * @param RegistryKeyType $type
-     * @return RegistryKey
      */
     public function setType(RegistryKeyType $type): self
     {
@@ -151,8 +116,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Get value.
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -161,9 +124,6 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * Set value.
-     *
-     * @param string $value
-     * @return RegistryKey
      */
     public function setValue(string $value): self
     {
@@ -173,8 +133,7 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
     }
 
     /**
-     * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function serialize(): string
     {
@@ -185,18 +144,16 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
         $a['type'] = $this->type->value;
         $a['value'] = $this->value;
 
-        return json_encode($a, JSON_THROW_ON_ERROR);
+        return json_encode($a, \JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @param string $string
-     * @return RegistryKey
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public static function deserialize(string $string): RegistryKey
+    public static function deserialize(string $string): self
     {
         /** @var array{user_id:int, key:string, name:string, type:string, value:string} $object */
-        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
+        $object = json_decode($string, true, 512, \JSON_THROW_ON_ERROR);
 
         $registry_key = new self();
 
@@ -211,9 +168,8 @@ class RegistryKey extends AbstractRegistryKey implements RegistryKeyInterface
 
     /**
      * @param array{user_id:int, key:string, name:string, type:string, value:string} $array
-     * @return RegistryKey
      */
-    public static function fromArray(array $array): RegistryKey
+    public static function fromArray(array $array): self
     {
         $registry_key = new self();
 

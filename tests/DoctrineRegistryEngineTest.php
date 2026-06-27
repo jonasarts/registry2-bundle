@@ -6,11 +6,11 @@ namespace jonasarts\Bundle\RegistryBundle\Tests;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use InvalidArgumentException;
 use jonasarts\Bundle\RegistryBundle\Engine\DoctrineRegistryEngine;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DoctrineRegistryEngineTest extends TestCase
@@ -19,19 +19,19 @@ class DoctrineRegistryEngineTest extends TestCase
      * Creates an engine wired with the given em/repos. Unprovided dependencies default to stubs.
      */
     private function createEngine(
-        EntityManagerInterface|null $em = null,
-        EntityRepository|null $registryRepo = null,
-        EntityRepository|null $systemRepo = null,
+        ?EntityManagerInterface $em = null,
+        ?EntityRepository $registryRepo = null,
+        ?EntityRepository $systemRepo = null,
     ): DoctrineRegistryEngine {
         $regRepo = $registryRepo ?? $this->createStub(EntityRepository::class);
         $sysRepo = $systemRepo ?? $this->createStub(EntityRepository::class);
         $entityManager = $em ?? $this->createStub(EntityManagerInterface::class);
 
         $entityManager->method('getRepository')
-            ->willReturnCallback(fn(string $class) => match ($class) {
+            ->willReturnCallback(static fn (string $class) => match ($class) {
                 RegistryKeyEntity::class => $regRepo,
                 SystemKeyEntity::class => $sysRepo,
-                default => throw new \InvalidArgumentException("Unknown: $class"),
+                default => throw new InvalidArgumentException('Unknown: '.$class),
             });
 
         return new DoctrineRegistryEngine($entityManager);
@@ -104,9 +104,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $repo = $this->createMock(EntityRepository::class);
         $repo->expects($this->once())
             ->method('findOneBy')
-            ->with($this->callback(function (array $criteria): bool {
-                return array_key_exists('type', $criteria) && $criteria['type'] === 'i';
-            }))
+            ->with($this->callback(static fn (array $criteria): bool => array_key_exists('type', $criteria) && 'i' === $criteria['type']))
             ->willReturn(null);
 
         $engine = $this->createEngine(registryRepo: $repo);
@@ -155,7 +153,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $persisted = null;
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())->method('persist')
-            ->willReturnCallback(function ($entity) use (&$persisted) {
+            ->willReturnCallback(static function ($entity) use (&$persisted) {
                 $persisted = $entity;
             });
         $em->expects($this->once())->method('flush');
@@ -175,7 +173,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $persisted = null;
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())->method('persist')
-            ->willReturnCallback(function ($entity) use (&$persisted) {
+            ->willReturnCallback(static function ($entity) use (&$persisted) {
                 $persisted = $entity;
             });
         $em->expects($this->once())->method('flush');
@@ -195,7 +193,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $persisted = null;
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())->method('persist')
-            ->willReturnCallback(function ($entity) use (&$persisted) {
+            ->willReturnCallback(static function ($entity) use (&$persisted) {
                 $persisted = $entity;
             });
         $em->expects($this->once())->method('flush');
@@ -215,7 +213,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $persisted = null;
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())->method('persist')
-            ->willReturnCallback(function ($entity) use (&$persisted) {
+            ->willReturnCallback(static function ($entity) use (&$persisted) {
                 $persisted = $entity;
             });
         $em->expects($this->once())->method('flush');
@@ -235,7 +233,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $persisted = null;
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())->method('persist')
-            ->willReturnCallback(function ($entity) use (&$persisted) {
+            ->willReturnCallback(static function ($entity) use (&$persisted) {
                 $persisted = $entity;
             });
         $em->expects($this->once())->method('flush');
@@ -360,9 +358,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $repo = $this->createMock(EntityRepository::class);
         $repo->expects($this->once())
             ->method('findOneBy')
-            ->with($this->callback(function (array $criteria): bool {
-                return array_key_exists('type', $criteria) && $criteria['type'] === 'f';
-            }))
+            ->with($this->callback(static fn (array $criteria): bool => array_key_exists('type', $criteria) && 'f' === $criteria['type']))
             ->willReturn(null);
 
         $engine = $this->createEngine(systemRepo: $repo);
@@ -411,7 +407,7 @@ class DoctrineRegistryEngineTest extends TestCase
         $persisted = null;
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects($this->once())->method('persist')
-            ->willReturnCallback(function ($entity) use (&$persisted) {
+            ->willReturnCallback(static function ($entity) use (&$persisted) {
                 $persisted = $entity;
             });
         $em->expects($this->once())->method('flush');

@@ -22,58 +22,23 @@ use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
  */
 interface SystemKeyInterface
 {
-    /**
-     * @return string
-     */
     public function getKey(): string;
 
-    /**
-     * @param string $key
-     * @return self
-     */
-    public function setKey(string $key): SystemKeyInterface;
+    public function setKey(string $key): self;
 
-    /**
-     * @return string
-     */
     public function getName(): string;
 
-    /**
-     * @param string $name
-     * @return self
-     */
-    public function setName(string $name): SystemKeyInterface;
+    public function setName(string $name): self;
 
-    /**
-     * @return RegistryKeyType
-     */
     public function getType(): RegistryKeyType;
 
-    /**
-     * @param RegistryKeyType $type
-     * @return self
-     */
-    public function setType(RegistryKeyType $type): SystemKeyInterface;
+    public function setType(RegistryKeyType $type): self;
 
-    /**
-     * @return string
-     */
     public function getValue(): string;
 
-    /**
-     * @param string $value
-     * @return self
-     */
-    public function setValue(string $value): SystemKeyInterface;
+    public function setValue(string $value): self;
 
-    /**
-     * @return string
-     */
     public function serialize(): string;
 
-    /**
-     * @param string $string
-     * @return self
-     */
-    public static function deserialize(string $string): SystemKeyInterface;
+    public static function deserialize(string $string): self;
 }

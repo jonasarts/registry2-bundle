@@ -18,48 +18,38 @@ use Doctrine\Persistence\ObjectRepository;
 use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyEntity as RegKey;
 use jonasarts\Bundle\RegistryBundle\Entity\SystemKeyEntity as SysKey;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use JsonException;
 
 /**
- * DoctrineRegistryEngine
+ * DoctrineRegistryEngine.
  */
 class DoctrineRegistryEngine implements RegistryEngineInterface
 {
     /**
-     * @var EntityManagerInterface entity manager
-     */
-    private EntityManagerInterface $em;
-
-    /**
      * @var ObjectRepository<RegKey> doctrine repository for registry keys
      */
-    private ObjectRepository $registry;
+    private readonly ObjectRepository $registry;
 
     /**
      * @var ObjectRepository<SysKey> doctrine repository for system keys
      */
-    private ObjectRepository $system;
+    private readonly ObjectRepository $system;
 
     /**
      * Constructor.
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(/**
+     * @var EntityManagerInterface entity manager
+     */
+        private readonly EntityManagerInterface $em)
     {
-        // get entity manager
-        $this->em = $em;
-
         // get repositories
         $this->registry = $this->em->getRepository(RegKey::class);
         $this->system = $this->em->getRepository(SysKey::class);
     }
 
     /**
-     * exists
-     *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * exists.
      */
     public function registryExists(int $user_id, string $key, string $name, RegistryKeyType $type): bool
     {
@@ -67,13 +57,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * del
-     *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * del.
      */
     public function registryDelete(int $user_id, string $key, string $name, RegistryKeyType $type): bool
     {
@@ -88,35 +72,23 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * get
-     *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool|string
+     * get.
      */
     public function registryRead(int $user_id, string $key, string $name, RegistryKeyType $type): bool|string
     {
         $entity = $this->registry->findOneBy(['user_id' => $user_id, 'key' => $key, 'name' => $name, 'type' => $type->value]);
 
         if ($entity instanceof RegKey) {
-            return (string) $entity->getValue();
-        } else {
-            return false;
+            return $entity->getValue();
         }
+
+        return false;
     }
 
     /**
-     * set
+     * set.
      *
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @param mixed $value
-     * @return bool
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function registryWrite(int $user_id, string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
@@ -132,7 +104,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $entity->setType($type);
         // entity value must be of type 'string'
         if (is_array($value)) {
-            $entity->setValue(json_encode($value, JSON_THROW_ON_ERROR));
+            $entity->setValue(json_encode($value, \JSON_THROW_ON_ERROR));
         } else {
             $entity->setValue($this->stringify($value));
         }
@@ -157,12 +129,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * exists
-     *
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * exists.
      */
     public function systemExists(string $key, string $name, RegistryKeyType $type): bool
     {
@@ -170,12 +137,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * del
-     *
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool
+     * del.
      */
     public function systemDelete(string $key, string $name, RegistryKeyType $type): bool
     {
@@ -190,33 +152,23 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * get
-     *
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @return bool|string
+     * get.
      */
     public function systemRead(string $key, string $name, RegistryKeyType $type): bool|string
     {
         $entity = $this->system->findOneBy(['key' => $key, 'name' => $name, 'type' => $type->value]);
 
         if ($entity instanceof SysKey) {
-            return (string) $entity->getValue();
-        } else {
-            return false;
+            return $entity->getValue();
         }
+
+        return false;
     }
 
     /**
-     * set
+     * set.
      *
-     * @param string $key
-     * @param string $name
-     * @param RegistryKeyType $type
-     * @param mixed $value
-     * @return bool
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function systemWrite(string $key, string $name, RegistryKeyType $type, mixed $value): bool
     {
@@ -231,7 +183,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
         $entity->setType($type);
         // entity value must be of type 'string'
         if (is_array($value)) {
-            $entity->setValue(json_encode($value, JSON_THROW_ON_ERROR));
+            $entity->setValue(json_encode($value, \JSON_THROW_ON_ERROR));
         } else {
             $entity->setValue($this->stringify($value));
         }
@@ -256,9 +208,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
     }
 
     /**
-     * @param mixed $value
-     * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function stringify(mixed $value): string
     {
@@ -266,7 +216,7 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
             return $value;
         }
 
-        if (is_int($value) || is_float($value) || is_bool($value) || $value === null) {
+        if (is_int($value) || is_float($value) || is_bool($value) || null === $value) {
             return (string) $value;
         }
 
@@ -274,6 +224,6 @@ class DoctrineRegistryEngine implements RegistryEngineInterface
             return (string) $value;
         }
 
-        return json_encode($value, JSON_THROW_ON_ERROR);
+        return json_encode($value, \JSON_THROW_ON_ERROR);
     }
 }

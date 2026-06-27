@@ -15,6 +15,8 @@ namespace jonasarts\Bundle\RegistryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use JsonException;
+use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`system`')]
 #[ORM\UniqueConstraint(name: 'uix_key_name', columns: ['systemkey', 'name'])]
 #[UniqueEntity(fields: ['name', 'key'])]
-class SystemKeyEntity implements SystemKeyInterface
+class SystemKeyEntity implements SystemKeyInterface, Stringable
 {
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
@@ -49,8 +51,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Entitiy to string.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -59,8 +59,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Get id.
-     *
-     * @return int
      */
     public function getId(): int
     {
@@ -69,9 +67,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Set key.
-     *
-     * @param string $key
-     * @return SystemKeyEntity
      */
     public function setKey(string $key): self
     {
@@ -82,8 +77,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Get key.
-     *
-     * @return string
      */
     public function getKey(): string
     {
@@ -92,9 +85,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Set name.
-     *
-     * @param string $name
-     * @return SystemKeyEntity
      */
     public function setName(string $name): self
     {
@@ -105,8 +95,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Get name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -115,9 +103,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Set type.
-     *
-     * @param RegistryKeyType $type
-     * @return SystemKeyEntity
      */
     public function setType(RegistryKeyType $type): self
     {
@@ -128,8 +113,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Get type.
-     *
-     * @return RegistryKeyType
      */
     public function getType(): RegistryKeyType
     {
@@ -138,9 +121,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Set value.
-     *
-     * @param string $value
-     * @return SystemKeyEntity
      */
     public function setValue(string $value): self
     {
@@ -151,8 +131,6 @@ class SystemKeyEntity implements SystemKeyInterface
 
     /**
      * Get value.
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -160,8 +138,7 @@ class SystemKeyEntity implements SystemKeyInterface
     }
 
     /**
-     * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function serialize(): string
     {
@@ -171,18 +148,16 @@ class SystemKeyEntity implements SystemKeyInterface
         $array['type'] = $this->type;
         $array['value'] = $this->value;
 
-        return json_encode($array, JSON_THROW_ON_ERROR);
+        return json_encode($array, \JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @param string $string
-     * @return SystemKey
-     * @throws \JsonException
+     * @throws JsonException
      */
     public static function deserialize(string $string): SystemKey
     {
         /** @var array{key:string, name:string, type:string, value:string} $object */
-        $object = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
+        $object = json_decode($string, true, 512, \JSON_THROW_ON_ERROR);
 
         $system_key = new SystemKey();
 

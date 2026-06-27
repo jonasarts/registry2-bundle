@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Entity;
 
-use jonasarts\Bundle\RegistryBundle\Entity\RegistryKeyInterface;
-
 /**
  * AbstractRegistryKey.
  *
@@ -147,5 +145,4 @@ abstract class AbstractRegistryKey
     // {
     //     return $this->value;
     // }
-
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Tests;
 
+use DateTimeImmutable;
 use jonasarts\Bundle\RegistryBundle\Engine\RegistryEngineInterface;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
 use jonasarts\Bundle\RegistryBundle\Registry\AbstractRegistry;
@@ -11,6 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub as StubObject;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * Concrete subclass so we can instantiate AbstractRegistry.
@@ -27,6 +29,7 @@ class TestableRegistry extends AbstractRegistry
 class AbstractRegistryTest extends TestCase
 {
     private RegistryEngineInterface&StubObject $stubEngine;
+
     private TestableRegistry $registry;
 
     protected function setUp(): void
@@ -42,6 +45,7 @@ class AbstractRegistryTest extends TestCase
     {
         $mock = $this->createMock(RegistryEngineInterface::class);
         $this->registry = new TestableRegistry($mock);
+
         return $mock;
     }
 
@@ -269,7 +273,7 @@ class AbstractRegistryTest extends TestCase
     {
         $this->stubEngine->method('registryRead')->willReturn(false);
 
-        $dt = new \DateTimeImmutable('2024-06-15');
+        $dt = new DateTimeImmutable('2024-06-15');
         $result = $this->registry->registryReadDefault(1, 'k', 'n', 'd', $dt);
 
         $this->assertSame($dt, $result);
@@ -325,7 +329,7 @@ class AbstractRegistryTest extends TestCase
 
     public function testRegistryWriteThrowsOnDelimiterInName(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('delimiter is not allowed in name');
 
         $this->registry->registryWrite(1, 'k', 'has:colon', 's', 'v');
@@ -333,7 +337,7 @@ class AbstractRegistryTest extends TestCase
 
     public function testSystemWriteThrowsOnDelimiterInName(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('delimiter is not allowed in name');
 
         $this->registry->systemWrite('k', 'has:colon', 's', 'v');
@@ -346,10 +350,11 @@ class AbstractRegistryTest extends TestCase
         $engine = $this->useMockEngine();
 
         $engine->method('registryRead')
-            ->willReturnCallback(function (int $uid, string $k, string $n, RegistryKeyType $t): bool|string {
-                if ($uid === 0) {
+            ->willReturnCallback(static function (int $uid, string $k, string $n, RegistryKeyType $t): bool|string {
+                if (0 === $uid) {
                     return '10';
                 }
+
                 return false;
             });
 
@@ -382,11 +387,12 @@ class AbstractRegistryTest extends TestCase
     {
         $callCount = 0;
         $this->stubEngine->method('registryRead')
-            ->willReturnCallback(function (int $uid) use (&$callCount): bool|string {
-                $callCount++;
-                if ($uid === 1) {
+            ->willReturnCallback(static function (int $uid) use (&$callCount): bool|string {
+                ++$callCount;
+                if (1 === $uid) {
                     return false;
                 }
+
                 return '42';
             });
 
@@ -510,7 +516,7 @@ class AbstractRegistryTest extends TestCase
 
     public function testRegistryWriteDateTimeConvertsToIso(): void
     {
-        $dt = new \DateTimeImmutable('2024-06-15T10:30:00+00:00');
+        $dt = new DateTimeImmutable('2024-06-15T10:30:00+00:00');
 
         $engine = $this->useMockEngine();
         $engine->method('registryRead')->willReturn(false);
@@ -524,7 +530,7 @@ class AbstractRegistryTest extends TestCase
 
     public function testSystemWriteDateTimeConvertsToIso(): void
     {
-        $dt = new \DateTimeImmutable('2024-06-15T10:30:00+00:00');
+        $dt = new DateTimeImmutable('2024-06-15T10:30:00+00:00');
 
         $engine = $this->useMockEngine();
         $engine->expects($this->once())

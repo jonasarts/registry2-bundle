@@ -21,9 +21,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('registry');
@@ -37,7 +34,7 @@ class Configuration implements ConfigurationInterface
                         // default registry key-value file
                         ->scalarNode('default_values')
                             ->defaultNull()
-                            //->defaultValue('%kernel.root_dir%/config/registry.yml')
+                            // ->defaultValue('%kernel.root_dir%/config/registry.yml')
                         ->end()
                         // field delimiter
                         ->scalarNode('delimiter')

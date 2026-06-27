@@ -20,14 +20,7 @@ namespace jonasarts\Bundle\RegistryBundle\Entity;
  */
 interface RegistryKeyInterface extends SystemKeyInterface
 {
-    /**
-     * @return int
-     */
     public function getUserId(): int;
 
-    /**
-     * @param int $user_id
-     * @return self
-     */
-    public function setUserId(int $user_id): RegistryKeyInterface;
+    public function setUserId(int $user_id): self;
 }

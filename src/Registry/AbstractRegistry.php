@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace jonasarts\Bundle\RegistryBundle\Registry;
 
+use DateTimeInterface;
 use jonasarts\Bundle\RegistryBundle\Engine\RegistryEngineInterface;
 use jonasarts\Bundle\RegistryBundle\Enum\RegistryKeyType;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * The registry logic
+ * The registry logic.
  *
  * This class contains the business logic for registry keys.
  */
@@ -27,13 +29,13 @@ abstract class AbstractRegistry implements RegistryInterface
     protected RegistryEngineInterface $engine;
 
     /** boolean, use default key-name/value array */
-    protected bool $use_yaml;
+    protected bool $use_yaml = false;
 
     /** @var array<string, array<string, scalar>> default key-name/value array */
-    protected array $yaml;
+    protected array $yaml = [];
 
     /** field delimiter (used in yaml) */
-    protected string $delimiter;
+    protected string $delimiter = ':';
 
     private function optimizeType(string|RegistryKeyType $type): RegistryKeyType
     {
@@ -45,7 +47,7 @@ abstract class AbstractRegistry implements RegistryInterface
         return match (trim(strtolower($type))) {
             'i', 'int', 'integer' => RegistryKeyType::INTEGER,
             'b', 'bln', 'boolean' => RegistryKeyType::BOOLEAN,
-            //'s', 'str', 'string' => RegistryKeyType::STRING,
+            // 's', 'str', 'string' => RegistryKeyType::STRING,
             'f', 'flt', 'float' => RegistryKeyType::FLOAT,
             'd', 'dat', 'date' => RegistryKeyType::DATE,
             't', 'tim', 'time' => RegistryKeyType::TIME,
@@ -59,10 +61,6 @@ abstract class AbstractRegistry implements RegistryInterface
      */
     public function __construct(?string $default_values_filename = null)
     {
-        $this->use_yaml = false;
-        $this->yaml = [];
-        $this->delimiter = ':';
-
         if (is_string($default_values_filename) && file_exists($default_values_filename)) {
             $parsed = Yaml::parseFile($default_values_filename);
             if (is_array($parsed)) {
@@ -72,81 +70,49 @@ abstract class AbstractRegistry implements RegistryInterface
                     if (!is_string($scope) || !is_array($entries)) {
                         continue;
                     }
+
                     foreach ($entries as $entryKey => $entryValue) {
                         if (!is_string($entryKey) || !is_scalar($entryValue)) {
                             continue;
                         }
+
                         $yaml[$scope][$entryKey] = $entryValue;
                     }
                 }
+
                 $this->yaml = $yaml;
             }
+
             $this->use_yaml = true;
         }
     }
 
-    /**
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return bool
-     */
     public function registryExists(int $user_id, string $key, string $name, string|RegistryKeyType $type): bool
     {
         return $this->engine->registryExists($user_id, $key, $name, $this->optimizeType($type));
     }
 
-    /**
-     * @param int $uid
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return bool
-     */
     public function re(int $uid, string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->registryExists($uid, $k, $n, $t);
     }
 
-    /**
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return bool
-     */
     public function registryDelete(int $user_id, string $key, string $name, string|RegistryKeyType $type): bool
     {
         return $this->engine->registryDelete($user_id, $key, $name, $this->optimizeType($type));
     }
 
-    /**
-     * @param int $uid
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return bool
-     */
     public function rd(int $uid, string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->registryDelete($uid, $k, $n, $t);
     }
 
-    /**
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @param mixed $default
-     * @return mixed
-     */
     public function registryReadDefault(int $user_id, string $key, string $name, string|RegistryKeyType $type, mixed $default): mixed
     {
         $type = $this->optimizeType($type);
 
         $value = $this->engine->registryRead($user_id, $key, $name, $type);
-        if ($value === false) {
+        if (false === $value) {
             $value = $this->engine->registryRead(0, $key, $name, $type);
         }
 
@@ -157,56 +123,27 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->normalizeDefaultValue($type, $default);
     }
 
-    /**
-     * @param int $uid
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @param mixed $d
-     * @return mixed
-     */
     public function rrd(int $uid, string $k, string $n, string|RegistryKeyType $t, mixed $d): mixed
     {
         return $this->registryReadDefault($uid, $k, $n, $t, $d);
     }
 
-    /**
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return mixed
-     */
     public function registryRead(int $user_id, string $key, string $name, string|RegistryKeyType $type): mixed
     {
         $result = $this->registryReadDefault($user_id, $key, $name, $type, null);
 
-        if ($result === null && $this->use_yaml) {
+        if (null === $result && $this->use_yaml) {
             $result = $this->readDefaultKeyValue('registry', $key, $name, $type);
         }
 
         return $result;
     }
 
-    /**
-     * @param int $uid
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return mixed
-     */
     public function rr(int $uid, string $k, string $n, string|RegistryKeyType $t): mixed
     {
         return $this->registryRead($uid, $k, $n, $t);
     }
 
-    /**
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return mixed
-     */
     public function registryReadOnce(int $user_id, string $key, string $name, string|RegistryKeyType $type): mixed
     {
         $r = $this->registryRead($user_id, $key, $name, $type);
@@ -215,43 +152,30 @@ abstract class AbstractRegistry implements RegistryInterface
         return $r;
     }
 
-    /**
-     * @param int $uid
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return mixed
-     */
     public function rro(int $uid, string $k, string $n, string|RegistryKeyType $t): mixed
     {
         return $this->registryReadOnce($uid, $k, $n, $t);
     }
 
     /**
-     * @param int $user_id
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @param mixed $value
-     * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function registryWrite(int $user_id, string $key, string $name, string|RegistryKeyType $type, mixed $value): bool
     {
         if (str_contains($name, $this->delimiter)) {
-            throw new \RuntimeException('delimiter is not allowed in name');
+            throw new RuntimeException('delimiter is not allowed in name');
         }
 
         $internal_type = $this->optimizeType($type);
 
-        if ($user_id !== 0) {
+        if (0 !== $user_id) {
             $result = $this->registryRead(0, $key, $name, $internal_type);
-            if ($result !== null && $result === $value) {
+            if (null !== $result && $result === $value) {
                 return $this->registryDelete($user_id, $key, $name, $internal_type);
             }
         }
 
-        if (($internal_type === RegistryKeyType::DATE || $internal_type === RegistryKeyType::TIME) && $value instanceof \DateTimeInterface) {
+        if ((RegistryKeyType::DATE === $internal_type || RegistryKeyType::TIME === $internal_type) && $value instanceof DateTimeInterface) {
             $value = $value->format('c');
         }
 
@@ -259,13 +183,7 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
-     * @param int $uid
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @param mixed $v
-     * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function rw(int $uid, string $k, string $n, string|RegistryKeyType $t, mixed $v): bool
     {
@@ -280,57 +198,26 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->engine->registryAll();
     }
 
-    /**
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return bool
-     */
     public function systemExists(string $key, string $name, string|RegistryKeyType $type): bool
     {
         return $this->engine->systemExists($key, $name, $this->optimizeType($type));
     }
 
-    /**
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return bool
-     */
     public function se(string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->systemExists($k, $n, $t);
     }
 
-    /**
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return bool
-     */
     public function systemDelete(string $key, string $name, string|RegistryKeyType $type): bool
     {
         return $this->engine->systemDelete($key, $name, $this->optimizeType($type));
     }
 
-    /**
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return bool
-     */
     public function sd(string $k, string $n, string|RegistryKeyType $t): bool
     {
         return $this->systemDelete($k, $n, $t);
     }
 
-    /**
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @param mixed $default
-     * @return mixed
-     */
     public function systemReadDefault(string $key, string $name, string|RegistryKeyType $type, mixed $default): mixed
     {
         $type = $this->optimizeType($type);
@@ -343,52 +230,27 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->normalizeDefaultValue($type, $default);
     }
 
-    /**
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @param mixed $d
-     * @return mixed
-     */
     public function srd(string $k, string $n, string|RegistryKeyType $t, mixed $d): mixed
     {
         return $this->systemReadDefault($k, $n, $t, $d);
     }
 
-    /**
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return mixed
-     */
     public function systemRead(string $key, string $name, string|RegistryKeyType $type): mixed
     {
         $result = $this->systemReadDefault($key, $name, $type, null);
 
-        if ($result === null && $this->use_yaml) {
+        if (null === $result && $this->use_yaml) {
             $result = $this->readDefaultKeyValue('system', $key, $name, $type);
         }
 
         return $result;
     }
 
-    /**
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return mixed
-     */
     public function sr(string $k, string $n, string|RegistryKeyType $t): mixed
     {
         return $this->systemRead($k, $n, $t);
     }
 
-    /**
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return mixed
-     */
     public function systemReadOnce(string $key, string $name, string|RegistryKeyType $type): mixed
     {
         $r = $this->systemRead($key, $name, $type);
@@ -397,34 +259,23 @@ abstract class AbstractRegistry implements RegistryInterface
         return $r;
     }
 
-    /**
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @return mixed
-     */
     public function sro(string $k, string $n, string|RegistryKeyType $t): mixed
     {
         return $this->systemReadOnce($k, $n, $t);
     }
 
     /**
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @param mixed $value
-     * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function systemWrite(string $key, string $name, string|RegistryKeyType $type, mixed $value): bool
     {
         if (str_contains($name, $this->delimiter)) {
-            throw new \RuntimeException('delimiter is not allowed in name');
+            throw new RuntimeException('delimiter is not allowed in name');
         }
 
         $internal_type = $this->optimizeType($type);
 
-        if (($internal_type === RegistryKeyType::DATE || $internal_type === RegistryKeyType::TIME) && $value instanceof \DateTimeInterface) {
+        if ((RegistryKeyType::DATE === $internal_type || RegistryKeyType::TIME === $internal_type) && $value instanceof DateTimeInterface) {
             $value = $value->format('c');
         }
 
@@ -432,12 +283,7 @@ abstract class AbstractRegistry implements RegistryInterface
     }
 
     /**
-     * @param string $k
-     * @param string $n
-     * @param string|RegistryKeyType $t
-     * @param mixed $v
-     * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function sw(string $k, string $n, string|RegistryKeyType $t, mixed $v): bool
     {
@@ -452,16 +298,9 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->engine->systemAll();
     }
 
-    /**
-     * @param string $scope
-     * @param string $key
-     * @param string $name
-     * @param string|RegistryKeyType $type
-     * @return mixed
-     */
     private function readDefaultKeyValue(string $scope, string $key, string $name, string|RegistryKeyType $type): mixed
     {
-        $path = $key . $this->delimiter . $name;
+        $path = $key.$this->delimiter.$name;
 
         if (!isset($this->yaml[$scope]) || !array_key_exists($path, $this->yaml[$scope])) {
             return null;
@@ -476,11 +315,6 @@ abstract class AbstractRegistry implements RegistryInterface
         return $this->normalizeDefaultValue($this->optimizeType($type), $value);
     }
 
-    /**
-     * @param RegistryKeyType $type
-     * @param string $value
-     * @return mixed
-     */
     private function decodeTypedValue(RegistryKeyType $type, string $value): mixed
     {
         return match ($type) {
@@ -494,14 +328,9 @@ abstract class AbstractRegistry implements RegistryInterface
         };
     }
 
-    /**
-     * @param RegistryKeyType $type
-     * @param mixed $default
-     * @return mixed
-     */
     private function normalizeDefaultValue(RegistryKeyType $type, mixed $default): mixed
     {
-        if ($default === null) {
+        if (null === $default) {
             return null;
         }
 
@@ -510,7 +339,7 @@ abstract class AbstractRegistry implements RegistryInterface
             RegistryKeyType::BOOLEAN => (bool) $default,
             RegistryKeyType::STRING => is_scalar($default) ? (string) $default : '',
             RegistryKeyType::FLOAT => is_numeric($default) ? (float) $default : 0.0,
-            RegistryKeyType::DATE, RegistryKeyType::TIME => $default instanceof \DateTimeInterface
+            RegistryKeyType::DATE, RegistryKeyType::TIME => $default instanceof DateTimeInterface
                 ? $default
                 : (is_int($default)
                     ? $default
