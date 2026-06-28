@@ -1,0 +1,26 @@
+{
+    "symbol-whitelist": [
+        "Doctrine\\ORM\\EntityManagerInterface",
+        "Doctrine\\ORM\\Mapping\\Column",
+        "Doctrine\\ORM\\Mapping\\Entity",
+        "Doctrine\\ORM\\Mapping\\GeneratedValue",
+        "Doctrine\\ORM\\Mapping\\Id",
+        "Doctrine\\ORM\\Mapping\\Table",
+        "Doctrine\\ORM\\Mapping\\UniqueConstraint",
+        "Doctrine\\Persistence\\ObjectRepository",
+        "Symfony\\Bridge\\Doctrine\\Validator\\Constraints\\UniqueEntity",
+        "Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController",
+        "Symfony\\Component\\Form\\AbstractType",
+        "Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType",
+        "Symfony\\Component\\Form\\Extension\\Core\\Type\\IntegerType",
+        "Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType",
+        "Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType",
+        "Symfony\\Component\\Form\\FormBuilderInterface",
+        "Symfony\\Component\\HttpFoundation\\Request",
+        "Symfony\\Component\\HttpFoundation\\Response",
+        "Symfony\\Component\\OptionsResolver\\OptionsResolver",
+        "Symfony\\Component\\Routing\\Attribute\\Route",
+        "Symfony\\Component\\Validator\\Constraints\\Length",
+        "Symfony\\Component\\Validator\\Constraints\\NotBlank"
+    ]
+}

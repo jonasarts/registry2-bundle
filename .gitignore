@@ -8,3 +8,6 @@ vendor
 ### ignore locks
 composer.lock
 symfony.lock
+# IDE & assistant config
+/.idea/
+/.claude/settings.local.json

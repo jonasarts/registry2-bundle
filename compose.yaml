@@ -1,0 +1,23 @@
+# Local development infrastructure for the integration test suite.
+#
+# The `integration` PHPUnit suite (tests/RegistryTest.php) exercises the
+# RedisRegistry against a real redis server. The tests skip automatically when
+# no redis is reachable, so this file is purely a developer convenience.
+#
+# Usage:
+#   docker compose up -d          # start redis on 127.0.0.1:6379
+#   composer test-integration     # run the integration suite
+#   docker compose down           # stop
+#
+# Connection is configured via REDIS_HOST / REDIS_PORT (defaults 127.0.0.1:6379),
+# matching the CI workflow (.github/workflows/ci.yml).
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

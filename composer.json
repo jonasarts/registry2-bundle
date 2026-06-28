@@ -1,10 +1,14 @@
 {
     "name": "jonasarts/registry2-bundle",
     "description": "A Registry System for Symfony",
-    "keywords": ["registry", "key", "value", "store"],
-    "homepage": "https://github.com/jonasarts/registry2-bundle",
-    "type": "symfony-bundle",
     "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": [
+        "registry",
+        "key",
+        "value",
+        "store"
+    ],
     "authors": [
         {
             "name": "Jonas Hauser",
@@ -12,49 +16,59 @@
             "homepage": "https://www.jonasarts.com"
         }
     ],
+    "homepage": "https://github.com/jonasarts/registry2-bundle",
     "require": {
         "php": ">=8.4",
-        "symfony/config": "^7.0|^8.0",
-        "symfony/dependency-injection": "^7.0|^8.0",
-        "symfony/http-kernel": "^7.0|^8.0"
+        "symfony/config": "^7.0 || ^8.0",
+        "symfony/dependency-injection": "^7.0 || ^8.0",
+        "symfony/http-kernel": "^7.0 || ^8.0",
+        "symfony/yaml": "^7.0 || ^8.0"
+    },
+    "require-dev": {
+        "doctrine/dbal": "^4.0",
+        "doctrine/orm": "^3.0",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^12.0 || ^13.0",
+        "rector/rector": "^2.0",
+        "symfony/doctrine-bridge": "^7.0 || ^8.0",
+        "symfony/form": "^7.0 || ^8.0",
+        "symfony/framework-bundle": "^7.0 || ^8.0",
+        "symfony/security-core": "^7.0 || ^8.0",
+        "symfony/validator": "^7.0 || ^8.0"
     },
     "suggest": {
         "doctrine/doctrine-bundle": "If you want to use the DoctrineRegistry (default engine).",
-        "snc/redis-bundle": "One way to provide a redis client service for the Redis engine.",
         "predis/predis": "A redis client usable as redis.client_service for the Redis engine.",
+        "snc/redis-bundle": "One way to provide a redis client service for the Redis engine.",
+        "symfony/doctrine-bridge": "Provides the UniqueEntity constraint used by the entities.",
         "symfony/form": "Required for the built-in CRUD controllers (ui.enabled).",
-        "symfony/twig-bundle": "Required for the built-in CRUD controllers (ui.enabled).",
-        "symfony/security-csrf": "Required for CSRF protection of the built-in CRUD controllers (ui.enabled).",
         "symfony/security-core": "Required for access control of the built-in CRUD controllers (ui.enabled).",
-        "symfony/validator": "Required to validate the entities (NotBlank/Length/UniqueEntity constraints).",
-        "symfony/doctrine-bridge": "Provides the UniqueEntity constraint used by the entities."
+        "symfony/security-csrf": "Required for CSRF protection of the built-in CRUD controllers (ui.enabled).",
+        "symfony/twig-bundle": "Required for the built-in CRUD controllers (ui.enabled).",
+        "symfony/validator": "Required to validate the entities (NotBlank/Length/UniqueEntity constraints)."
     },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "autoload": {
-        "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\": "src/" }
+        "psr-4": {
+            "jonasarts\\Bundle\\RegistryBundle\\": "src/"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "jonasarts\\Bundle\\RegistryBundle\\Tests\\": "tests/" }
+        "psr-4": {
+            "jonasarts\\Bundle\\RegistryBundle\\Tests\\": "tests/"
+        }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^11.0|^12.0",
-        "symfony/yaml": "^7.0|^8.0",
-        "doctrine/orm": "^3.0",
-        "doctrine/dbal": "^4.0",
-        "symfony/framework-bundle": "^7.0|^8.0",
-        "symfony/form": "^7.0|^8.0",
-        "phpstan/phpstan": "^2.0",
-        "rector/rector": "^2.0",
-        "friendsofphp/php-cs-fixer": "^3.64",
-        "symfony/validator": "^7.0|^8.0",
-        "symfony/security-core": "^7.0|^8.0",
-        "symfony/doctrine-bridge": "^7.0|^8.0"
+    "config": {
+        "sort-packages": true
     },
     "scripts": {
         "cs": "php-cs-fixer fix",
         "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "phpstan": "phpstan analyse",
         "rector": "rector process",
         "rector-check": "rector process --dry-run",
-        "phpstan": "phpstan analyse",
         "test": "phpunit --testsuite unit",
         "test-integration": "phpunit --testsuite integration"
     }

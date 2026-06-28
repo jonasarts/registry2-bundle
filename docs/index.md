@@ -23,4 +23,9 @@ Operations
 * [Optional CRUD UI](05-crud-ui.md)
 * [Database migration (value NOT NULL)](04-migration.md)
 * [Upgrade from 7.x to 8.0](UPGRADE-8.0.md)
-* [Change log](changes.md)
+
+Development
+-----------
+
+* [Testing the bundle](test.md)
+* [Change log](../CHANGELOG.md)
