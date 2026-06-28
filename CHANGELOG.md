@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.0.1] - 2026-06-28
+
+### Fixed
+
+- CI: the `composer normalize` gate now uses a project-local
+  `ergebnis/composer-normalize` (require-dev + `config.allow-plugins`) instead of
+  a global tool, so the command is reliably available.
+- The extension test provides the `kernel.environment` / `kernel.build_dir`
+  parameters so it passes on the lowest supported Symfony (7.0).
+
 ## [8.0.0] - 2026-06-28
 
 ### Added
