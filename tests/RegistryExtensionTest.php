@@ -22,6 +22,11 @@ class RegistryExtensionTest extends TestCase
     private function load(array $config = []): ContainerBuilder
     {
         $container = new ContainerBuilder();
+        // AbstractBundle's extension reads these kernel parameters when loading
+        // (required on Symfony 7.0; defaulted on 8.x). Provide them so the bare
+        // test container works across the whole supported Symfony range.
+        $container->setParameter('kernel.environment', 'test');
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir());
         new RegistryBundle()->getContainerExtension()->load([$config], $container);
 
         return $container;
